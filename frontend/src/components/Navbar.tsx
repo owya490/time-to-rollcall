@@ -1,7 +1,7 @@
 "use client";
 import { useContext, useState } from "react";
 import Sidebar from "./SideBar";
-import SideBarMobile from "./SideBarMobile";
+import SideBarMobile from "./MobileTopBar";
 import { UserContext } from "../lib/context";
 
 export default function Navbar() {

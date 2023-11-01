@@ -18,10 +18,10 @@ export default function SideBarMobile({
           setter((oldVal) => !oldVal);
         }}
       >
-        hello
+        Side Bar
       </button>
       <Link href={Path.LandingPage} className="mx-auto">
-        home
+        Home
       </Link>
       {!user && (
         <Link className="text-3xl flex text-white" href={Path.LogIn}>
