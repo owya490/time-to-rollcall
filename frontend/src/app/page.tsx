@@ -1,11 +1,11 @@
 "use client";
 import toast from "react-hot-toast";
 import Loader from "../components/Loader";
-import { SignInButton } from "./log-in/page";
 import { useContext } from "react";
 import { UserContext } from "../lib/context";
 import Link from "next/link";
 import { Path } from "../components/Path";
+import SignInButton from "../components/SignInButton";
 
 export default function LandingPage() {
   const user = useContext(UserContext);

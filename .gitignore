@@ -37,9 +37,12 @@ next-env.d.ts
 
 # Firebase
 .firebaserc
-/.github
 .firebase/hosting.YnVpbGQ.cache
+
+.firebase
 
 # functions env var
 functions/.runtimeconfig.json
 functions/lib/
+
+firebase-debug.log

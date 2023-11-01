@@ -2,12 +2,12 @@
 import { Toaster } from "react-hot-toast";
 import Navbar from "./Navbar";
 import { UserContext } from "../lib/context";
-import { getUserAuth } from "../lib/hooks";
+import { useUserAuth } from "../lib/hooks";
 import { usePathname } from "next/navigation";
 import { Path } from "./Path";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const user = getUserAuth();
+  const user = useUserAuth();
   return (
     <UserContext.Provider value={user}>
       <div className="min-h-screen">
