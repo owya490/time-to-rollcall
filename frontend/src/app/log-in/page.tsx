@@ -1,13 +1,15 @@
 "use client";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleAuthProvider } from "../../lib/firebase";
+import { useContext } from "react";
+import { UserContext } from "../../lib/context";
 
 export default function LogIn() {
-  const user = null;
+  const user = useContext(UserContext);
   return <main>{!user ? <SignInButton /> : null}</main>;
 }
 
-function SignInButton() {
+export function SignInButton() {
   const signInWithGoogle = async () => {
     await signInWithPopup(auth, googleAuthProvider);
   };

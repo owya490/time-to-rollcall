@@ -20,7 +20,7 @@ export default function SideBarMobile({
       >
         Side Bar
       </button>
-      <Link href={Path.LandingPage} className="mx-auto">
+      <Link href={user ? Path.Dashboard : Path.LandingPage} className="mx-auto">
         Home
       </Link>
       {!user && (
