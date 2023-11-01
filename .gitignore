@@ -34,3 +34,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Firebase
+.firebaserc
+/.github
+.firebase/hosting.YnVpbGQ.cache
+
+# functions env var
+functions/.runtimeconfig.json
+functions/lib/
