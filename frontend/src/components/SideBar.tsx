@@ -39,7 +39,9 @@ export default function Sidebar({
         href={route}
         onClick={() => {
           setter((oldVal) => !oldVal);
-          onClick();
+          if (onClick) {
+            onClick();
+          }
         }}
         className={`flex gap-1 [&>*]:my-auto text-md pl-6 py-3 border-b-[1px] border-b-white/10 ${colorClass}`}
       >
