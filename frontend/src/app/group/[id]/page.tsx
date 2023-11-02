@@ -1,3 +1,3 @@
 export default function Group({ params }: { params: { id: string } }) {
-  return <>{params.id}</>;
+  return <>Group id: {params.id}</>;
 }

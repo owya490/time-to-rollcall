@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Path } from "./Path";
-import { User } from "firebase/auth";
+import { User, signOut } from "firebase/auth";
 import { Dispatch, SetStateAction } from "react";
+import { auth } from "../lib/firebase";
 
 export default function Sidebar({
   show,
@@ -20,7 +21,15 @@ export default function Sidebar({
   const appendClass = show ? " ml-0" : " ml-[-250px] md:ml-0";
 
   // Clickable menu items
-  const MenuItem = ({ name, route }: { name: string; route: string }) => {
+  const MenuItem = ({
+    name,
+    route,
+    onClick,
+  }: {
+    name: string;
+    route?: string;
+    onClick?: () => void;
+  }) => {
     // Highlight menu item based on currently displayed route
     const colorClass =
       usePathname() === route ? "text-white" : "text-white/50 hover:text-white";
@@ -30,6 +39,7 @@ export default function Sidebar({
         href={route}
         onClick={() => {
           setter((oldVal) => !oldVal);
+          onClick();
         }}
         className={`flex gap-1 [&>*]:my-auto text-md pl-6 py-3 border-b-[1px] border-b-white/10 ${colorClass}`}
       >
@@ -48,21 +58,36 @@ export default function Sidebar({
       }}
     />
   );
+  const router = useRouter();
 
   return (
     <>
       <div className={`${className}${appendClass}`}>
         <div className="p-2 flex">
-          <Link href={Path.LandingPage} className="text-white">
+          <Link
+            href={user ? Path.Dashboard : Path.LandingPage}
+            className="text-white"
+          >
             {user ? user.displayName : "Welcome"}
           </Link>
         </div>
         <div className="flex flex-col">
-          <MenuItem name="Home" route={Path.LandingPage} />
+          <MenuItem
+            name={user ? "Dashboard" : "Home"}
+            route={user ? Path.Dashboard : Path.LandingPage}
+          />
+          <MenuItem name="Create group" route={Path.CreateGroup} />
           {!user ? (
             <MenuItem name="Log in" route={Path.LogIn} />
           ) : (
-            <MenuItem name="Log out" route={Path.LogIn} />
+            <MenuItem
+              name="Log out"
+              route={""}
+              onClick={() => {
+                signOut(auth);
+                router.refresh();
+              }}
+            />
           )}
         </div>
       </div>
