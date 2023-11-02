@@ -14,12 +14,12 @@ import {
 import { getStorage } from "firebase/storage";
 
 export const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: "AIzaSyDp6gXIb4s6c43jiFk3-vMfh8RtHwdYHX0",
+  authDomain: "timetorollcall.firebaseapp.com",
+  projectId: "timetorollcall",
+  storageBucket: "timetorollcall.appspot.com",
+  messagingSenderId: "242180253857",
+  appId: "1:242180253857:web:cc902415e90603609668e0",
 };
 
 function createFirebaseApp(config) {
