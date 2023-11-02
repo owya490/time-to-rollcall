@@ -3,14 +3,7 @@ import { GoogleAuthProvider, getAuth } from "firebase/auth";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import "firebase/compat/storage";
-import {
-  collection,
-  getDocs,
-  getFirestore,
-  limit,
-  query,
-  where,
-} from "firebase/firestore";
+import { DocumentSnapshot, getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 export const firebaseConfig = {
@@ -47,27 +40,9 @@ export const STATE_CHANGED = "state_changed";
 /// Helper functions
 
 /**`
- * Gets a users/{uid} document with username
- * @param  {string} username
- */
-export async function getUserWithUsername(username) {
-  // const usersRef = collection(firestore, 'users');
-  // const query = usersRef.where('username', '==', username).limit(1);
-
-  const q = query(
-    collection(firestore, "users"),
-    where("username", "==", username),
-    limit(1)
-  );
-  const userDoc = (await getDocs(q)).docs[0];
-  return userDoc;
-}
-
-/**`
  * Converts a firestore document to JSON
- * @param  {DocumentSnapshot} doc
  */
-export function postToJSON(doc) {
+export function postToJSON(doc: DocumentSnapshot) {
   const data = doc.data();
   return {
     ...data,
