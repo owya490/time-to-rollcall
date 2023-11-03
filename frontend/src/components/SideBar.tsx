@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Path } from "./Path";
-import { User, signOut } from "firebase/auth";
+import { User } from "firebase/auth";
 import { Dispatch, SetStateAction } from "react";
-import { auth } from "../lib/firebase";
+import { logOut } from "../lib/auth";
 
 export default function Sidebar({
   show,
@@ -60,7 +60,6 @@ export default function Sidebar({
       }}
     />
   );
-  const router = useRouter();
 
   return (
     <>
@@ -78,18 +77,17 @@ export default function Sidebar({
             name={user ? "Dashboard" : "Home"}
             route={user ? Path.Dashboard : Path.LandingPage}
           />
-          <MenuItem name="Create group" route={Path.CreateGroup} />
-          {!user ? (
-            <MenuItem name="Log in" route={Path.LogIn} />
-          ) : (
-            <MenuItem
-              name="Log out"
-              route={""}
-              onClick={() => {
-                signOut(auth);
-                router.refresh();
-              }}
-            />
+          {user && (
+            <>
+              <MenuItem name="Create group" route={Path.CreateGroup} />
+              <MenuItem
+                name="Log out"
+                route={""}
+                onClick={() => {
+                  logOut();
+                }}
+              />
+            </>
           )}
         </div>
       </div>
