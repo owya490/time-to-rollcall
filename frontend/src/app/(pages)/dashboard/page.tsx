@@ -1,7 +1,7 @@
 "use client";
 import { useContext } from "react";
-import { UserContext } from "../../../lib/context";
-import AuthCheck from "../../../components/AuthCheck";
+import { UserContext } from "@/lib/context";
+import AuthCheck from "@/components/AuthCheck";
 import toast from "react-hot-toast";
 
 export default function Dashboard() {

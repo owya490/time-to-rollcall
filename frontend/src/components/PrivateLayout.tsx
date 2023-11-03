@@ -1,7 +1,7 @@
 "use client";
 import Navbar from "./Navbar";
-import { UserContext } from "../lib/context";
-import { useUserAuth } from "../lib/hooks";
+import { UserContext } from "@/lib/context";
+import { useUserAuth } from "@/lib/hooks";
 import React from "react";
 import { Toaster } from "react-hot-toast";
 

@@ -2,7 +2,7 @@
 import { useContext, useState } from "react";
 import Sidebar from "./SideBar";
 import SideBarMobile from "./MobileTopBar";
-import { UserContext } from "../lib/context";
+import { UserContext } from "@/lib/context";
 
 export default function Navbar() {
   const user = useContext(UserContext);

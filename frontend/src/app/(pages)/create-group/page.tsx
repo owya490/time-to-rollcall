@@ -1,7 +1,7 @@
 "use client";
 import { useContext } from "react";
-import { UserContext } from "../../../lib/context";
-import AuthCheck from "../../../components/AuthCheck";
+import { UserContext } from "@/lib/context";
+import AuthCheck from "@/components/AuthCheck";
 
 export default function CreateGroup() {
   const user = useContext(UserContext);

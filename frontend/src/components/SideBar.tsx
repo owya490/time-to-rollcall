@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import { Path } from "./Path";
 import { User } from "firebase/auth";
 import { Dispatch, SetStateAction } from "react";
-import { logOut } from "../lib/auth";
+import { logOut } from "@/lib/auth";
 
 export default function Sidebar({
   show,
