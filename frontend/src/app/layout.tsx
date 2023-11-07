@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Time to Rollcall",
-  description: "Mark your roles",
+  description: "Rollcall and Analytics",
 };
 
 export default function RootLayout({
