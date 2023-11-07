@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { UserContext } from "@/lib/context";
 import AuthCheck from "@/components/AuthCheck";
 
-export default function CreateGroup() {
+export default function GroupCreate() {
   const user = useContext(UserContext);
   return (
     <main>

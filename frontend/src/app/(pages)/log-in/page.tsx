@@ -10,9 +10,12 @@ export default function LogIn() {
   return (
     <main>
       {!user ? (
-        <p>
-          Sign in: <SignInButton />
-        </p>
+        <>
+          <h1>Dominic - SOW-413: TODO Log in</h1>
+          <p>
+            Sign in: <SignInButton />
+          </p>
+        </>
       ) : (
         redirect(Path.Dashboard)
       )}

@@ -10,8 +10,14 @@ export default function Dashboard() {
     <main>
       <AuthCheck>
         <p>
-          This is the normal dashboard page that a user goes to when they are
-          logged in {user?.displayName}
+          This is the page which a user sees when they log in,{" "}
+          {user?.displayName}. It will display the list of groups, or maybe we
+          can just make them automatically go to the group they last visited
+          like discord
+        </p>
+        <p>
+          [] - SOW-418: TODO Sidebar and layout - remember the sidebar needs to
+          be displayed on all the pages so edit the SideBar
         </p>
         <button onClick={() => toast.success("hello toast")}>
           Display Toast
