@@ -1,4 +1,4 @@
-import { auth } from "../lib/firebase";
+import { auth } from "@/lib/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 // Custom hook to read auth record and user profile doc
