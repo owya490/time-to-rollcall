@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { UserContext } from "@/lib/context";
 import Link from "next/link";
 import { Path } from "../helper/Path";
+import { logOut } from "@/lib/auth";
 
 export default function Topbar() {
   const user = useContext(UserContext);
@@ -37,6 +38,7 @@ export default function Topbar() {
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           <button
             type="button"
+            onClick={() => logOut()}
             className="text-gray-900 bg-transparent border hover:bg-gray-200 border-black font-semibold text-xs px-3 py-1.5"
           >
             Sign Out
