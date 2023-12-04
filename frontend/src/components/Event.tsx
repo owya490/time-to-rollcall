@@ -11,8 +11,8 @@ export default function Event({
     <div className={happeningNow ? "py-6 px-8 bg-[#303030]" : "pt-6 px-8"}>
       <div className="flex flex-wrap items-start justify-between mx-auto">
         {happeningNow ? (
-          <p className="text-green-600 text-xs font-semibold pb-4">
-            Happening Now
+          <p className="text-green-500 text-xs font-medium pb-4">
+            ●&nbsp;&nbsp;Happening Now
           </p>
         ) : (
           <p className="text-[#acacac] text-xs font-medium pb-4">Finished</p>
