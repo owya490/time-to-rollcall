@@ -1,12 +1,11 @@
 "use client";
-import { useContext } from "react";
-import { UserContext } from "@/lib/context";
 import SignInButton from "@/components/SignInButton";
 import { redirect } from "next/navigation";
 import { Path } from "helper/Path";
+import { useUserAuth } from "@/lib/hooks";
 
 export default function LogIn() {
-  const user = useContext(UserContext);
+  const user = useUserAuth();
   return (
     <main>
       {!user ? (
@@ -17,7 +16,7 @@ export default function LogIn() {
           </p>
         </>
       ) : (
-        redirect(Path.Dashboard)
+        redirect(`${Path.Group}/1`)
       )}
     </main>
   );

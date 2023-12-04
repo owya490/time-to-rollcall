@@ -1,8 +1,10 @@
+"use client";
+import AuthCheck from "@/components/AuthCheck";
 import Event from "@/components/Event";
 
 export default function Group({ params }: { params: { groupId: string } }) {
   return (
-    <main>
+    <AuthCheck>
       <div className="p-8">
         <h1 className="text-4xl font-semibold pb-6">Events</h1>
         <p>Sort by: Newest Oldest Tag Campus</p>
@@ -27,6 +29,6 @@ export default function Group({ params }: { params: { groupId: string } }) {
         going onto this group
       </h1>
       <h1>Dominic - SOW-416: TODO Group settings</h1>
-    </main>
+    </AuthCheck>
   );
 }

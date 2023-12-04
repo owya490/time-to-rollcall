@@ -1,3 +1,4 @@
+"use client";
 import { useContext } from "react";
 import { UserContext } from "../lib/context";
 import { redirect } from "next/navigation";
