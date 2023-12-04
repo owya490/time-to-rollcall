@@ -1,6 +1,6 @@
 import Loader from "@/components/Loader";
 import Link from "next/link";
-import { Path } from "@/components/Path";
+import { Path } from "helper/Path";
 
 export default function LandingPage() {
   return (
