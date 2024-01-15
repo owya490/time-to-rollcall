@@ -3,7 +3,7 @@ import { GoogleAuthProvider, getAuth } from "firebase/auth";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import "firebase/compat/storage";
-import { DocumentSnapshot, getFirestore } from "firebase/firestore";
+import { DocumentSnapshot, Timestamp, getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 export const firebaseConfig = {
@@ -38,16 +38,20 @@ export const storage = getStorage(firebaseApp);
 export const STATE_CHANGED = "state_changed";
 
 /// Helper functions
+export function convertToJavascript(doc: DocumentSnapshot) {
+  let data = doc.data();
+  data["id"] = data.id;
+  for (const [key, value] of Object.entries(data)) {
+    data[key] = value instanceof Timestamp ? value.toDate() : value;
+  }
+  return data;
+}
 
-/**`
- * Converts a firestore document to JSON
- */
-export function postToJSON(doc: DocumentSnapshot) {
-  const data = doc.data();
-  return {
-    ...data,
-    // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
-    createdAt: data?.createdAt.toMillis() || 0,
-    updatedAt: data?.updatedAt.toMillis() || 0,
-  };
+export function convertToFirestore(data: { id: string }) {
+  const { id, ...dataWithoutId } = data;
+  return dataWithoutId;
+}
+
+export function convertCollectionToJavascript(docs: DocumentSnapshot[]) {
+  return docs.map((doc) => convertToJavascript(doc));
 }

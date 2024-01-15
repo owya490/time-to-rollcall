@@ -2,7 +2,7 @@
 import { useContext } from "react";
 import { UserContext } from "@/lib/context";
 import Link from "next/link";
-import { Path } from "../helper/Path";
+import { Path } from "@/helper/Path";
 import { logOut } from "@/lib/auth";
 
 export default function Topbar() {

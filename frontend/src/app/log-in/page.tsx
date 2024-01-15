@@ -2,13 +2,13 @@
 import SignInButton from "@/components/SignInButton";
 import { redirect } from "next/navigation";
 import { Path } from "helper/Path";
-import { useUserAuth } from "@/lib/hooks";
+import { useUserData } from "@/lib/hooks";
 
 export default function LogIn() {
-  const user = useUserAuth();
+  const userData = useUserData();
   return (
     <main>
-      {!user ? (
+      {!userData ? (
         <>
           <h1>Dominic - SOW-413: TODO Log in</h1>
           <p>
@@ -16,7 +16,7 @@ export default function LogIn() {
           </p>
         </>
       ) : (
-        redirect(`${Path.Group}/1`)
+        redirect(`${Path.Group}/1`) // TODO: Redirect to your first group
       )}
     </main>
   );

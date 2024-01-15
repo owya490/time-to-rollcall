@@ -1,7 +1,7 @@
 export enum Path {
   LandingPage = "/",
   LogIn = "/log-in",
-  CreateGroup = "/group/create",
+  GroupCreate = "/group/create",
   Dashboard = "/dashboard",
   Group = "/group",
 }

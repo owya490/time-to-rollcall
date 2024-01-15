@@ -1,27 +1,45 @@
 "use client";
 import AuthCheck from "@/components/AuthCheck";
 import Event from "@/components/Event";
+import { Filter, InitFilter, filters } from "@/helper/Filter";
+import { getEvents } from "@/lib/events";
+import { EventModel } from "@/models/Event";
+import { useEffect, useState } from "react";
 
 export default function Group({ params }: { params: { groupId: string } }) {
+  const [events, setEvents] = useState<EventModel[]>([]);
+
+  const [filter, setFilter] = useState<Filter>(InitFilter);
+
+  useEffect(() => {
+    getEvents(params.groupId).then((events) => setEvents(events));
+  }, []);
+
   return (
     <AuthCheck>
       <div className="p-8">
         <h1 className="text-4xl font-semibold pb-6">Events</h1>
-        <p>Sort by: Newest Oldest Tag Campus</p>
+        <div className="flex items-center justify-between">
+          <p>Sort by:</p>
+          <div className="flex items-center justify-between gap-3">
+            {filters.map((f, i) => (
+              <button
+                key={i}
+                className={filter.name === f.name ? "font-bold" : ""}
+                onClick={() => {
+                  setEvents(f.sort(events));
+                  setFilter(f);
+                }}
+              >
+                {f.name}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
-      <Event event={{ dateStart: new Date() }} />
-      <Event
-        event={{
-          dateStart: new Date("2021/10/10"),
-          dateEnd: new Date("2021/11/10"),
-        }}
-      />
-      <Event
-        event={{
-          dateStart: new Date("2021/10/10"),
-          dateEnd: new Date("2021/11/10"),
-        }}
-      />
+      {events.map((event, i) => (
+        <Event key={i} event={event} groupId={params.groupId} />
+      ))}
       <h1>Group id: {params.groupId}</h1>
       <h1>Daniel L - SOW-402: TODO Metrics</h1>
       <h1>

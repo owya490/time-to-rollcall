@@ -1,9 +1,14 @@
+import { Path } from "@/helper/Path";
+import { EventModel } from "@/models/Event";
 import { inBetween, toddMonYYYY } from "helper/Time";
+import Link from "next/link";
 
 export default function Event({
   event,
+  groupId,
 }: {
-  event: { dateStart: Date; dateEnd?: Date };
+  event: EventModel;
+  groupId: string;
 }) {
   const now = new Date();
   const happeningNow = inBetween(event.dateStart, now, event.dateEnd);
@@ -24,7 +29,7 @@ export default function Event({
               : "text-black text-xs font-medium"
           }
         >
-          Tag: Weekly Meeting
+          Tag: TODO
         </p>
       </div>
       <p
@@ -44,7 +49,7 @@ export default function Event({
             : "text-lg font-semibold pb-4 text-black"
         }
       >
-        Weekly Meeting 12
+        {event.name}
       </h2>
       <div className="flex flex-wrap items-center justify-between mx-auto">
         <button
@@ -54,8 +59,9 @@ export default function Event({
         >
           Attendance: 20
         </button>
-        <button
+        <Link
           type="button"
+          href={`${Path.Group}/${groupId}/event/${event.id}`}
           className={
             happeningNow
               ? "text-white bg-transparent border border-white hover:bg-gray-700 text-sm p-2"
@@ -63,7 +69,7 @@ export default function Event({
           }
         >
           {happeningNow ? "Check-in ➝" : "Edit ➝"}
-        </button>
+        </Link>
       </div>
       {!happeningNow && (
         <hr className="mt-6 h-[1px] border-t-0 bg-neutral-300" />

@@ -20,6 +20,8 @@
     "baseUrl": "./src",
     "paths": {
       "@/components/*": ["components/*"],
+      "@/models/*": ["models/*"],
+      "@/helper/*": ["helper/*"],
       "@/lib/*": ["lib/*"]
     }
   },
