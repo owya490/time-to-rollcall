@@ -11,9 +11,11 @@ export function useUserData() {
 
   useEffect(() => {
     if (userAuth) {
-      getUser(userAuth.uid).then((user) => setUser({ ...user, ...userAuth }));
+      getUser(userAuth.uid).then((user) => setUser(user));
+    } else {
+      setUser(null);
     }
   }, [userAuth]);
 
-  return { ...user, userAuth };
+  return userAuth ? { ...userAuth, ...user } : undefined;
 }
