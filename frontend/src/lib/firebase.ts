@@ -40,7 +40,7 @@ export const STATE_CHANGED = "state_changed";
 /// Helper functions
 export function convertToJavascript(doc: DocumentSnapshot) {
   let data = doc.data();
-  data["id"] = data.id;
+  data["id"] = doc.id;
   for (const [key, value] of Object.entries(data)) {
     data[key] = value instanceof Timestamp ? value.toDate() : value;
   }
