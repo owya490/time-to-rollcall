@@ -2,16 +2,23 @@
 import AuthCheck from "@/components/AuthCheck";
 import Event from "@/components/Event";
 import { Filter, InitFilter, filters } from "@/helper/Filter";
+import { UserContext } from "@/lib/context";
 import { getEvents } from "@/lib/events";
 import { EventModel } from "@/models/Event";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 export default function Group({ params }: { params: { groupId: string } }) {
+  const user = useContext(UserContext);
   const [events, setEvents] = useState<EventModel[]>([]);
 
   const [filter, setFilter] = useState<Filter>(InitFilter);
 
   useEffect(() => {
+    // TODO Ian
+    console.log(user.groups);
+    // check user.groups is this groupId in this array?
+    // if no addUserGroups()
+    // if yes, do nothing
     getEvents(params.groupId).then((events) => setEvents(events));
   }, []);
 
