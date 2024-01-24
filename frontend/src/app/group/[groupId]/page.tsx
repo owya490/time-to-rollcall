@@ -2,25 +2,27 @@
 import AuthCheck from "@/components/AuthCheck";
 import Event from "@/components/Event";
 import { Filter, InitFilter, filters } from "@/helper/Filter";
-import { UserContext } from "@/lib/context";
+import { GroupContext, UserContext } from "@/lib/context";
 import { getEvents } from "@/lib/events";
 import { EventModel } from "@/models/Event";
 import { useContext, useEffect, useState } from "react";
 
 export default function Group({ params }: { params: { groupId: string } }) {
   const user = useContext(UserContext);
+  const group = useContext(GroupContext);
   const [events, setEvents] = useState<EventModel[]>([]);
 
   const [filter, setFilter] = useState<Filter>(InitFilter);
 
   useEffect(() => {
     // TODO Ian
-    console.log(user.groups);
     // check user.groups is this groupId in this array?
     // if no addUserGroups()
     // if yes, do nothing
+
+    // TODO Tag sorting
     getEvents(params.groupId).then((events) => setEvents(events));
-  }, []);
+  }, [user]);
 
   return (
     <AuthCheck>
@@ -42,6 +44,14 @@ export default function Group({ params }: { params: { groupId: string } }) {
               </button>
             ))}
           </div>
+          {filter.name === "Tag" &&
+            group &&
+            group.tags &&
+            group.tags.map((tag, i) => (
+              <button key={i} onClick={() => {}}>
+                {tag.name}
+              </button>
+            ))}
         </div>
       </div>
       {events.map((event, i) => (

@@ -11,7 +11,7 @@ export default function Topbar() {
     <nav className="bg-neutral-100 fixed w-full z-20 top-0 start-0">
       <div className="flex flex-wrap items-center justify-between mx-auto px-9 py-6">
         <Link
-          href={Path.Dashboard}
+          href={Path.Group}
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <div className="flex items-center gap-2">

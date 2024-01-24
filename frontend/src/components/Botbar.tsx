@@ -8,7 +8,7 @@ export default function Botbar({ groupId }: { groupId: string }) {
       <div className="flex flex-wrap items-center justify-between mx-auto px-8 py-6">
         <Link
           type="button"
-          href={`${Path.Group}/${groupId}`}
+          href={Path.Group}
           className="text-gray-900 bg-transparent border hover:bg-gray-200 border-black font-semibold text-xs px-3 py-1.5"
         >
           Groups
@@ -22,7 +22,7 @@ export default function Botbar({ groupId }: { groupId: string }) {
         </Link>
         <Link
           type="button"
-          href={`${Path.Group}/${groupId}`}
+          href={`${Path.Group}/${groupId}/settings`}
           className="text-gray-900 bg-transparent border hover:bg-gray-200 border-black font-semibold text-xs px-3 py-1.5"
         >
           Settings

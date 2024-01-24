@@ -1,5 +1,6 @@
 import Botbar from "@/components/Botbar";
 import PrivateLayout from "@/components/PrivateLayout";
+import PrivateLayoutGroup from "@/components/PrivateLayoutGroup";
 
 export default function PagesLayout({
   children,
@@ -10,8 +11,10 @@ export default function PagesLayout({
 }) {
   return (
     <PrivateLayout>
-      {children}
-      <Botbar groupId={params.groupId} />
+      <PrivateLayoutGroup params={params}>
+        {children}
+        <Botbar groupId={params.groupId} />
+      </PrivateLayoutGroup>
     </PrivateLayout>
   );
 }

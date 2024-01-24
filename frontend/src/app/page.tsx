@@ -1,11 +1,11 @@
 import Loader from "@/components/Loader";
+import { Path } from "@/helper/Path";
 import Link from "next/link";
-import { Path } from "helper/Path";
 
 export default function LandingPage() {
   return (
     <main>
-      <Link href={Path.Dashboard}>Dashboard</Link>
+      <Link href={Path.Group}>Groups</Link>
       <Loader show />
     </main>
   );
