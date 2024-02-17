@@ -1,10 +1,12 @@
 "use client";
 import AuthCheck from "@/components/AuthCheck";
+import Botbar from "@/components/Botbar";
 import Event from "@/components/Event";
+import CreateEvent from "@/components/CreateEvent";
 import { Filter, InitFilter, filters } from "@/helper/Filter";
 import { GroupContext, UserContext } from "@/lib/context";
 import { getEvents } from "@/lib/events";
-import { EventModel } from "@/models/Event";
+import { EventModel, InitSubmitEvent, SubmitEventModel } from "@/models/Event";
 import { useContext, useEffect, useState } from "react";
 
 export default function Group({ params }: { params: { groupId: string } }) {
@@ -13,6 +15,25 @@ export default function Group({ params }: { params: { groupId: string } }) {
   const [events, setEvents] = useState<EventModel[]>([]);
 
   const [filter, setFilter] = useState<Filter>(InitFilter);
+
+  const [step, setStep] = useState<number>(1);
+  const [submitEvent, setSubmitEvent] =
+    useState<SubmitEventModel>(InitSubmitEvent);
+
+  function incrementStep() {
+    setStep(step + 1);
+  }
+
+  let [isOpen, setIsOpen] = useState(true);
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  function openModal() {
+    setStep(1);
+    setIsOpen(true);
+  }
 
   useEffect(() => {
     // TODO Ian
@@ -26,6 +47,14 @@ export default function Group({ params }: { params: { groupId: string } }) {
 
   return (
     <AuthCheck>
+      <CreateEvent
+        isOpen={isOpen}
+        closeModal={closeModal}
+        step={step}
+        incrementStep={incrementStep}
+        submitEvent={submitEvent}
+        setSubmitEvent={setSubmitEvent}
+      />
       <div className="p-8">
         <h1 className="text-4xl font-semibold pb-6">Events</h1>
         <div className="flex items-center justify-between">
@@ -66,6 +95,7 @@ export default function Group({ params }: { params: { groupId: string } }) {
         going onto this group
       </h1>
       <h1>SOW-416: TODO Group settings</h1>
+      <Botbar groupId={params.groupId} openModal={openModal} />
     </AuthCheck>
   );
 }
