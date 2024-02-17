@@ -62,7 +62,6 @@ export default function Group({ params }: { params: { groupId: string } }) {
       <div className="p-8">
         <h1 className="text-4xl font-semibold pb-6">Events</h1>
         <div className="flex items-center justify-between">
-          <p>Sort by:</p>
           {filter.name === "Tag" &&
             group &&
             group.tags &&
