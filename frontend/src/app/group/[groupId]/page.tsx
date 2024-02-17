@@ -55,15 +55,17 @@ export default function Group({ params }: { params: { groupId: string } }) {
         </div>
       </div>
       {events.map((event, i) => (
-        <Event key={i} event={event} groupId={params.groupId} />
+        <div>
+          <hr className="mx-8 my-4 h-[1px] border-t-0 bg-neutral-300" />
+          <Event key={i} event={event} groupId={params.groupId} />
+        </div>
       ))}
-      <h1>Group id: {params.groupId}</h1>
-      <h1>Daniel L - SOW-402: TODO Metrics</h1>
-      <h1>
+      <hr className="mx-8 my-4 h-[1px] border-t-0 bg-neutral-300" />
+      <h1 className="mt-96">
         Ian - SOW-419: TODO Add this group to list if it is the users first time
         going onto this group
       </h1>
-      <h1>Dominic - SOW-416: TODO Group settings</h1>
+      <h1>SOW-416: TODO Group settings</h1>
     </AuthCheck>
   );
 }
