@@ -42,6 +42,7 @@ export default function CreateEvent({
               <Dialog.Panel className="w-full transform overflow-hidden rounded-t-3xl bg-white p-6 text-center align-middle shadow-xl transition-all">
                 <div className="flex justify-end pb-2">
                   <svg
+                    className="hover:cursor-pointer"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 15 15"
                     width="15"

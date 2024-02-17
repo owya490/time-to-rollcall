@@ -24,7 +24,7 @@ export default function Group({ params }: { params: { groupId: string } }) {
     setStep(step + 1);
   }
 
-  let [isOpen, setIsOpen] = useState(true);
+  let [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
     setIsOpen(false);
@@ -86,7 +86,7 @@ export default function Group({ params }: { params: { groupId: string } }) {
       {events.map((event, i) => (
         <div key={i}>
           <hr className="mx-8 my-4 h-[1px] border-t-0 bg-neutral-300" />
-          <Event key={i} event={event} groupId={params.groupId} />
+          <Event event={event} groupId={params.groupId} />
         </div>
       ))}
       <hr className="mx-8 my-4 h-[1px] border-t-0 bg-neutral-300" />

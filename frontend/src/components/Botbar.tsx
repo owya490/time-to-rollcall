@@ -9,7 +9,7 @@ export default function Botbar({
 }) {
   return (
     <nav className="h-full border-gray-700 bg-white">
-      <div className="fixed z-50 h-16 w-full max-w-max px-3 -translate-x-1/2 bottom-10 left-1/2">
+      <div className="fixed z-10 h-16 w-full max-w-max px-3 -translate-x-1/2 bottom-10 left-1/2">
         <div className="h-full mx-auto flex">
           <div className="bg-gray-100 border border-gray-100 rounded-full grid h-full max-w-lg grid-cols-4 ">
             <button
