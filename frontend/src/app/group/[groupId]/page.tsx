@@ -43,7 +43,7 @@ export default function Group({ params }: { params: { groupId: string } }) {
 
     // TODO Tag sorting
     getEvents(params.groupId).then((events) => setEvents(events));
-  }, [user]);
+  }, [user, params.groupId]);
 
   return (
     <AuthCheck>
@@ -84,7 +84,7 @@ export default function Group({ params }: { params: { groupId: string } }) {
         </div>
       </div>
       {events.map((event, i) => (
-        <div>
+        <div key={i}>
           <hr className="mx-8 my-4 h-[1px] border-t-0 bg-neutral-300" />
           <Event key={i} event={event} groupId={params.groupId} />
         </div>
