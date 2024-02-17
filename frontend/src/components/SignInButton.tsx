@@ -1,9 +1,9 @@
-import { signInWithPopup } from "firebase/auth";
+import { signInWithRedirect } from "firebase/auth";
 import { auth, googleAuthProvider } from "@/lib/firebase";
 
 export default function SignInButton() {
   const signInWithGoogle = async () => {
-    await signInWithPopup(auth, googleAuthProvider);
+    await signInWithRedirect(auth, googleAuthProvider);
   };
 
   return (
