@@ -58,13 +58,16 @@ export async function addAttendeeGoing(
     eventId: EventId,
     firstName: string,
     lastName: string
-) {
-    addDoc(collection(firestore, "users"), {
+): Promise<Attendee> {
+    const newAttendee = {
         firstName: firstName,
         lastName: lastName,
-    } as Attendee).then((attendee) => {
+    } as Attendee;
+    addDoc(collection(firestore, "users"), newAttendee).then((attendee) => {
         setAttendeeGoing(groupId, eventId, attendee.id);
+        newAttendee.id = attendee.id;
     });
+    return newAttendee;
 }
 
 export async function removeAttendeeGoing(

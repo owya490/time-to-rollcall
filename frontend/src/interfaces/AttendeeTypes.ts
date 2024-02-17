@@ -4,5 +4,5 @@ export interface Attendee {
   id: AttendeeId;
   firstName: string;
   lastName: string;
-  email: string;
+  email?: string;
 }
