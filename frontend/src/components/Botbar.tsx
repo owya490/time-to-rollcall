@@ -12,8 +12,8 @@ export default function Botbar({
   openModal: () => void;
 }) {
   return (
-    <nav className="h-full border-gray-700 bg-white">
-      <div className="fixed z-10 h-14 w-full px-3 bottom-3">
+    <nav className="flex justify-center h-full border-gray-700 bg-white">
+      <div className="fixed z-10 h-14 w-full max-w-max px-3 bottom-3">
         <div className="h-full flex">
           <div className="bg-gray-100 border border-gray-100 rounded-full grid h-full w-full grid-cols-4">
             {filters.map((f, i) => (
