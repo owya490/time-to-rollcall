@@ -1,4 +1,5 @@
 import { EventModel } from "@/models/Event";
+import { inBetween } from "./Time";
 
 export interface Filter {
   name: string;
@@ -7,8 +8,13 @@ export interface Filter {
 
 export const filters = [
   {
+    name: "Live",
+    sort: (events: EventModel[]) =>
+      events.filter((e) => inBetween(e.dateStart, new Date(), e.dateEnd)),
+  },
+  {
     name: "Newest",
-    sort: (events) =>
+    sort: (events: EventModel[]) =>
       events.sort(
         (a, b) =>
           (b.dateEnd ? b.dateEnd : b.dateStart).valueOf() -
@@ -17,7 +23,7 @@ export const filters = [
   },
   {
     name: "Oldest",
-    sort: (events) =>
+    sort: (events: EventModel[]) =>
       events.sort(
         (a, b) =>
           (a.dateEnd ? a.dateEnd : a.dateStart).valueOf() -
@@ -25,8 +31,8 @@ export const filters = [
       ),
   },
   {
-    name: "Tag",
-    sort: (events) =>
+    name: "Tags",
+    sort: (events: EventModel[]) =>
       events.sort(
         (a, b) =>
           (b.dateEnd ? b.dateEnd : b.dateStart).valueOf() -

@@ -3,7 +3,7 @@ import AuthCheck from "@/components/AuthCheck";
 import Botbar from "@/components/Botbar";
 import Event from "@/components/Event";
 import CreateEvent from "@/components/CreateEvent";
-import { Filter, InitFilter, filters } from "@/helper/Filter";
+import { Filter, InitFilter } from "@/helper/Filter";
 import { GroupContext, UserContext } from "@/lib/context";
 import { getEvents } from "@/lib/events";
 import { EventModel, InitSubmitEvent, SubmitEventModel } from "@/models/Event";
@@ -13,6 +13,7 @@ export default function Group({ params }: { params: { groupId: string } }) {
   const user = useContext(UserContext);
   const group = useContext(GroupContext);
   const [events, setEvents] = useState<EventModel[]>([]);
+  const [showedEvents, setShowedEvents] = useState<EventModel[]>([]);
 
   const [filter, setFilter] = useState<Filter>(InitFilter);
 
@@ -42,7 +43,10 @@ export default function Group({ params }: { params: { groupId: string } }) {
     // if yes, do nothing
 
     // TODO Tag sorting
-    getEvents(params.groupId).then((events) => setEvents(events));
+    getEvents(params.groupId).then((events) => {
+      setEvents(events);
+      setShowedEvents(events);
+    });
   }, [user, params.groupId]);
 
   return (
@@ -59,20 +63,6 @@ export default function Group({ params }: { params: { groupId: string } }) {
         <h1 className="text-4xl font-semibold pb-6">Events</h1>
         <div className="flex items-center justify-between">
           <p>Sort by:</p>
-          <div className="flex items-center justify-between gap-3">
-            {filters.map((f, i) => (
-              <button
-                key={i}
-                className={filter.name === f.name ? "font-bold" : ""}
-                onClick={() => {
-                  setEvents(f.sort(events));
-                  setFilter(f);
-                }}
-              >
-                {f.name}
-              </button>
-            ))}
-          </div>
           {filter.name === "Tag" &&
             group &&
             group.tags &&
@@ -83,7 +73,7 @@ export default function Group({ params }: { params: { groupId: string } }) {
             ))}
         </div>
       </div>
-      {events.map((event, i) => (
+      {showedEvents.map((event, i) => (
         <div key={i}>
           <hr className="mx-8 my-4 h-[1px] border-t-0 bg-neutral-300" />
           <Event event={event} groupId={params.groupId} />
@@ -95,7 +85,14 @@ export default function Group({ params }: { params: { groupId: string } }) {
         going onto this group
       </h1>
       <h1>SOW-416: TODO Group settings</h1>
-      <Botbar groupId={params.groupId} openModal={openModal} />
+      <Botbar
+        filter={filter}
+        filterEvents={(f) => {
+          setShowedEvents(f.sort(events));
+          setFilter(f);
+        }}
+        openModal={openModal}
+      />
     </AuthCheck>
   );
 }
