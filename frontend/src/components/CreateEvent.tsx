@@ -98,7 +98,7 @@ export default function CreateEvent({
                   <div>
                     <div className="mt-2 px-12">
                       <p className="text-sm text-gray-500">
-                        Attach relevant tags to the event. These won't be
+                        Attach relevant tags to the event. These won&apos;t be
                         displayed but they make it easier to group and organise
                         your events.
                       </p>
