@@ -52,6 +52,7 @@ export default function Group({ params }: { params: { groupId: string } }) {
   return (
     <AuthCheck>
       <CreateEvent
+        tags={group?.tags}
         isOpen={isOpen}
         closeModal={closeModal}
         step={step}

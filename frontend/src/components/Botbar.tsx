@@ -45,9 +45,9 @@ export default function Botbar({
               >
                 <path
                   stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2.5"
                   d="M9 1v16M1 9h16"
                 />
               </svg>

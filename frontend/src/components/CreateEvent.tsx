@@ -1,8 +1,10 @@
 import { SubmitEventModel } from "@/models/Event";
+import { Tag } from "@/models/Group";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
 export default function CreateEvent({
+  tags,
   isOpen,
   closeModal,
   step,
@@ -10,6 +12,7 @@ export default function CreateEvent({
   submitEvent,
   setSubmitEvent,
 }: {
+  tags?: Tag[];
   isOpen: boolean;
   closeModal: () => void;
   step: number;
@@ -75,13 +78,10 @@ export default function CreateEvent({
                     >
                       Create Your Event
                     </Dialog.Title>
-                    <div className="mt-2 px-12">
-                      <p className="text-sm text-gray-500">
-                        Start by naming your event. This will be the name
-                        displayed for everyone but it can always be changed
-                        later.
-                      </p>
-                    </div>
+                    <p className="mt-2 px-12 text-sm text-gray-500">
+                      Start by naming your event. This will be the name
+                      displayed for everyone but it can always be changed later.
+                    </p>
                     <textarea
                       className="my-12 w-full resize-none text-center border-b border-blue-gray-200 bg-transparent pt-4 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:outline-0"
                       placeholder="Awesome Event"
@@ -93,28 +93,78 @@ export default function CreateEvent({
                         })
                       }
                     />
+                    <button
+                      type="button"
+                      disabled={!submitEvent.name}
+                      className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent disabled: bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={incrementStep}
+                    >
+                      Next
+                    </button>
                   </div>
                 )}
                 {step === 2 && (
                   <div>
-                    <div className="mt-2 px-12">
-                      <p className="text-sm text-gray-500">
-                        Attach relevant tags to the event. These won&apos;t be
-                        displayed but they make it easier to group and organise
-                        your events.
-                      </p>
-                    </div>
+                    <p className="mt-2 px-12 text-sm text-gray-500">
+                      Attach relevant tags to the event. These won&apos;t be
+                      displayed but they make it easier to group and organise
+                      your events.
+                    </p>
+                    <p className="mt-12 text-xs font-light text-gray-400">
+                      Add Tags
+                    </p>
+                    {tags?.map((t, i) => (
+                      <button
+                        type="button"
+                        key={i}
+                        className={
+                          submitEvent.tagIds.includes(t.id)
+                            ? "rounded-3xl border-solid border-blue-800 border-2 bg-blue-100 px-4 py-2 m-2 text-xs font-medium text-blue-900"
+                            : "rounded-3xl border-transparent border-2 bg-blue-100 px-4 py-2 m-2 text-xs font-medium text-blue-900"
+                        }
+                        onClick={() =>
+                          setSubmitEvent({
+                            ...submitEvent,
+                            tagIds: submitEvent.tagIds.includes(t.id)
+                              ? submitEvent.tagIds
+                                  .slice(0, submitEvent.tagIds.indexOf(t.id))
+                                  .concat(
+                                    submitEvent.tagIds.slice(
+                                      submitEvent.tagIds.indexOf(t.id) + 1
+                                    )
+                                  )
+                              : submitEvent.tagIds.concat(t.id),
+                          })
+                        }
+                      >
+                        {t.name}
+                      </button>
+                    ))}
+                    <button
+                      type="button"
+                      disabled={submitEvent.tagIds.length === 0}
+                      className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={incrementStep}
+                    >
+                      Next
+                    </button>
                   </div>
                 )}
-                <div className="mt-4">
-                  <button
-                    type="button"
-                    className="inline-flex w-full justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    onClick={incrementStep}
-                  >
-                    Next
-                  </button>
-                </div>
+                {step === 3 && (
+                  <div>
+                    <p className="mt-2 px-12 text-sm text-gray-500">
+                      Date stuff? Date stuff? Date stuff? Date stuff?
+                    </p>
+                    <button
+                      type="button"
+                      disabled
+                      className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={incrementStep}
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
               </Dialog.Panel>
             </Transition.Child>
           </div>
