@@ -83,6 +83,7 @@ export default function CreateEvent({
                       displayed for everyone but it can always be changed later.
                     </p>
                     <textarea
+                      autoFocus
                       className="my-6 w-full rounded-none resize-none text-center border-b border-blue-gray-200 border-t-0 bg-transparent pt-4 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
                       placeholder="Awesome Event"
                       value={submitEvent.name}
