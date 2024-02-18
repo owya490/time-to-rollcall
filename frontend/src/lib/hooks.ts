@@ -28,7 +28,7 @@ export function useGroupData(groupId: string) {
 
   useEffect(() => {
     getGroup(groupId).then((group) => setGroup(group));
-  }, []);
+  }, [groupId]);
 
   return group;
 }
