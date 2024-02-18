@@ -55,18 +55,18 @@ export default function CreateEvent({
                     <line
                       x1="2"
                       y1="2"
-                      x2="13"
-                      y2="13"
+                      x2="14"
+                      y2="14"
                       stroke="black"
-                      strokeWidth="1.7"
+                      strokeWidth="2"
                     />
                     <line
-                      x1="13"
+                      x1="14"
                       y1="2"
                       x2="2"
-                      y2="13"
+                      y2="14"
                       stroke="black"
-                      strokeWidth="1.7"
+                      strokeWidth="2"
                     />
                   </svg>
                 </div>
@@ -83,7 +83,7 @@ export default function CreateEvent({
                       displayed for everyone but it can always be changed later.
                     </p>
                     <textarea
-                      className="my-12 w-full resize-none text-center border-b border-blue-gray-200 bg-transparent pt-4 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:outline-0"
+                      className="my-6 w-full resize-none text-center border-b border-blue-gray-200 bg-transparent pt-4 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:outline-0"
                       placeholder="Awesome Event"
                       value={submitEvent.name}
                       onChange={(event) =>
@@ -105,12 +105,12 @@ export default function CreateEvent({
                 )}
                 {step === 2 && (
                   <div>
-                    <p className="mt-2 px-12 text-sm text-gray-500">
+                    <p className="mt-2 px-8 text-sm text-gray-500">
                       Attach relevant tags to the event. These won&apos;t be
                       displayed but they make it easier to group and organise
                       your events.
                     </p>
-                    <p className="mt-12 text-xs font-light text-gray-400">
+                    <p className="mt-7 mb-1 text-xs font-light text-gray-400">
                       Add Tags
                     </p>
                     {tags?.map((t, i) => (
@@ -119,8 +119,8 @@ export default function CreateEvent({
                         key={i}
                         className={
                           submitEvent.tagIds.includes(t.id)
-                            ? "rounded-3xl border-solid border-blue-800 border-2 bg-blue-100 px-4 py-2 m-2 text-xs font-medium text-blue-900"
-                            : "rounded-3xl border-transparent border-2 bg-blue-100 px-4 py-2 m-2 text-xs font-medium text-blue-900"
+                            ? "rounded-3xl border-solid border-blue-800 border-2 bg-blue-100 px-4 py-2 mx-2 my-1 text-xs font-medium text-blue-900"
+                            : "rounded-3xl border-transparent border-2 bg-blue-100 px-4 py-2 mx-2 my-1 text-xs font-medium text-blue-900"
                         }
                         onClick={() =>
                           setSubmitEvent({
