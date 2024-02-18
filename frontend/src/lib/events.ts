@@ -13,11 +13,11 @@ export async function getEvents(groupId: string) {
   return convertCollectionToJavascript(events.docs) as EventModel[];
 }
 
-export async function getEventsbyTag(groupId: string, tagId: string[]) {
+export async function getEventsbyTag(groupId: string, tagIds: string[]) {
   const events = await getDocs(
     query(
       collection(firestore, "groups", groupId, "events"),
-      where("tags", "array-contains-any", tagId),
+      where("tags", "array-contains-any", tagIds),
       orderBy("dateEnd", "desc"),
       orderBy("dateStart", "desc")
     )
