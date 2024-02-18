@@ -1,5 +1,5 @@
 import { SubmitEventModel } from "@/models/Event";
-import { Tag } from "@/models/Group";
+import { Tag } from "@/models/Tag";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 

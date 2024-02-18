@@ -1,7 +1,9 @@
-import { Tag } from "./Group";
+import { Tag } from "./Tag";
+
+export type EventId = string;
 
 export interface EventModel {
-  id: string;
+  id: EventId;
   name: string;
   tags: Tag[];
   dateStart: Date;

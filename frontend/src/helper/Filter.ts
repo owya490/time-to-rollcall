@@ -6,47 +6,42 @@ export interface Filter {
   sort: (events: EventModel[]) => EventModel[];
 }
 
-export const filters = [
-  {
-    name: "Live",
-    sort: (events: EventModel[]) =>
-      events.filter((e) => inBetween(e.dateStart, new Date(), e.dateEnd)),
-  },
-  {
-    name: "Newest",
-    sort: (events: EventModel[]) =>
-      events.sort(
-        (a, b) =>
-          (b.dateEnd ? b.dateEnd : b.dateStart).valueOf() -
-          (a.dateEnd ? a.dateEnd : a.dateStart).valueOf()
-      ),
-  },
-  {
-    name: "Oldest",
-    sort: (events: EventModel[]) =>
-      events.sort(
-        (a, b) =>
-          (a.dateEnd ? a.dateEnd : a.dateStart).valueOf() -
-          (b.dateEnd ? b.dateEnd : b.dateStart).valueOf()
-      ),
-  },
-  {
-    name: "Tags",
-    sort: (events: EventModel[]) =>
-      events.sort(
-        (a, b) =>
-          (b.dateEnd ? b.dateEnd : b.dateStart).valueOf() -
-          (a.dateEnd ? a.dateEnd : a.dateStart).valueOf()
-      ),
-  },
-];
+const liveFilter = {
+  name: "Live",
+  sort: (events: EventModel[]) =>
+    events.filter((e) => inBetween(e.dateStart, new Date(), e.dateEnd)),
+};
 
-export const InitFilter = {
+const newestFilter = {
   name: "Newest",
-  sort: (events) =>
+  sort: (events: EventModel[]) =>
     events.sort(
       (a, b) =>
         (b.dateEnd ? b.dateEnd : b.dateStart).valueOf() -
         (a.dateEnd ? a.dateEnd : a.dateStart).valueOf()
     ),
 };
+
+const oldestFilter = {
+  name: "Oldest",
+  sort: (events: EventModel[]) =>
+    events.sort(
+      (a, b) =>
+        (a.dateEnd ? a.dateEnd : a.dateStart).valueOf() -
+        (b.dateEnd ? b.dateEnd : b.dateStart).valueOf()
+    ),
+};
+
+const tagsFilter = {
+  name: "Tags",
+  sort: (events: EventModel[]) =>
+    events.sort(
+      (a, b) =>
+        (b.dateEnd ? b.dateEnd : b.dateStart).valueOf() -
+        (a.dateEnd ? a.dateEnd : a.dateStart).valueOf()
+    ),
+};
+
+export const filters = [liveFilter, newestFilter, oldestFilter, tagsFilter];
+
+export const InitFilter = newestFilter;
