@@ -8,7 +8,7 @@ export async function getUser(id: UserId) {
   return { ...userDoc.data(), id: id } as User;
 }
 
-export async function addUserGroups(id: UserId, groupId: GroupId) {
+export async function addGroupToUserGroups(id: UserId, groupId: GroupId) {
   await updateDoc(doc(firestore, "users", id), {
     groups: arrayUnion(groupId),
   });
