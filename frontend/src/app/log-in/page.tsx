@@ -5,11 +5,16 @@ import { redirect } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
-export default function LogIn() {
-  const userData = useUserData();
+function Redirect() {
   const searchParams = useSearchParams();
 
   const from = searchParams.get("from");
+
+  return redirect(from);
+}
+
+export default function LogIn() {
+  const userData = useUserData();
   return (
     <main>
       {!userData ? (
@@ -20,7 +25,7 @@ export default function LogIn() {
           </p>
         </>
       ) : (
-        <Suspense fallback={<></>}>{redirect(from)}</Suspense>
+        <Suspense fallback={<></>}>{<Redirect />}</Suspense>
       )}
     </main>
   );
