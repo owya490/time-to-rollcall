@@ -1,6 +1,7 @@
 "use client";
 import { GroupContext } from "@/lib/context";
 import { useGroupData } from "@/lib/hooks";
+import { GroupId } from "@/models/Group";
 import React from "react";
 
 export default function PrivateLayoutGroup({
@@ -8,7 +9,7 @@ export default function PrivateLayoutGroup({
   params,
 }: {
   children: React.ReactNode;
-  params: { groupId: string };
+  params: { groupId: GroupId };
 }) {
   const groupData = useGroupData(params.groupId);
   return (

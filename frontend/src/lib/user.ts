@@ -1,13 +1,14 @@
 import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
 import { firestore } from "./firebase";
-import { User } from "@/models/User";
+import { User, UserId } from "@/models/User";
+import { GroupId } from "@/models/Group";
 
-export async function getUser(id: string) {
+export async function getUser(id: UserId) {
   const userDoc = await getDoc(doc(firestore, "users", id));
-  return userDoc.data() as User;
+  return { ...userDoc.data(), id: id } as User;
 }
 
-export async function addUserGroups(id: string, groupId: string) {
+export async function addUserGroups(id: UserId, groupId: GroupId) {
   await updateDoc(doc(firestore, "users", id), {
     groups: arrayUnion(groupId),
   });

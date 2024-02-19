@@ -1,9 +1,11 @@
 import AuthCheck from "@/components/AuthCheck";
+import { EventId } from "@/models/Event";
+import { GroupId } from "@/models/Group";
 
 export default function Event({
   params,
 }: {
-  params: { groupId: string; eventId: string };
+  params: { groupId: GroupId; eventId: EventId };
 }) {
   return (
     <AuthCheck>

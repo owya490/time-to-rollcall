@@ -1,7 +1,10 @@
+import { GroupId } from "./Group";
+
+export type UserId = string;
+
 export interface User {
-  uid: string;
+  id: UserId;
   email: string;
-  groups: string[];
-  photoURL?: string;
+  groups: GroupId[];
   displayName?: string;
 }

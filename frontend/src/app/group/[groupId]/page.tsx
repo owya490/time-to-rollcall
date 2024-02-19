@@ -8,8 +8,10 @@ import { GroupContext, UserContext } from "@/lib/context";
 import { getEvents } from "@/lib/events";
 import { EventModel, InitSubmitEvent, SubmitEventModel } from "@/models/Event";
 import { useContext, useEffect, useState } from "react";
+import { GroupId } from "@/models/Group";
+import { addUserGroups as addGroupToUserGroups } from "@/lib/user";
 
-export default function Group({ params }: { params: { groupId: string } }) {
+export default function Group({ params }: { params: { groupId: GroupId } }) {
   const user = useContext(UserContext);
   const group = useContext(GroupContext);
   const [events, setEvents] = useState<EventModel[]>([]);
@@ -37,12 +39,9 @@ export default function Group({ params }: { params: { groupId: string } }) {
   }
 
   useEffect(() => {
-    // TODO Ian
-    // check user.groups is this groupId in this array?
-    // if no addUserGroups()
-    // if yes, do nothing
-
-    // TODO Tag sorting
+    if (!user.groups.includes(params.groupId)) {
+      addGroupToUserGroups(user.id, params.groupId);
+    }
     getEvents(params.groupId).then((events) => {
       setEvents(events);
       setShowedEvents(events);
@@ -68,11 +67,8 @@ export default function Group({ params }: { params: { groupId: string } }) {
         </div>
       ))}
       <hr className="mx-8 my-4 h-[1px] border-t-0 bg-neutral-300" />
-      <h1 className="mt-96">
-        Ian - SOW-419: TODO Add this group to list if it is the users first time
-        going onto this group
-      </h1>
-      <h1>SOW-416: TODO Group settings</h1>
+      <h1 className="mt-96">SOW-416: TODO Group settings</h1>
+      <h1>TODO: Sort by tags</h1>
       <div className="p-8">
         <div className="flex items-center justify-between">
           {filter.name === "Tag" &&
