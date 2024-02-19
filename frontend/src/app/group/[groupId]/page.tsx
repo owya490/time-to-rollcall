@@ -49,8 +49,6 @@ export default function Group({ params }: { params: { groupId: string } }) {
     });
   }, [user, params.groupId]);
 
-  console.log(events);
-
   return (
     <AuthCheck>
       <CreateEvent
