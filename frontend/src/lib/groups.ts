@@ -22,12 +22,6 @@ export async function getGroup(groupId: string) {
   return { ...(await convertToJavascript(groupDoc)), tags } as GroupModel;
 }
 
-// create group function
-// it should return created group
-// make a button that triggers this function
-// with hardcoded values
-// addDoc groups collection, object, { name }
-// loop through tagNames, call addDoc on the group -> tags collection {name: tagName}
 export async function createGroup(
   name: string,
   tagNames: string[],
