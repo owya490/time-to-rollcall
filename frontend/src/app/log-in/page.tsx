@@ -3,6 +3,7 @@ import SignInButton from "@/components/SignInButton";
 import { useUserData } from "@/lib/hooks";
 import { redirect } from "next/navigation";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 export default function LogIn() {
   const userData = useUserData();
@@ -19,7 +20,7 @@ export default function LogIn() {
           </p>
         </>
       ) : (
-        redirect(from)
+        <Suspense fallback={<></>}>{redirect(from)}</Suspense>
       )}
     </main>
   );
