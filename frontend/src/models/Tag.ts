@@ -1,6 +1,6 @@
 export type TagId = string;
 
-export interface Tag {
+export interface TagModel {
   id: TagId;
   name: string;
 }

@@ -10,7 +10,7 @@ export async function getGroups(groupIds?: string[]) {
   for (const groupId of groupIds) {
     let groupDoc = await getDoc(doc(firestore, "groups", groupId));
     if (groupDoc.exists()) {
-      groups.push(convertToJavascript(groupDoc) as GroupModel);
+      groups.push((await convertToJavascript(groupDoc)) as GroupModel);
     }
   }
   return groups;
@@ -18,5 +18,5 @@ export async function getGroups(groupIds?: string[]) {
 
 export async function getGroup(groupId: string) {
   let groupDoc = await getDoc(doc(firestore, "groups", groupId));
-  return convertToJavascript(groupDoc) as GroupModel;
+  return (await convertToJavascript(groupDoc)) as GroupModel;
 }

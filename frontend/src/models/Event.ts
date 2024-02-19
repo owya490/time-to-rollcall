@@ -1,18 +1,18 @@
-import { Tag } from "./Tag";
+import { TagModel, TagId } from "./Tag";
 
 export type EventId = string;
 
 export interface EventModel {
   id: EventId;
   name: string;
-  tags: Tag[];
+  tags: TagModel[];
   dateStart: Date;
   dateEnd?: Date;
 }
 
 export interface SubmitEventModel {
   name: string;
-  tagIds: string[];
+  tagIds: TagId[];
   dateStart: Date;
   dateEnd?: Date;
 }
