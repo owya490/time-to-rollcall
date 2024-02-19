@@ -6,6 +6,7 @@ import {
   getDocs,
   orderBy,
   query,
+  where,
   setDoc,
 } from "firebase/firestore";
 import {
@@ -16,11 +17,24 @@ import {
 import { EventId, EventModel, SubmitEventModel } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import { convertTagIdToReference } from "./tags";
+import { TagId } from "@/models/Tag";
 
 export async function getEvents(groupId: GroupId) {
   const events = await getDocs(
     query(
       collection(firestore, "groups", groupId, "events"),
+      orderBy("dateEnd", "desc"),
+      orderBy("dateStart", "desc")
+    )
+  );
+  return (await convertCollectionToJavascript(events.docs)) as EventModel[];
+}
+
+export async function getEventsbyTag(groupId: string, tagIds: TagId[]) {
+  const events = await getDocs(
+    query(
+      collection(firestore, "groups", groupId, "events"),
+      where("tags", "array-contains-any", tagIds),
       orderBy("dateEnd", "desc"),
       orderBy("dateStart", "desc")
     )
