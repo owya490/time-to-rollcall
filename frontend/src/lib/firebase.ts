@@ -3,7 +3,13 @@ import { GoogleAuthProvider, getAuth } from "firebase/auth";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import "firebase/compat/storage";
-import { DocumentSnapshot, Timestamp, getFirestore } from "firebase/firestore";
+import {
+  DocumentReference,
+  DocumentSnapshot,
+  Timestamp,
+  getDoc,
+  getFirestore,
+} from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 export const firebaseConfig = {
@@ -38,11 +44,24 @@ export const storage = getStorage(firebaseApp);
 export const STATE_CHANGED = "state_changed";
 
 /// Helper functions
-export function convertToJavascript(doc: DocumentSnapshot) {
-  let data = doc.data();
-  data["id"] = doc.id;
+export async function convertToJavascript(document: DocumentSnapshot) {
+  let data = document.data();
+  data["id"] = document.id;
   for (const [key, value] of Object.entries(data)) {
-    data[key] = value instanceof Timestamp ? value.toDate() : value;
+    if (value instanceof Timestamp) {
+      data[key] = value.toDate();
+    } else if (value instanceof DocumentReference) {
+      data[key] = await getDoc(value);
+    } else if (
+      Array.isArray(value) &&
+      value.every((item) => item instanceof DocumentReference)
+    ) {
+      data[key] = await Promise.all(
+        value.map(async (v) => convertToJavascript(await getDoc(v)))
+      );
+    } else {
+      data[key] = value;
+    }
   }
   return data;
 }
@@ -52,6 +71,6 @@ export function convertToFirestore(data: { id: string }) {
   return dataWithoutId;
 }
 
-export function convertCollectionToJavascript(docs: DocumentSnapshot[]) {
-  return docs.map((doc) => convertToJavascript(doc));
+export async function convertCollectionToJavascript(docs: DocumentSnapshot[]) {
+  return Promise.all(docs.map((doc) => convertToJavascript(doc)));
 }

@@ -1,5 +1,5 @@
 import { SubmitEventModel } from "@/models/Event";
-import { Tag } from "@/models/Tag";
+import { TagModel } from "@/models/Tag";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 
@@ -12,7 +12,7 @@ export default function CreateEvent({
   submitEvent,
   setSubmitEvent,
 }: {
-  tags?: Tag[];
+  tags?: TagModel[];
   isOpen: boolean;
   closeModal: () => void;
   step: number;

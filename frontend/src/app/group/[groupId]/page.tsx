@@ -49,6 +49,8 @@ export default function Group({ params }: { params: { groupId: string } }) {
     });
   }, [user, params.groupId]);
 
+  console.log(events);
+
   return (
     <AuthCheck>
       <CreateEvent
@@ -60,19 +62,7 @@ export default function Group({ params }: { params: { groupId: string } }) {
         submitEvent={submitEvent}
         setSubmitEvent={setSubmitEvent}
       />
-      <div className="p-8">
-        <h1 className="text-4xl font-semibold pb-6">Events</h1>
-        <div className="flex items-center justify-between">
-          {filter.name === "Tag" &&
-            group &&
-            group.tags &&
-            group.tags.map((tag, i) => (
-              <button key={i} onClick={() => {}}>
-                {tag.name}
-              </button>
-            ))}
-        </div>
-      </div>
+      <div className="p-12"></div>
       {showedEvents.map((event, i) => (
         <div key={i}>
           <hr className="mx-8 my-4 h-[1px] border-t-0 bg-neutral-300" />
@@ -85,6 +75,18 @@ export default function Group({ params }: { params: { groupId: string } }) {
         going onto this group
       </h1>
       <h1>SOW-416: TODO Group settings</h1>
+      <div className="p-8">
+        <div className="flex items-center justify-between">
+          {filter.name === "Tag" &&
+            group &&
+            group.tags &&
+            group.tags.map((tag, i) => (
+              <button key={i} onClick={() => {}}>
+                {tag.name}
+              </button>
+            ))}
+        </div>
+      </div>
       <Botbar
         filter={filter}
         filterEvents={(f) => {
