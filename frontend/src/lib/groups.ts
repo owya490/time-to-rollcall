@@ -1,6 +1,7 @@
 import { doc, getDoc } from "firebase/firestore";
 import { convertToJavascript, firestore } from "@/lib/firebase";
 import { GroupModel } from "@/models/Group";
+import { getTags } from "./tags";
 
 export async function getGroups(groupIds?: string[]) {
   const groups: GroupModel[] = [];
@@ -8,15 +9,13 @@ export async function getGroups(groupIds?: string[]) {
     return [];
   }
   for (const groupId of groupIds) {
-    let groupDoc = await getDoc(doc(firestore, "groups", groupId));
-    if (groupDoc.exists()) {
-      groups.push(convertToJavascript(groupDoc) as GroupModel);
-    }
+    groups.push(await getGroup(groupId));
   }
   return groups;
 }
 
 export async function getGroup(groupId: string) {
   let groupDoc = await getDoc(doc(firestore, "groups", groupId));
-  return convertToJavascript(groupDoc) as GroupModel;
+  let tags = await getTags(groupId);
+  return { ...(await convertToJavascript(groupDoc)), tags } as GroupModel;
 }

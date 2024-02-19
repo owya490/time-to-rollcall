@@ -17,8 +17,7 @@ export default function Groups() {
 
   return (
     <AuthCheck>
-      <h1>Groups page</h1>
-      <h1>Ian - Display list of groups</h1>
+      <h1 className="p-3 text-2xl text-gray-500">Your Teams</h1>
       {groups.map((group, i) => (
         <Link key={i} href={`${Path.Group}/${group.id}`}>
           {group.name}

@@ -1,18 +1,40 @@
 "use client";
 import AuthCheck from "@/components/AuthCheck";
+import Botbar from "@/components/Botbar";
 import Event from "@/components/Event";
-import { Filter, InitFilter, filters } from "@/helper/Filter";
+import CreateEvent from "@/components/CreateEvent";
+import { Filter, InitFilter } from "@/helper/Filter";
 import { GroupContext, UserContext } from "@/lib/context";
 import { getEvents } from "@/lib/events";
-import { EventModel } from "@/models/Event";
+import { EventModel, InitSubmitEvent, SubmitEventModel } from "@/models/Event";
 import { useContext, useEffect, useState } from "react";
 
 export default function Group({ params }: { params: { groupId: string } }) {
   const user = useContext(UserContext);
   const group = useContext(GroupContext);
   const [events, setEvents] = useState<EventModel[]>([]);
+  const [showedEvents, setShowedEvents] = useState<EventModel[]>([]);
 
   const [filter, setFilter] = useState<Filter>(InitFilter);
+
+  const [step, setStep] = useState<number>(1);
+  const [submitEvent, setSubmitEvent] =
+    useState<SubmitEventModel>(InitSubmitEvent);
+
+  function incrementStep() {
+    setStep(step + 1);
+  }
+
+  let [isOpen, setIsOpen] = useState(false);
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  function openModal() {
+    setStep(1);
+    setIsOpen(true);
+  }
 
   useEffect(() => {
     // TODO Ian
@@ -21,29 +43,38 @@ export default function Group({ params }: { params: { groupId: string } }) {
     // if yes, do nothing
 
     // TODO Tag sorting
-    getEvents(params.groupId).then((events) => setEvents(events));
-  }, [user]);
+    getEvents(params.groupId).then((events) => {
+      setEvents(events);
+      setShowedEvents(events);
+    });
+  }, [user, params.groupId]);
 
   return (
     <AuthCheck>
+      <CreateEvent
+        tags={group?.tags}
+        isOpen={isOpen}
+        closeModal={closeModal}
+        step={step}
+        incrementStep={incrementStep}
+        submitEvent={submitEvent}
+        setSubmitEvent={setSubmitEvent}
+      />
+      <div className="p-12"></div>
+      {showedEvents.map((event, i) => (
+        <div key={i}>
+          <hr className="mx-8 my-4 h-[1px] border-t-0 bg-neutral-300" />
+          <Event event={event} groupId={params.groupId} />
+        </div>
+      ))}
+      <hr className="mx-8 my-4 h-[1px] border-t-0 bg-neutral-300" />
+      <h1 className="mt-96">
+        Ian - SOW-419: TODO Add this group to list if it is the users first time
+        going onto this group
+      </h1>
+      <h1>SOW-416: TODO Group settings</h1>
       <div className="p-8">
-        <h1 className="text-4xl font-semibold pb-6">Events</h1>
         <div className="flex items-center justify-between">
-          <p>Sort by:</p>
-          <div className="flex items-center justify-between gap-3">
-            {filters.map((f, i) => (
-              <button
-                key={i}
-                className={filter.name === f.name ? "font-bold" : ""}
-                onClick={() => {
-                  setEvents(f.sort(events));
-                  setFilter(f);
-                }}
-              >
-                {f.name}
-              </button>
-            ))}
-          </div>
           {filter.name === "Tag" &&
             group &&
             group.tags &&
@@ -54,16 +85,14 @@ export default function Group({ params }: { params: { groupId: string } }) {
             ))}
         </div>
       </div>
-      {events.map((event, i) => (
-        <Event key={i} event={event} groupId={params.groupId} />
-      ))}
-      <h1>Group id: {params.groupId}</h1>
-      <h1>Daniel L - SOW-402: TODO Metrics</h1>
-      <h1>
-        Ian - SOW-419: TODO Add this group to list if it is the users first time
-        going onto this group
-      </h1>
-      <h1>Dominic - SOW-416: TODO Group settings</h1>
+      <Botbar
+        filter={filter}
+        filterEvents={(f) => {
+          setShowedEvents(f.sort(events));
+          setFilter(f);
+        }}
+        openModal={openModal}
+      />
     </AuthCheck>
   );
 }

@@ -1,10 +1,9 @@
-export interface GroupModel {
-  id: string;
-  name: string;
-  tags: Tag[];
-}
+import { TagModel } from "./Tag";
 
-export interface Tag {
-  id: string;
+export type GroupId = string;
+
+export interface GroupModel {
+  id: GroupId;
   name: string;
+  tags: TagModel[];
 }
