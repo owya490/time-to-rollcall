@@ -41,12 +41,6 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   useEffect(() => {
     if (user?.id && (!user.groups || !user.groups.includes(params.groupId))) {
       addGroupToUserGroups(user.id, params.groupId);
-      // setUser({
-      //   ...user,
-      //   groups: user.groups
-      //     ? user.groups.concat(params.groupId)
-      //     : [params.groupId],
-      // });
     }
     getEvents(params.groupId).then((events) => {
       setEvents(events);
