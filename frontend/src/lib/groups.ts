@@ -23,20 +23,19 @@ export async function getGroup(groupId: string) {
 }
 
 export async function createGroup(
-  name: string,
+  groupName: string,
   tagNames: string[],
-  id: UserId
+  userId: UserId
 ) {
   const addedDoc = await addDoc(collection(firestore, "groups"), {
-    name,
+    name: groupName,
   });
-  await addGroupToUserGroups(id, addedDoc.id);
-  tagNames.map(
-    async (t) =>
-      await addDoc(collection(firestore, "groups", addedDoc.id, "tags"), {
-        name: t,
-      })
-  );
+  await addGroupToUserGroups(userId, addedDoc.id);
+  for (const tagName of tagNames) {
+    await addDoc(collection(firestore, "groups", addedDoc.id, "tags"), {
+      name: tagName,
+    });
+  }
 
   return getGroup(addedDoc.id);
 }
