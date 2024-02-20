@@ -1,5 +1,6 @@
 "use client";
 import AuthCheck from "@/components/AuthCheck";
+import Topbar from "@/components/Topbar";
 import { Path } from "@/helper/Path";
 import { UserContext } from "@/lib/context";
 import { getGroups } from "@/lib/groups";
@@ -17,12 +18,19 @@ export default function Groups() {
 
   return (
     <AuthCheck>
-      <h1 className="p-3 text-2xl text-gray-500">Your Teams</h1>
-      {groups.map((group, i) => (
-        <Link key={i} href={`${Path.Group}/${group.id}`}>
-          {group.name}
-        </Link>
-      ))}
+      <Topbar />
+      <h1 className="text-2xl text-gray-500">Your Teams</h1>
+      <div className="grid-flow-col gap-2 my-4">
+        {groups.map((group, i) => (
+          <Link
+            key={i}
+            className="bg-gray-500 text-white rounded-3xl text-sm p-1 px-3"
+            href={`${Path.Group}/${group.id}`}
+          >
+            {group.name}
+          </Link>
+        ))}
+      </div>
     </AuthCheck>
   );
 }

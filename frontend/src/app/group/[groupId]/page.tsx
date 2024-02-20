@@ -62,14 +62,14 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
       <div className="p-12"></div>
       {showedEvents.map((event, i) => (
         <div key={i}>
-          <hr className="mx-8 my-4 h-[1px] border-t-0 bg-neutral-300" />
+          <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />
           <Event event={event} groupId={params.groupId} />
         </div>
       ))}
-      <hr className="mx-8 my-4 h-[1px] border-t-0 bg-neutral-300" />
+      <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />
       <h1 className="mt-96">SOW-416: TODO Group settings</h1>
       <h1>TODO: Sort by tags</h1>
-      <div className="p-8">
+      <div className="p-2">
         <div className="flex items-center justify-between">
           {filter.name === "Tag" &&
             group &&

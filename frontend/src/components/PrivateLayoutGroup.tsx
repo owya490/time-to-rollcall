@@ -3,6 +3,7 @@ import { GroupContext } from "@/lib/context";
 import { useGroupData } from "@/lib/hooks";
 import { GroupId } from "@/models/Group";
 import React from "react";
+import Topbar from "./Topbar";
 
 export default function PrivateLayoutGroup({
   children,
@@ -13,6 +14,9 @@ export default function PrivateLayoutGroup({
 }) {
   const groupData = useGroupData(params.groupId);
   return (
-    <GroupContext.Provider value={groupData}>{children}</GroupContext.Provider>
+    <GroupContext.Provider value={groupData}>
+      <Topbar />
+      <div>{children}</div>
+    </GroupContext.Provider>
   );
 }
