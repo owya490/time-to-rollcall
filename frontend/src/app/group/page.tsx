@@ -20,7 +20,7 @@ export default function Groups() {
     <AuthCheck>
       <Topbar />
       <h1 className="text-2xl text-gray-500">Your Teams</h1>
-      <div className="grid-flow-col gap-2 my-4">
+      <div className="flex gap-2 my-4">
         {groups.map((group, i) => (
           <Link
             key={i}
