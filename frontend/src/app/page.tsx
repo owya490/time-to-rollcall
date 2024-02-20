@@ -1,12 +1,12 @@
-import Loader from "@/components/Loader";
 import { Path } from "@/helper/Path";
 import Link from "next/link";
 
 export default function LandingPage() {
   return (
     <main>
-      <Link href={Path.Group}>Groups</Link>
-      <Loader show />
+      <Link className="text-3xl m-12" href={Path.Group}>
+        Go to Dashboard
+      </Link>
     </main>
   );
 }
