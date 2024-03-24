@@ -10,12 +10,12 @@ export default function PrivateLayoutGroup({
   params,
 }: {
   children: React.ReactNode;
-  params: { groupId: GroupId };
+  params: { groupId: GroupId; page: string };
 }) {
   const groupData = useGroupData(params.groupId);
   return (
     <GroupContext.Provider value={groupData}>
-      <Topbar />
+      <Topbar page={"Events"} />
       <div>{children}</div>
     </GroupContext.Provider>
   );

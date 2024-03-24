@@ -1,4 +1,7 @@
-import AuthCheck from "@/components/AuthCheck";
+import AttendanceSearchBar from "@/components/event/AttendanceSearchBar";
+import EventDetailsHeader from "@/components/event/EventDetailsHeader";
+import MemberSignInCard from "@/components/event/MemberSignInCard";
+import SignInDetailsBar from "@/components/event/SignInDetailsBar";
 import { EventId } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 
@@ -8,12 +11,25 @@ export default function Event({
   params: { groupId: GroupId; eventId: EventId };
 }) {
   return (
-    <AuthCheck>
-      <p>This is the Attendance page</p>
-      <p>If the event is finished, then we need to not allow users to edit</p>
-      Group id: {params.groupId}
-      Event id: {params.eventId}
-      <h1>Owen - SOW-407: TODO Rollcall page</h1>
-    </AuthCheck>
+    // <AuthCheck>
+    <div>
+      <div className="mb-3">
+        <EventDetailsHeader />
+      </div>
+
+      <h1 className="text-2xl mb-16">Weekly Meeting 12</h1>
+      <div className="mb-8">
+        <AttendanceSearchBar />
+      </div>
+      <div className="mb-8">
+        <SignInDetailsBar />
+      </div>
+      <MemberSignInCard />
+      <MemberSignInCard />
+      <MemberSignInCard />
+      <MemberSignInCard />
+      <MemberSignInCard />
+    </div>
+    // </AuthCheck>
   );
 }
