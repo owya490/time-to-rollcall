@@ -1,11 +1,19 @@
 import { GroupId } from "@/models/Group";
 import { TagModel, TagId } from "@/models/Tag";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs } from "firebase/firestore";
 import {
   convertCollectionToJavascript,
   convertToJavascript,
   firestore,
 } from "./firebase";
+
+export async function addTag(groupId: GroupId, tagName: string) {
+  return (
+    await addDoc(collection(firestore, "groups", groupId, "tags"), {
+      name: tagName,
+    })
+  ).id;
+}
 
 export async function getTags(groupId: GroupId) {
   const tags = await getDocs(collection(firestore, "groups", groupId, "tags"));
