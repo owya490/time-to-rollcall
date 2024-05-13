@@ -97,14 +97,14 @@ export default function CreateEvent({
                   <Tab.List className="flex justify-center space-x-2 rounded-xl p-1.5">
                     <Tab
                       className={({ selected }) =>
-                        selected
+                        selected || selectedIndex >= 1
                           ? "w-12 h-0.5 rounded-xl bg-blue-500"
                           : "w-12 h-0.5 rounded-xl bg-blue-100"
                       }
                     />
                     <Tab
                       className={({ selected }) =>
-                        selected
+                        selected || selectedIndex >= 2
                           ? "w-12 h-0.5 rounded-xl bg-blue-500"
                           : "w-12 h-0.5 rounded-xl bg-blue-100"
                       }
@@ -112,7 +112,7 @@ export default function CreateEvent({
                     />
                     <Tab
                       className={({ selected }) =>
-                        selected
+                        selected || selectedIndex >= 3
                           ? "w-12 h-0.5 rounded-xl bg-blue-500"
                           : "w-12 h-0.5 rounded-xl bg-blue-100"
                       }
