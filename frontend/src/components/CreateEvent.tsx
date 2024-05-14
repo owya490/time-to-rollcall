@@ -1,3 +1,4 @@
+import { convertToDateTimeLocalString } from "@/helper/Time";
 import { addTag } from "@/lib/tags";
 import { SubmitEventModel } from "@/models/Event";
 import { GroupId } from "@/models/Group";
@@ -242,18 +243,24 @@ export default function CreateEvent({
                           <p className="text-xs">Start Time</p>
                           <input
                             type="datetime-local"
-                            onChange={(event) =>
+                            value={convertToDateTimeLocalString(
+                              submitEventForm.dateStart
+                            )}
+                            onChange={(event) => {
                               setSubmitEventForm({
                                 ...submitEventForm,
                                 dateStart: new Date(event.target.value),
-                              })
-                            }
+                              });
+                            }}
                           />
                         </div>
                         <div className="flex flex-wrap mb-16 justify-between items-center">
                           <p className="text-xs">End Time</p>
                           <input
                             type="datetime-local"
+                            value={convertToDateTimeLocalString(
+                              submitEventForm.dateEnd
+                            )}
                             onChange={(event) =>
                               setSubmitEventForm({
                                 ...submitEventForm,
