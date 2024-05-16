@@ -7,7 +7,7 @@ export default function PagesLayout({
 }) {
   return (
     <PrivateLayout>
-      <div className="my-24 mx-6">{children}</div>
+      <div className="my-24">{children}</div>
     </PrivateLayout>
   );
 }
