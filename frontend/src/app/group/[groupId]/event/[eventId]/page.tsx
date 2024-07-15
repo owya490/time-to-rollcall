@@ -32,8 +32,8 @@ export default function Event({
     { name: "Fark Shark" },
   ]);
   const [memberSuggestedList, setMemberSuggestedList] = useState<Member[]>([
-    { name: "Rebecca Lee" },
-    { name: "Ashley Kim" },
+    { name: "Owen Yang" },
+    { name: "Bob Bill" },
   ]);
 
   useEffect(() => {
@@ -63,33 +63,50 @@ export default function Event({
           <AttendanceSuggested
             suggested={memberSuggestedList}
             onAdd={(member: Member) => {
-              console.log(member);
-              setMemberSignedInList([...memberSignedInList, member]);
-              console.log([
-                ...memberSuggestedList.slice(
-                  0,
-                  memberSuggestedList.indexOf(member)
-                ),
-                ...memberSuggestedList.slice(
-                  memberSuggestedList.indexOf(member) + 1,
-                  undefined
-                ),
-              ]);
-              setMemberSuggestedList([
-                ...memberSuggestedList.slice(
-                  0,
-                  memberSuggestedList.indexOf(member)
-                ),
-                ...memberSuggestedList.slice(
-                  memberSuggestedList.indexOf(member) + 1,
-                  undefined
-                ),
-              ]);
+              console.log("owen");
+              console.log([...memberSignedInList, member]);
 
-              // setMemberSuggestedList([
-              //   { name: "Ashley Kim" },
-              //   // { name: "owen" },
+              // setMemberSignedInList([...memberSignedInList, member]);
+              // console.log([
+              //   ...memberSuggestedList.slice(
+              //     0,
+              //     memberSuggestedList.indexOf(member)
+              //   ),
+              //   ...memberSuggestedList.slice(
+              //     memberSuggestedList.indexOf(member) + 1,
+              //     undefined
+              //   ),
               // ]);
+
+              // setMemberSignedInList((prevItems) => {
+              //   return [...prevItems, member];
+              // });
+              // setMemberSuggestedList([
+              //   ...memberSuggestedList.slice(
+              //     0,
+              //     memberSuggestedList.indexOf(member)
+              //   ),
+              //   ...memberSuggestedList.slice(
+              //     memberSuggestedList.indexOf(member) + 1,
+              //     undefined
+              //   ),
+              // ]);
+              // const tmp = memberSuggestedList;
+              // setMemberSuggestedList([]);
+              // console.log("what");
+              console.log(memberSuggestedList);
+              // setMemberSuggestedList(
+              //   memberSuggestedList.filter((item) => item !== member)
+              // );
+              setMemberSuggestedList((prevItems) => {
+                const updatedItems = prevItems.filter((item, index) => {
+                  console.log(item.name !== member.name);
+                  return item.name !== member.name;
+                });
+                console.log(member);
+                console.log(updatedItems);
+                return [...updatedItems];
+              });
             }}
           />
         )}

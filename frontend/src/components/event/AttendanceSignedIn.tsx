@@ -8,7 +8,7 @@ interface AttendanceSignedInProps {
 
 export default function AttendanceSignedIn({
   signedIn,
-  onDelete
+  onDelete,
 }: AttendanceSignedInProps) {
   return (
     <>
@@ -17,14 +17,15 @@ export default function AttendanceSignedIn({
           SIGNED-IN
         </p>
       </div>
-      {signedIn.map((member) => {
+      {signedIn.map((member, index) => {
         return (
           <MemberSignInCard
+            key={index}
             member={member}
             dragConfig={{
               draggable: true,
               dragType: "DELETE",
-              onAction: onDelete
+              onAction: onDelete,
             }}
           />
         );

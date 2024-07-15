@@ -5,6 +5,12 @@ const USERBASE: Member[] = [
     name: "Owen Yang",
   },
   {
+    name: "Octopus Yang",
+  },
+  {
+    name: "Oliver Yang",
+  },
+  {
     name: "Daniel Kim",
   },
   {

@@ -20,15 +20,17 @@ export default function AttendanceSuggested({
           <p className="text-[10px] font-light">ATTENDANCE: 20</p>
         </div>
       </div>
-      {suggested.map((member) => {
+      {suggested.map((member, index) => {
         return (
           <MemberSignInCard
+            key={index}
             member={member}
             dragConfig={{
               draggable: true,
               dragType: "ADD",
               onAction: onAdd,
             }}
+            suggested={suggested}
           />
         );
       })}

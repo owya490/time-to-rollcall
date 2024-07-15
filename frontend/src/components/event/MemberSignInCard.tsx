@@ -5,6 +5,7 @@ import { Member } from "app/group/[groupId]/event/[eventId]/page";
 import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 import WOMAN_FACE_PNG from "../../../public/face-woman-profile.png";
 import GroupBadge from "./GroupBadge";
 
@@ -21,6 +22,7 @@ interface MemberSignInCard {
   selected?: boolean;
   onSelection?: (member: Member) => void;
   dragConfig?: DragConfig;
+  suggested: Member[];
 }
 
 export default function MemberSignInCard({
@@ -28,11 +30,22 @@ export default function MemberSignInCard({
   selected,
   onSelection,
   dragConfig,
+  suggested,
 }: MemberSignInCard) {
   const id = member.name.replace(" ", ""); // TODO MAKE IT UUID
+  const frontId = id + "Front";
+  const backId = id + "Back";
+
   console.log(id);
+
+  const frontRef = useRef();
+  const backRef = useRef();
   // const windowWidth = window.innerWidth;
   const dragEnabled = dragConfig !== undefined && dragConfig.draggable === true;
+
+  useEffect(() => {
+    console.log("oh no " + id);
+  }, [suggested]);
   if (dragEnabled) {
     switch (dragConfig.dragType) {
       case "ADD":
@@ -52,7 +65,10 @@ export default function MemberSignInCard({
       // break;
       case "DELETE":
         useGSAP(() => {
-          Draggable.create(`#${id}`, {
+          console.log("MY MOM " + id);
+          // Draggable.create(`#${id}`);
+          // gsapRef.current = Draggable.create(`#${frontId}`, {
+          Draggable.create(frontRef.current, {
             type: "x",
             bounds: {},
             onDragEnd: function (e) {
@@ -64,9 +80,9 @@ export default function MemberSignInCard({
                   },
                 });
                 timeline
-                  .add("start")
+                  // .add("start")
                   .to(
-                    `#${id}`,
+                    frontRef.current,
                     {
                       x: -500,
                       y: 0,
@@ -74,11 +90,21 @@ export default function MemberSignInCard({
                     },
                     "start"
                   )
-                  .to(`#${id}`, {
-                    height: 0,
-                    duration: 0.5,
-                    clearProps: "x,height", // reset css styles
-                  });
+                  .to(
+                    backRef.current,
+                    {
+                      height: 0,
+                      duration: 0.5,
+                      // clearProps: "x,height", // reset css styles
+                    },
+                    "height"
+                  );
+                // .add("height")
+
+                // .to(`#${backId}`, {
+                //   height: 0,
+                //   duration: 0.5,
+                // });
                 // .then(async () => {
                 //   // // document.getElementById(id).classList.add("hidden");
                 //   // gsap.to(`#${id}`, {
@@ -94,7 +120,7 @@ export default function MemberSignInCard({
                 //   dragConfig.onAction(member);
                 // });
               } else {
-                gsap.to(`#${id}`, {
+                gsap.to(`#${frontId}`, {
                   x: 0,
                   y: 0,
                   duration: 0.5,
@@ -102,19 +128,19 @@ export default function MemberSignInCard({
               }
             },
           });
-        });
+        }, [suggested]);
         break;
     }
   }
 
   return (
-    <div className="relative">
+    <div className="relative overflow-hidden" id={id} key={id} ref={backRef}>
       <div
         className={`flex h-20 items-center relative z-30 px-6 ${
           selected ? "bg-gray-100" : "bg-white"
         }`}
-        // id="memberSignInCard"
-        id={id}
+        id={frontId}
+        ref={frontRef}
         onClick={() => {
           onSelection(member);
         }}
@@ -138,7 +164,7 @@ export default function MemberSignInCard({
       </div>
       {dragEnabled ? (
         dragConfig.dragType == "ADD" ? (
-          <div className="z-10">
+          <div className="z-10" id={backId}>
             <div className="bg-blue-600 h-20 top-0 w-full absolute z-10 flex justify-center items-center">
               <ArrowRightIcon className="h-5 ml-auto mr-8 text-white" />
             </div>
