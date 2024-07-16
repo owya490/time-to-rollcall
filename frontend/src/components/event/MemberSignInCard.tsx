@@ -22,7 +22,7 @@ interface MemberSignInCard {
   selected?: boolean;
   onSelection?: (member: Member) => void;
   dragConfig?: DragConfig;
-  suggested: Member[];
+  refreshDependency?: Member[];
 }
 
 export default function MemberSignInCard({
@@ -30,7 +30,7 @@ export default function MemberSignInCard({
   selected,
   onSelection,
   dragConfig,
-  suggested,
+  refreshDependency,
 }: MemberSignInCard) {
   const id = member.name.replace(" ", ""); // TODO MAKE IT UUID
   const frontId = id + "Front";
@@ -44,8 +44,8 @@ export default function MemberSignInCard({
   const dragEnabled = dragConfig !== undefined && dragConfig.draggable === true;
 
   useEffect(() => {
-    console.log("oh no " + id);
-  }, [suggested]);
+    gsap.from(frontRef.current, { height: 0, duration: 0.5 });
+  }, []);
   if (dragEnabled) {
     switch (dragConfig.dragType) {
       case "ADD":
@@ -65,7 +65,6 @@ export default function MemberSignInCard({
       // break;
       case "DELETE":
         useGSAP(() => {
-          console.log("MY MOM " + id);
           // Draggable.create(`#${id}`);
           // gsapRef.current = Draggable.create(`#${frontId}`, {
           Draggable.create(frontRef.current, {
@@ -128,7 +127,7 @@ export default function MemberSignInCard({
               }
             },
           });
-        }, [suggested]);
+        }, [refreshDependency]);
         break;
     }
   }

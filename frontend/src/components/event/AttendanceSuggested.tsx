@@ -30,7 +30,7 @@ export default function AttendanceSuggested({
               dragType: "ADD",
               onAction: onAdd,
             }}
-            suggested={suggested}
+            refreshDependency={suggested}
           />
         );
       })}

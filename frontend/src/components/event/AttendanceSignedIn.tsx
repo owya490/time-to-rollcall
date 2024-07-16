@@ -27,6 +27,7 @@ export default function AttendanceSignedIn({
               dragType: "DELETE",
               onAction: onDelete,
             }}
+            refreshDependency={signedIn}
           />
         );
       })}

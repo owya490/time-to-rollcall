@@ -63,48 +63,14 @@ export default function Event({
           <AttendanceSuggested
             suggested={memberSuggestedList}
             onAdd={(member: Member) => {
-              console.log("owen");
-              console.log([...memberSignedInList, member]);
+              setMemberSignedInList((prevItems) => {
+                return [...prevItems, member];
+              });
 
-              // setMemberSignedInList([...memberSignedInList, member]);
-              // console.log([
-              //   ...memberSuggestedList.slice(
-              //     0,
-              //     memberSuggestedList.indexOf(member)
-              //   ),
-              //   ...memberSuggestedList.slice(
-              //     memberSuggestedList.indexOf(member) + 1,
-              //     undefined
-              //   ),
-              // ]);
-
-              // setMemberSignedInList((prevItems) => {
-              //   return [...prevItems, member];
-              // });
-              // setMemberSuggestedList([
-              //   ...memberSuggestedList.slice(
-              //     0,
-              //     memberSuggestedList.indexOf(member)
-              //   ),
-              //   ...memberSuggestedList.slice(
-              //     memberSuggestedList.indexOf(member) + 1,
-              //     undefined
-              //   ),
-              // ]);
-              // const tmp = memberSuggestedList;
-              // setMemberSuggestedList([]);
-              // console.log("what");
-              console.log(memberSuggestedList);
-              // setMemberSuggestedList(
-              //   memberSuggestedList.filter((item) => item !== member)
-              // );
               setMemberSuggestedList((prevItems) => {
                 const updatedItems = prevItems.filter((item, index) => {
-                  console.log(item.name !== member.name);
                   return item.name !== member.name;
                 });
-                console.log(member);
-                console.log(updatedItems);
                 return [...updatedItems];
               });
             }}
@@ -114,13 +80,13 @@ export default function Event({
       <AttendanceSignedIn
         signedIn={memberSignedInList}
         onDelete={(member: Member) => {
-          setMemberSignedInList([
-            ...memberSignedInList.slice(0, memberSignedInList.indexOf(member)),
-            ...memberSignedInList.slice(
-              memberSignedInList.indexOf(member) + 1,
-              undefined
-            ),
-          ]);
+          console.log(memberSignedInList);
+          setMemberSignedInList((prevItems) => {
+            const updatedItems = prevItems.filter((item, index) => {
+              return item.name !== member.name;
+            });
+            return [...updatedItems];
+          });
         }}
       />
     </div>
