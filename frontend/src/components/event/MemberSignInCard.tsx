@@ -46,6 +46,47 @@ export default function MemberSignInCard({
   useEffect(() => {
     gsap.from(frontRef.current, { height: 0, duration: 0.5 });
   }, []);
+  useGSAP(() => {
+    // Draggable.create(`#${id}`);
+    // gsapRef.current = Draggable.create(`#${frontId}`, {
+    Draggable.create(frontRef.current, {
+      type: "x",
+      bounds: {},
+      onDragEnd: function (e) {
+        if (e.pageX < screen.width / 2) {
+          const timeline = gsap.timeline({
+            onComplete: () => {
+              dragConfig.onAction(member);
+            },
+          });
+          timeline.to(
+            frontRef.current,
+            {
+              x: -screen.width,
+              y: 0,
+              duration: 0.5,
+            },
+            "start"
+          );
+          timeline.to(
+            backRef.current,
+            {
+              height: 0,
+              duration: 0.5,
+              // clearProps: "x,height", // reset css styles
+            },
+            "start"
+          );
+        } else {
+          gsap.to(`#${frontId}`, {
+            x: 0,
+            y: 0,
+            duration: 0.5,
+          });
+        }
+      },
+    });
+  }, [refreshDependency]);
   if (dragEnabled) {
     switch (dragConfig.dragType) {
       case "ADD":
@@ -64,70 +105,6 @@ export default function MemberSignInCard({
       // });
       // break;
       case "DELETE":
-        useGSAP(() => {
-          // Draggable.create(`#${id}`);
-          // gsapRef.current = Draggable.create(`#${frontId}`, {
-          Draggable.create(frontRef.current, {
-            type: "x",
-            bounds: {},
-            onDragEnd: function (e) {
-              console.log(e);
-              if (e.pageX < 150) {
-                const timeline = gsap.timeline({
-                  onComplete: () => {
-                    dragConfig.onAction(member);
-                  },
-                });
-                timeline
-                  // .add("start")
-                  .to(
-                    frontRef.current,
-                    {
-                      x: -500,
-                      y: 0,
-                      duration: 0.5,
-                    },
-                    "start"
-                  )
-                  .to(
-                    backRef.current,
-                    {
-                      height: 0,
-                      duration: 0.5,
-                      // clearProps: "x,height", // reset css styles
-                    },
-                    "height"
-                  );
-                // .add("height")
-
-                // .to(`#${backId}`, {
-                //   height: 0,
-                //   duration: 0.5,
-                // });
-                // .then(async () => {
-                //   // // document.getElementById(id).classList.add("hidden");
-                //   // gsap.to(`#${id}`, {
-                //   //   height: "5rem",
-                //   //   duration: 0.1,
-                //   // });
-                //   // gsap.to(`#${id}`, {
-                //   //   x: 0,
-                //   //   y: 0,
-                //   //   duration: 0.1,
-                //   // });
-                //   await new Promise((r) => setTimeout(r, 1000));
-                //   dragConfig.onAction(member);
-                // });
-              } else {
-                gsap.to(`#${frontId}`, {
-                  x: 0,
-                  y: 0,
-                  duration: 0.5,
-                });
-              }
-            },
-          });
-        }, [refreshDependency]);
         break;
     }
   }
@@ -141,7 +118,7 @@ export default function MemberSignInCard({
         id={frontId}
         ref={frontRef}
         onClick={() => {
-          onSelection(member);
+          // onSelection(member);
         }}
       >
         <Image

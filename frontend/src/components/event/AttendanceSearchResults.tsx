@@ -15,7 +15,7 @@ export default function AttendanceSearchResults({
 
   useEffect(() => {
     setSelectedMembers([]);
-  }, searchResults);
+  }, [...searchResults]);
 
   function handleMemberSelection(member: Member) {
     // if already in list, remove them
