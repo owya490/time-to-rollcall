@@ -46,9 +46,10 @@ export default function AttendanceSearchResults({
           <input type="checkbox" />
         </div>
       </div>
-      {searchResults.map((member) => {
+      {searchResults.map((member, i) => {
         return (
           <MemberSignInCard
+            key={i}
             member={member}
             selected={selectedMembers.includes(member)}
             onSelection={handleMemberSelection}
