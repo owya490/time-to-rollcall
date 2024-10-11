@@ -22,11 +22,11 @@ export function useUserData() {
 }
 
 export function useGroupData(groupId: string) {
-  const [group, setGroup] = useState<GroupModel | null>(null);
+  const groupState = useState<GroupModel | null>(null);
 
   useEffect(() => {
-    getGroup(groupId).then((group) => setGroup(group));
+    getGroup(groupId).then((group) => groupState[1](group));
   }, [groupId]);
 
-  return group;
+  return groupState;
 }

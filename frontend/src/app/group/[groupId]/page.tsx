@@ -5,27 +5,24 @@ import Event from "@/components/Event";
 import CreateEvent from "@/components/CreateEvent";
 import { Filter, InitFilter } from "@/helper/Filter";
 import { GroupContext, UserContext } from "@/lib/context";
-import { getEvents } from "@/lib/events";
+import { getEvents, submitEvent } from "@/lib/events";
 import { EventModel, InitSubmitEvent, SubmitEventModel } from "@/models/Event";
 import { useContext, useEffect, useState } from "react";
 import { GroupId } from "@/models/Group";
 import { addGroupToUserGroups } from "@/lib/users";
+import { TagModel } from "@/models/Tag";
 
 export default function Group({ params }: { params: { groupId: GroupId } }) {
   const user = useContext(UserContext);
-  const group = useContext(GroupContext);
+  const [group, setGroup] = useContext(GroupContext);
   const [events, setEvents] = useState<EventModel[]>([]);
   const [showedEvents, setShowedEvents] = useState<EventModel[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const [filter, setFilter] = useState<Filter>(InitFilter);
 
-  const [step, setStep] = useState<number>(1);
-  const [submitEvent, setSubmitEvent] =
+  const [submitEventForm, setSubmitEventForm] =
     useState<SubmitEventModel>(InitSubmitEvent);
-
-  function incrementStep() {
-    setStep(step + 1);
-  }
 
   let [isOpen, setIsOpen] = useState(false);
 
@@ -34,8 +31,18 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   }
 
   function openModal() {
-    setStep(1);
     setIsOpen(true);
+  }
+
+  function createEvent() {
+    submitEvent(group.id, submitEventForm).then((submittedEvent) => {
+      let newEvents = [submittedEvent].concat(events);
+      setEvents(newEvents);
+      setShowedEvents(filter.sort(newEvents));
+      setSelectedIndex(0);
+    });
+    setSubmitEventForm(InitSubmitEvent);
+    closeModal();
   }
 
   useEffect(() => {
@@ -50,15 +57,20 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
 
   return (
     <AuthCheck>
-      <CreateEvent
-        tags={group?.tags}
-        isOpen={isOpen}
-        closeModal={closeModal}
-        step={step}
-        incrementStep={incrementStep}
-        submitEvent={submitEvent}
-        setSubmitEvent={setSubmitEvent}
-      />
+      {group && (
+        <CreateEvent
+          groupId={group.id}
+          tags={group.tags}
+          setTags={(tags: TagModel[]) => setGroup({ ...group, tags })}
+          isOpen={isOpen}
+          closeModal={closeModal}
+          submitEventForm={submitEventForm}
+          setSubmitEventForm={setSubmitEventForm}
+          createEvent={createEvent}
+          selectedIndex={selectedIndex}
+          setSelectedIndex={setSelectedIndex}
+        />
+      )}
       <div className="p-12"></div>
       {showedEvents.map((event, i) => (
         <div key={i}>

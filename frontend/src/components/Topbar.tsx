@@ -6,7 +6,7 @@ import { useContext } from "react";
 
 export default function Topbar({ page }: { page: string }) {
   const user = useContext(UserContext);
-  const group = useContext(GroupContext);
+  const [group, _] = useContext(GroupContext);
   return (
     <nav className="bg-white fixed w-full z-20 top-0 start-0">
       <div className="flex items-center justify-between px-6 py-6">

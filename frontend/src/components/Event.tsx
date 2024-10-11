@@ -1,6 +1,6 @@
 import { Path } from "@/helper/Path";
 import { EventModel } from "@/models/Event";
-import { inBetween, toddMMYYYY } from "helper/Time";
+import { inBetween, sameDay, toddMMYYYY } from "helper/Time";
 import Link from "next/link";
 
 function EventHappeningNow({
@@ -15,7 +15,9 @@ function EventHappeningNow({
       <div className="flex items-start justify-between">
         <p className="text-gray-500 text-xs font-medium pb-2">
           {toddMMYYYY(event.dateStart)}
-          {event.dateEnd && " - " + toddMMYYYY(event.dateEnd)}
+          {!sameDay(event.dateStart, event.dateEnd)
+            ? " - " + toddMMYYYY(event.dateEnd)
+            : ""}
         </p>
         <div className="flex items-center">
           <svg
@@ -50,21 +52,26 @@ function EventHappeningNow({
   );
 }
 
-function EventEnded({
+function EventOther({
   event,
   groupId,
 }: {
   event: EventModel;
   groupId: string;
 }) {
+  const now = new Date();
   return (
     <div className="mx-6">
       <div className="flex items-start justify-between">
         <p className="text-gray-500 text-xs font-medium pb-2">
           {toddMMYYYY(event.dateStart)}
-          {event.dateEnd && " - " + toddMMYYYY(event.dateEnd)}
+          {!sameDay(event.dateStart, event.dateEnd)
+            ? " - " + toddMMYYYY(event.dateEnd)
+            : ""}
         </p>
-        <p className="text-xs font-medium text-gray-500">ENDED</p>
+        <p className="text-xs font-medium text-gray-500">
+          {now < event.dateStart ? "NOT YET" : "ENDED"}
+        </p>
       </div>
       <h1 className="text-lg font-semibold pb-8">{event.name}</h1>
       <div className="flex items-center justify-between">
@@ -93,6 +100,6 @@ export default function Event({
   if (happeningNow) {
     return <EventHappeningNow event={event} groupId={groupId} />;
   } else {
-    return <EventEnded event={event} groupId={groupId} />;
+    return <EventOther event={event} groupId={groupId} />;
   }
 }

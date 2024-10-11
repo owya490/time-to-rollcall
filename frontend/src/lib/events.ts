@@ -46,7 +46,7 @@ export async function getEvent(groupId: GroupId, eventId: EventId) {
   const event = await getDoc(
     doc(firestore, "groups", groupId, "events", eventId)
   );
-  return convertToJavascript(event);
+  return (await convertToJavascript(event)) as EventModel;
 }
 
 export async function submitEvent(groupId: GroupId, event: SubmitEventModel) {
