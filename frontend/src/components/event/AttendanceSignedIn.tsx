@@ -1,14 +1,16 @@
-import { Member } from "app/group/[groupId]/event/[eventId]/page";
+import { MemberModel } from "@/models/Member";
 import MemberSignInCard from "./MemberSignInCard";
 
 interface AttendanceSignedInProps {
-  signedIn: Member[];
-  onDelete: (member: Member) => void;
+  signedIn?: MemberModel[];
+  action: (member: MemberModel) => void;
+  end: (member: MemberModel) => void;
 }
 
 export default function AttendanceSignedIn({
   signedIn,
-  onDelete,
+  action,
+  end,
 }: AttendanceSignedInProps) {
   return (
     <>
@@ -17,7 +19,7 @@ export default function AttendanceSignedIn({
           SIGNED-IN
         </p>
       </div>
-      {signedIn.map((member, index) => {
+      {signedIn?.map((member, index) => {
         return (
           <MemberSignInCard
             key={index}
@@ -25,9 +27,11 @@ export default function AttendanceSignedIn({
             dragConfig={{
               draggable: true,
               dragType: "DELETE",
-              onAction: onDelete,
+              action,
+              end,
             }}
             refreshDependency={signedIn}
+            triggerAddAnimation
           />
         );
       })}

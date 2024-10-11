@@ -1,11 +1,11 @@
 "use client";
 import { useGSAP } from "@gsap/react";
 import { ArrowRightIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { Member } from "app/group/[groupId]/event/[eventId]/page";
+import { MemberModel } from "@/models/Member";
 import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import WOMAN_FACE_PNG from "../../../public/face-woman-profile.png";
 import GroupBadge from "./GroupBadge";
 
@@ -14,15 +14,17 @@ export type DragType = "DELETE" | "ADD";
 export interface DragConfig {
   draggable: boolean;
   dragType: DragType;
-  onAction: (member: Member) => void;
+  action: (member: MemberModel) => void;
+  end: (member: MemberModel) => void;
 }
 
 interface MemberSignInCard {
-  member: Member;
+  member: MemberModel;
   selected?: boolean;
-  onSelection?: (member: Member) => void;
+  onSelection?: (member: MemberModel) => void;
   dragConfig?: DragConfig;
-  refreshDependency?: Member[];
+  refreshDependency?: MemberModel[];
+  triggerAddAnimation?: boolean;
 }
 
 export default function MemberSignInCard({
@@ -31,8 +33,9 @@ export default function MemberSignInCard({
   onSelection,
   dragConfig,
   refreshDependency,
+  triggerAddAnimation,
 }: MemberSignInCard) {
-  const id = member.name.replace(" ", ""); // TODO MAKE IT UUID
+  const id = member.id;
   const frontId = id + "Front";
   const backId = id + "Back";
 
@@ -43,7 +46,8 @@ export default function MemberSignInCard({
   const dragEnabled = dragConfig !== undefined && dragConfig.draggable === true;
 
   useEffect(() => {
-    gsap.from(frontRef.current, { height: 0, duration: 0.5 });
+    if (triggerAddAnimation)
+      gsap.from(frontRef.current, { height: 0, duration: 0.3 });
   }, []);
   useGSAP(() => {
     // Draggable.create(`#${id}`);
@@ -57,8 +61,11 @@ export default function MemberSignInCard({
       onDragEnd: function (e) {
         if (positionX.current - e.pageX > screen.width / 2) {
           const timeline = gsap.timeline({
+            onStart: () => {
+              dragConfig?.action(member);
+            },
             onComplete: () => {
-              dragConfig.onAction(member);
+              dragConfig?.end(member);
             },
           });
           timeline.to(

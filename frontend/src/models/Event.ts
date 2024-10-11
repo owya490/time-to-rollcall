@@ -1,3 +1,4 @@
+import { MemberModel } from "./Member";
 import { TagModel, TagId } from "./Tag";
 
 export type EventId = string;
@@ -8,6 +9,7 @@ export interface EventModel {
   tags: TagModel[];
   dateStart: Date;
   dateEnd: Date;
+  members?: MemberModel[];
 }
 
 export interface SubmitEventModel {

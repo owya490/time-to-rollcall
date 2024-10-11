@@ -8,6 +8,9 @@ import {
   query,
   where,
   setDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import {
   convertCollectionToJavascript,
@@ -18,6 +21,7 @@ import { EventId, EventModel, SubmitEventModel } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import { convertTagIdToReference } from "./tags";
 import { TagId } from "@/models/Tag";
+import { MemberId } from "@/models/Member";
 
 export async function getEvents(groupId: GroupId) {
   const events = await getDocs(
@@ -74,4 +78,26 @@ function convertEventToDocument(groupId: GroupId, event: EventModel) {
     ...eventWithoutId,
     tags: tags.map((t) => convertTagIdToReference(groupId, t.id)),
   };
+}
+
+export async function addMemberToEvent(
+  groupId: GroupId,
+  eventId: EventId,
+  memberId: MemberId
+) {
+  await updateDoc(doc(firestore, "groups", groupId, "events", eventId), {
+    members: arrayUnion(doc(firestore, "groups", groupId, "members", memberId)),
+  });
+}
+
+export async function removeMemberFromEvent(
+  groupId: GroupId,
+  eventId: EventId,
+  memberId: MemberId
+) {
+  await updateDoc(doc(firestore, "groups", groupId, "events", eventId), {
+    members: arrayRemove(
+      doc(firestore, "groups", groupId, "members", memberId)
+    ),
+  });
 }

@@ -1,11 +1,11 @@
 "use client";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
-import { Member } from "app/group/[groupId]/event/[eventId]/page";
 import { useState } from "react";
 import MemberSignInCard from "./MemberSignInCard";
+import { MemberModel } from "@/models/Member";
 
 interface AttendanceSearchResultsProps {
-  searchResults: Member[];
+  searchResults: MemberModel[];
 }
 
 export default function AttendanceSearchResults({
@@ -13,7 +13,7 @@ export default function AttendanceSearchResults({
 }: AttendanceSearchResultsProps) {
   const [selectedMembers, setSelectedMembers] = useState([]);
 
-  function handleMemberSelection(member: Member) {
+  function handleMemberSelection(member: MemberModel) {
     // if already in list, remove them
     if (selectedMembers.includes(member)) {
       setSelectedMembers([

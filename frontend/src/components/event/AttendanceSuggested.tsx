@@ -1,14 +1,18 @@
-import { Member } from "app/group/[groupId]/event/[eventId]/page";
+import { MemberModel } from "@/models/Member";
 import MemberSignInCard from "./MemberSignInCard";
 
 interface AttendanceSuggested {
-  suggested: Member[];
-  onAdd: (member: Member) => void;
+  suggested: MemberModel[];
+  action: (member: MemberModel) => void;
+  end: (member: MemberModel) => void;
+  attendance: number;
 }
 
 export default function AttendanceSuggested({
   suggested,
-  onAdd,
+  action,
+  end,
+  attendance,
 }: AttendanceSuggested) {
   return (
     <>
@@ -17,7 +21,7 @@ export default function AttendanceSuggested({
           SUGGESTED
         </p>
         <div className="ml-auto py-1.5 px-1.5 rounded-lg bg-gray-100">
-          <p className="text-[10px] font-light">ATTENDANCE: 20</p>
+          <p className="text-[10px] font-light">ATTENDANCE: {attendance}</p>
         </div>
       </div>
       {suggested.map((member, index) => {
@@ -28,9 +32,11 @@ export default function AttendanceSuggested({
             dragConfig={{
               draggable: true,
               dragType: "ADD",
-              onAction: onAdd,
+              action,
+              end,
             }}
             refreshDependency={suggested}
+            triggerAddAnimation
           />
         );
       })}

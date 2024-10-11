@@ -17,7 +17,6 @@ export default function AttendanceSearchBar({
         placeholder="Search to add members"
         className="w-full placeholder:text-sm placeholder:font-thin placeholder:align-middle outline-none"
         onChange={(e) => {
-          console.log(e.target.value);
           setSearchInput(e.target.value);
         }}
       ></input>

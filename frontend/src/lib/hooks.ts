@@ -5,6 +5,8 @@ import { getUser } from "./users";
 import { User } from "@/models/User";
 import { GroupModel } from "@/models/Group";
 import { getGroup } from "./groups";
+import { MemberModel } from "@/models/Member";
+import { getMembers } from "./members";
 
 export function useUserData() {
   const [userAuth] = useAuthState(auth);
@@ -29,4 +31,14 @@ export function useGroupData(groupId: string) {
   }, [groupId]);
 
   return groupState;
+}
+
+export function useMembersData(groupId: string) {
+  const membersState = useState<MemberModel[] | null>([]);
+
+  useEffect(() => {
+    getMembers(groupId).then((members) => membersState[1](members));
+  }, [groupId]);
+
+  return membersState;
 }

@@ -37,11 +37,11 @@ export default function Topbar({ page }: { page: string }) {
               </svg>
             </Link>
           )}
-          {page === "Events" && (
+          {/* {page === "Events" && (
             <div className="border border-black border-[0.5px] rounded-full py-1.5 px-3">
               <p className="text-xs">Save</p>
             </div>
-          )}
+          )} */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

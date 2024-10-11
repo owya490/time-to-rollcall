@@ -1,6 +1,6 @@
 "use client";
-import { GroupContext } from "@/lib/context";
-import { useGroupData } from "@/lib/hooks";
+import { GroupContext, MembersContext } from "@/lib/context";
+import { useGroupData, useMembersData } from "@/lib/hooks";
 import { GroupId } from "@/models/Group";
 import React from "react";
 import Topbar from "./Topbar";
@@ -13,10 +13,13 @@ export default function PrivateLayoutGroup({
   params: { groupId: GroupId; page: string };
 }) {
   const groupData = useGroupData(params.groupId);
+  const membersData = useMembersData(params.groupId);
   return (
     <GroupContext.Provider value={groupData}>
-      <Topbar page="Events" />
-      <div>{children}</div>
+      <MembersContext.Provider value={membersData}>
+        <Topbar page="Events" />
+        <div>{children}</div>
+      </MembersContext.Provider>
     </GroupContext.Provider>
   );
 }
