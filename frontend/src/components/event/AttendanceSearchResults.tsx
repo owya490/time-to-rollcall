@@ -1,7 +1,7 @@
 "use client";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { Member } from "app/group/[groupId]/event/[eventId]/page";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MemberSignInCard from "./MemberSignInCard";
 
 interface AttendanceSearchResultsProps {
@@ -13,13 +13,8 @@ export default function AttendanceSearchResults({
 }: AttendanceSearchResultsProps) {
   const [selectedMembers, setSelectedMembers] = useState([]);
 
-  useEffect(() => {
-    setSelectedMembers([]);
-  }, [...searchResults]);
-
   function handleMemberSelection(member: Member) {
     // if already in list, remove them
-    console.log(selectedMembers.includes(member));
     if (selectedMembers.includes(member)) {
       setSelectedMembers([
         ...selectedMembers.slice(0, selectedMembers.indexOf(member)),

@@ -5,7 +5,7 @@ import { Member } from "app/group/[groupId]/event/[eventId]/page";
 import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import WOMAN_FACE_PNG from "../../../public/face-woman-profile.png";
 import GroupBadge from "./GroupBadge";
 
@@ -36,10 +36,9 @@ export default function MemberSignInCard({
   const frontId = id + "Front";
   const backId = id + "Back";
 
-  console.log(id);
-
   const frontRef = useRef();
   const backRef = useRef();
+  const positionX = useRef<number>();
   // const windowWidth = window.innerWidth;
   const dragEnabled = dragConfig !== undefined && dragConfig.draggable === true;
 
@@ -52,8 +51,11 @@ export default function MemberSignInCard({
     Draggable.create(frontRef.current, {
       type: "x",
       bounds: {},
+      onDragStart: function (e) {
+        positionX.current = e.pageX;
+      },
       onDragEnd: function (e) {
-        if (e.pageX < screen.width / 2) {
+        if (positionX.current - e.pageX > screen.width / 2) {
           const timeline = gsap.timeline({
             onComplete: () => {
               dragConfig.onAction(member);
@@ -64,7 +66,7 @@ export default function MemberSignInCard({
             {
               x: -screen.width,
               y: 0,
-              duration: 0.5,
+              duration: 0.3,
             },
             "start"
           );
@@ -72,7 +74,7 @@ export default function MemberSignInCard({
             backRef.current,
             {
               height: 0,
-              duration: 0.5,
+              duration: 0.3,
               // clearProps: "x,height", // reset css styles
             },
             "start"
@@ -81,33 +83,12 @@ export default function MemberSignInCard({
           gsap.to(`#${frontId}`, {
             x: 0,
             y: 0,
-            duration: 0.5,
+            duration: 0.3,
           });
         }
       },
     });
   }, [refreshDependency]);
-  if (dragEnabled) {
-    switch (dragConfig.dragType) {
-      case "ADD":
-      // useGSAP(() => {
-      //   Draggable.create("#memberSignInCard", {
-      //     type: "x",
-      //     bounds: {},
-      //     onDragEnd: function () {
-      //       gsap.to("#memberSignInCard", {
-      //         x: 0,
-      //         y: 0,
-      //         duration: 0.5,
-      //       });
-      //     },
-      //   });
-      // });
-      // break;
-      case "DELETE":
-        break;
-    }
-  }
 
   return (
     <div className="relative overflow-hidden" id={id} key={id} ref={backRef}>

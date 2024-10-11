@@ -58,7 +58,7 @@ function EventEnded({
   groupId: string;
 }) {
   return (
-    <div>
+    <div className="mx-6">
       <div className="flex items-start justify-between">
         <p className="text-gray-500 text-xs font-medium pb-2">
           {toddMMYYYY(event.dateStart)}
