@@ -15,7 +15,7 @@ export default function PrivateLayoutGroup({
   const groupData = useGroupData(params.groupId);
   return (
     <GroupContext.Provider value={groupData}>
-      <Topbar page={"Events"} />
+      <Topbar page="Events" />
       <div>{children}</div>
     </GroupContext.Provider>
   );
