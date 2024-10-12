@@ -18,7 +18,7 @@ export default function Groups() {
 
   return (
     <AuthCheck>
-      <Topbar page="Groups" />
+      <Topbar />
       <h1 className="text-2xl text-gray-500">Your Teams</h1>
       <div className="flex gap-2 my-4">
         {groups.map((group, i) => (

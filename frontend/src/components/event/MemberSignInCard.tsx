@@ -1,7 +1,7 @@
 "use client";
+import { MemberModel } from "@/models/Member";
 import { useGSAP } from "@gsap/react";
 import { ArrowRightIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { MemberModel } from "@/models/Member";
 import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
 import Image from "next/image";
@@ -42,16 +42,14 @@ export default function MemberSignInCard({
   const frontRef = useRef();
   const backRef = useRef();
   const positionX = useRef<number>();
-  // const windowWidth = window.innerWidth;
   const dragEnabled = dragConfig !== undefined && dragConfig.draggable === true;
 
   useEffect(() => {
-    if (triggerAddAnimation)
+    if (triggerAddAnimation) {
       gsap.from(frontRef.current, { height: 0, duration: 0.3 });
+    }
   }, []);
   useGSAP(() => {
-    // Draggable.create(`#${id}`);
-    // gsapRef.current = Draggable.create(`#${frontId}`, {
     Draggable.create(frontRef.current, {
       type: "x",
       bounds: {},
@@ -73,16 +71,8 @@ export default function MemberSignInCard({
             {
               x: -screen.width,
               y: 0,
-              duration: 0.3,
-            },
-            "start"
-          );
-          timeline.to(
-            backRef.current,
-            {
               height: 0,
               duration: 0.3,
-              // clearProps: "x,height", // reset css styles
             },
             "start"
           );

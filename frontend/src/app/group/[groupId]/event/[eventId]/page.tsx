@@ -1,7 +1,6 @@
 "use client";
 import AuthCheck from "@/components/AuthCheck";
 import AttendanceSearchBar from "@/components/event/AttendanceSearchBar";
-import AttendanceSearchResults from "@/components/event/AttendanceSearchResults";
 import AttendanceSignedIn from "@/components/event/AttendanceSignedIn";
 import AttendanceSuggested from "@/components/event/AttendanceSuggested";
 import EventDetailsHeader from "@/components/event/EventDetailsHeader";
@@ -78,7 +77,11 @@ export default function Event({
               />
             </div>
           </div>
-          <div className="mb-8">
+          <div
+            className={
+              "mb-8 " + (notSuggestedMembers.length > 0 ? "h-[275px]" : "")
+            }
+          >
             <AttendanceSuggested
               attendance={event.members?.length ?? 0}
               suggested={suggestedMembers}

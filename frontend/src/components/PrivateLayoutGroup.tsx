@@ -17,7 +17,7 @@ export default function PrivateLayoutGroup({
   return (
     <GroupContext.Provider value={groupData}>
       <MembersContext.Provider value={membersData}>
-        <Topbar page="Events" />
+        <Topbar />
         <div>{children}</div>
       </MembersContext.Provider>
     </GroupContext.Provider>

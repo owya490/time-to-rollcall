@@ -8,7 +8,7 @@ export default function Profile() {
   const user = useContext(UserContext);
   return (
     <AuthCheck>
-      <Topbar page="Profile" />
+      <Topbar />
       <h1 className="text-2xl text-gray-500">
         Edit your profile {user?.displayName}
       </h1>

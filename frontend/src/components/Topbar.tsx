@@ -2,9 +2,11 @@
 import { Path } from "@/helper/Path";
 import { GroupContext, UserContext } from "@/lib/context";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useContext } from "react";
 
-export default function Topbar({ page }: { page: string }) {
+export default function Topbar() {
+  const pathname = usePathname();
   const user = useContext(UserContext);
   const [group, _] = useContext(GroupContext);
   return (
@@ -12,7 +14,11 @@ export default function Topbar({ page }: { page: string }) {
       <div className="flex items-center justify-between px-6 py-6">
         {group ? (
           <Link
-            href={Path.Group}
+            href={
+              pathname === Path.Group + "/" + group.id
+                ? Path.Group
+                : Path.Group + "/" + group.id
+            }
             className="bg-gray-500 text-white rounded-3xl text-sm p-1 px-3"
           >
             {group.name}
@@ -37,12 +43,7 @@ export default function Topbar({ page }: { page: string }) {
               </svg>
             </Link>
           )}
-          {/* {page === "Events" && (
-            <div className="border border-black border-[0.5px] rounded-full py-1.5 px-3">
-              <p className="text-xs">Save</p>
-            </div>
-          )} */}
-          <svg
+          {/* <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -55,7 +56,7 @@ export default function Topbar({ page }: { page: string }) {
               strokeLinejoin="round"
               d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
             />
-          </svg>
+          </svg> */}
         </div>
       </div>
     </nav>
