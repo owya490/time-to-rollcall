@@ -12,7 +12,7 @@ const liveFilter = {
     events.filter((e) => inBetween(e.dateStart, new Date(), e.dateEnd)),
 };
 
-const newestFilter = {
+export const newestFilter = {
   name: "Newest",
   sort: (events: EventModel[]) =>
     events.sort(
@@ -42,6 +42,6 @@ const tagsFilter = {
     ),
 };
 
-export const filters = [liveFilter, newestFilter, oldestFilter, tagsFilter];
+export const filters = [newestFilter, oldestFilter, liveFilter, tagsFilter];
 
 export const InitFilter = newestFilter;

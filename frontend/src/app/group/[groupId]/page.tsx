@@ -14,7 +14,7 @@ import { TagModel } from "@/models/Tag";
 import { getGroup } from "@/lib/groups";
 
 export default function Group({ params }: { params: { groupId: GroupId } }) {
-  const user = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext);
   const [group, setGroup] = useContext(GroupContext);
   const [events, setEvents] = useState<EventModel[]>([]);
   const [showedEvents, setShowedEvents] = useState<EventModel[]>([]);
@@ -49,7 +49,10 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   useEffect(() => {
     if (user?.id && (!user.groups || !user.groups.includes(params.groupId))) {
       addGroupToUserGroups(user.id, params.groupId).then(() =>
-        getGroup(params.groupId).then((group) => setGroup(group))
+        getGroup(params.groupId).then((group) => {
+          setGroup(group);
+          setUser({ ...user, groups: [...user.groups, params.groupId] });
+        })
       );
     }
     getEvents(params.groupId).then((events) => {
@@ -82,8 +85,6 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
         </div>
       ))}
       <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />
-      <h1 className="mt-96">SOW-416: TODO Group settings</h1>
-      <h1>TODO: Sort by tags</h1>
       <div className="p-2">
         <div className="flex items-center justify-between">
           {filter.name === "Tag" &&

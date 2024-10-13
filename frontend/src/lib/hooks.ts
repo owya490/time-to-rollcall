@@ -10,35 +10,39 @@ import { getMembers } from "./members";
 
 export function useUserData() {
   const [userAuth] = useAuthState(auth);
-  const [user, setUser] = useState<User | null>(null);
+  const userState = useState<User | null | undefined>(undefined);
 
   useEffect(() => {
     if (userAuth) {
-      getUser(userAuth.uid).then((user) => setUser(user));
+      getUser(userAuth.uid).then((user) =>
+        userState[1]({ ...userAuth, ...user })
+      );
     } else {
-      setUser(null);
+      userState[1](undefined);
     }
   }, [userAuth]);
 
-  return userAuth ? { ...userAuth, ...user } : undefined;
+  return userState;
 }
 
-export function useGroupData(groupId: string) {
+export function useGroupData(user: User, groupId: string) {
   const groupState = useState<GroupModel | null>(null);
 
   useEffect(() => {
-    getGroup(groupId).then((group) => groupState[1](group));
-  }, [groupId]);
+    if (user && groupId)
+      getGroup(groupId).then((group) => groupState[1](group));
+  }, [user]);
 
   return groupState;
 }
 
-export function useMembersData(groupId: string) {
+export function useMembersData(user: User, groupId: string) {
   const membersState = useState<MemberModel[] | null>([]);
 
   useEffect(() => {
-    getMembers(groupId).then((members) => membersState[1](members));
-  }, [groupId]);
+    if (user && groupId)
+      getMembers(groupId).then((members) => membersState[1](members));
+  }, [user]);
 
   return membersState;
 }

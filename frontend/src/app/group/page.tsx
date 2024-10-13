@@ -9,11 +9,13 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 
 export default function Groups() {
-  const user = useContext(UserContext);
+  const [user] = useContext(UserContext);
   const [groups, setGroups] = useState<GroupModel[]>([]);
 
   useEffect(() => {
-    getGroups(user.groups).then((groups) => setGroups(groups));
+    if (user) {
+      getGroups(user.groups).then((groups) => setGroups(groups));
+    }
   }, [user]);
 
   return (

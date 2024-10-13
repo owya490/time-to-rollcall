@@ -1,6 +1,6 @@
 "use client";
 
-import { Filter, filters } from "@/helper/Filter";
+import { Filter, filters, newestFilter } from "@/helper/Filter";
 
 export default function Botbar({
   filter,
@@ -12,7 +12,7 @@ export default function Botbar({
   openModal: () => void;
 }) {
   return (
-    <nav className="flex justify-center h-full border-gray-700 bg-white">
+    <nav className="flex justify-center h-full border-gray-700">
       <div className="fixed z-10 h-14 w-full max-w-max px-3 bottom-3">
         <div className="h-full flex">
           <div className="bg-gray-100 border border-gray-100 rounded-full grid h-full w-full grid-cols-4">
@@ -20,11 +20,19 @@ export default function Botbar({
               <button
                 key={i}
                 className={
-                  filter.name === f.name
-                    ? "inline-flex flex-col items-center justify-center px-3 my-3 mx-1 rounded-full bg-gray-200"
-                    : "inline-flex flex-col items-center justify-center px-3 my-3 mx-1 rounded-full hover:bg-gray-200"
+                  "inline-flex flex-col items-center justify-center px-3 py-3 " +
+                  (filter.name === f.name
+                    ? "bg-gray-200"
+                    : "hover:bg-gray-200") +
+                  (i === 0
+                    ? " rounded-s-full"
+                    : i === filters.length - 1
+                    ? " rounded-r-full"
+                    : "")
                 }
-                onClick={() => filterEvents(f)}
+                onClick={() =>
+                  filterEvents(filter.name === f.name ? newestFilter : f)
+                }
               >
                 {f.name}
               </button>

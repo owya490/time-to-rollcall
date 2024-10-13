@@ -60,6 +60,9 @@ export const STATE_CHANGED = "state_changed";
 /// Helper functions
 export async function convertToJavascript(document: DocumentSnapshot) {
   let data = document.data();
+  if (!data) {
+    return undefined;
+  }
   data["id"] = document.id;
   for (const [key, value] of Object.entries(data)) {
     if (value instanceof Timestamp) {

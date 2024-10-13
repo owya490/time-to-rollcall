@@ -5,7 +5,7 @@ import { UserContext } from "@/lib/context";
 import { useContext } from "react";
 
 export default function Profile() {
-  const user = useContext(UserContext);
+  const [user] = useContext(UserContext);
   return (
     <AuthCheck>
       <Topbar />

@@ -30,7 +30,7 @@ export default function Event({
   const [searchActive, setSearchActive] = useState(false);
   const [searchInput, setSearchInput] = useState<string>("");
   const [event, setEvent] = useState<EventModel>();
-  const [members, _] = useContext(MembersContext);
+  const [members] = useContext(MembersContext);
   const [membersNotSignedIn, setMembersNotSignedIn] = useState<MemberModel[]>(
     []
   );
