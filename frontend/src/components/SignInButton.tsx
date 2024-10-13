@@ -1,18 +1,18 @@
 import { signInWithPopup } from "firebase/auth";
-import { auth, googleAuthProvider } from "@/lib/firebase";
+import { auth, microsoftProvider } from "@/lib/firebase";
 
 export default function SignInButton() {
-  const signInWithGoogle = async () => {
-    await signInWithPopup(auth, googleAuthProvider);
+  const signInWithMicrosoft = async () => {
+    await signInWithPopup(auth, microsoftProvider);
   };
 
   return (
     <button
       type="button"
       className="text-gray-900 bg-transparent border hover:bg-gray-200 border-black font-semibold text-xs px-3 py-1.5"
-      onClick={signInWithGoogle}
+      onClick={signInWithMicrosoft}
     >
-      Sign in with Google
+      Sign in with your SOW account
     </button>
   );
 }

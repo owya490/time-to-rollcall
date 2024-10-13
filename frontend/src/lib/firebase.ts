@@ -1,5 +1,5 @@
 import { getApp, initializeApp } from "firebase/app";
-import { GoogleAuthProvider, getAuth } from "firebase/auth";
+import { GoogleAuthProvider, OAuthProvider, getAuth } from "firebase/auth";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
 import "firebase/compat/storage";
@@ -45,6 +45,11 @@ const firebaseApp = createFirebaseApp(firebaseConfig);
 // export const auth = firebase.auth();
 export const auth = getAuth(firebaseApp);
 export const googleAuthProvider = new GoogleAuthProvider();
+export const microsoftProvider = new OAuthProvider("microsoft.com");
+microsoftProvider.setCustomParameters({
+  prompt: "consent",
+  tenant: "977dce0e-7408-4dba-9ff5-c55073be357d",
+});
 
 // Firestore exports
 export const firestore = getFirestore(firebaseApp);
