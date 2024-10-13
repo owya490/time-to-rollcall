@@ -11,6 +11,8 @@ import { useContext, useEffect, useState } from "react";
 import { GroupId } from "@/models/Group";
 import { addGroupToUserGroups } from "@/lib/users";
 import { TagModel } from "@/models/Tag";
+import { useRouter } from "next/router";
+import { getGroup } from "@/lib/groups";
 
 export default function Group({ params }: { params: { groupId: GroupId } }) {
   const user = useContext(UserContext);
@@ -25,6 +27,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
     useState<SubmitEventModel>(InitSubmitEvent);
 
   let [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   function closeModal() {
     setIsOpen(false);
@@ -47,7 +50,9 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
 
   useEffect(() => {
     if (user?.id && (!user.groups || !user.groups.includes(params.groupId))) {
-      addGroupToUserGroups(user.id, params.groupId);
+      addGroupToUserGroups(user.id, params.groupId).then(() =>
+        getGroup(params.groupId).then((group) => setGroup(group))
+      );
     }
     getEvents(params.groupId).then((events) => {
       setEvents(events);
