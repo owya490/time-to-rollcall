@@ -18,7 +18,6 @@ import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
 import { useContext, useEffect, useState } from "react";
 import { searchForMemberByName } from "services/attendanceService";
-// import InertiaPlugin from "gsap/InertiaPlugin";
 
 gsap.registerPlugin(Draggable, useGSAP);
 
@@ -36,7 +35,7 @@ export default function Event({
     []
   );
   const [index, setIndex] = useState<number>(5);
-  const [loadAnimation, setLoadAnimation] = useState<boolean>(true);
+  const [loadAnimation, setLoadAnimation] = useState<boolean>(false);
 
   useEffect(() => {
     getEvent(groupId, eventId).then((event) => {
@@ -95,7 +94,7 @@ export default function Event({
               action={(member: MemberModel) => {
                 setEvent((prevEvent) => ({
                   ...prevEvent,
-                  members: [...(prevEvent.members ?? []), member],
+                  members: (prevEvent.members ?? []).concat(member),
                 }));
                 addMemberToEvent(groupId, eventId, member.id);
               }}
@@ -109,14 +108,13 @@ export default function Event({
               }}
             />
           </div>
-          <div className="absolute mt-64 z-40 w-full">
+          <div className="absolute mt-[275px] z-40 w-full">
             <AttendanceSignedIn
               signedIn={event.members}
               action={(member: MemberModel) => {
-                setMembersNotSignedIn((prevMembers) => [
-                  ...prevMembers,
-                  member,
-                ]);
+                setMembersNotSignedIn((prevMembers) =>
+                  prevMembers.concat(member)
+                );
               }}
               end={(member: MemberModel) => {
                 setEvent((prevEvent) => ({

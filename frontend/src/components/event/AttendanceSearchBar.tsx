@@ -1,4 +1,4 @@
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, XCircleIcon } from "@heroicons/react/24/outline";
 
 interface AttendanceSearchBarProps {
   searchInput: string;
@@ -11,7 +11,7 @@ export default function AttendanceSearchBar({
 }: AttendanceSearchBarProps) {
   return (
     <div className="flex w-full h-12 border-y-[1px] py-4 border-gray-300 items-center">
-      <MagnifyingGlassIcon className="w-4 h-4 mr-2" />
+      <MagnifyingGlassIcon className="w-6 h-6 mr-2 text-gray-500" />
       <input
         value={searchInput}
         placeholder="Search to add members"
@@ -19,7 +19,11 @@ export default function AttendanceSearchBar({
         onChange={(e) => {
           setSearchInput(e.target.value);
         }}
-      ></input>
+      />
+      <XCircleIcon
+        className="w-6 h-6 mr-2 text-gray-500"
+        onClick={() => setSearchInput("")}
+      />
     </div>
   );
 }
