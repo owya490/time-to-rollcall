@@ -5,7 +5,7 @@ import { ArrowRightIcon, TrashIcon } from "@heroicons/react/24/outline";
 import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
 import Image from "next/image";
-import { FC, memo, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import WOMAN_FACE_PNG from "../../../public/face-woman-profile.png";
 import GroupBadge from "./GroupBadge";
 
