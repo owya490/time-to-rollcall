@@ -76,9 +76,9 @@ export default function Event({
         <div className="relative">
           <div className="mx-6">
             <div className="mb-3">
-              <EventDetailsHeader />
+              <EventDetailsHeader event={event} />
             </div>
-            <h1 className="text-2xl mb-16">Weekly Meeting 12</h1>
+            <h1 className="text-2xl mb-16">{event.name}</h1>
             <div className="mb-8">
               <AttendanceSearchBar
                 searchInput={searchInput}

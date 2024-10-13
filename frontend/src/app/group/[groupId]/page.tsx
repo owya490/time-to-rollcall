@@ -71,7 +71,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
           setSelectedIndex={setSelectedIndex}
         />
       )}
-      <div className="p-12"></div>
+      <h1 className="mx-6 text-2xl mb-16">Events</h1>
       {showedEvents.map((event, i) => (
         <div key={i}>
           <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />
