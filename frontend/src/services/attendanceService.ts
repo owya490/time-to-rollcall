@@ -13,7 +13,7 @@ export function searchForMemberByName(
       member
     ) {
       if (
-        suggested.length < 3 &&
+        suggested.length < 5 &&
         member.name
           .toLocaleLowerCase()
           .includes(searchInput.toLocaleLowerCase())

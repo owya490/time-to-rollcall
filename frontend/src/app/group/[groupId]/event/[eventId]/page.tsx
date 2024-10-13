@@ -32,19 +32,20 @@ export default function Event({
   const [searchInput, setSearchInput] = useState<string>("");
   const [event, setEvent] = useState<EventModel>();
   const [members, _] = useContext(MembersContext);
-  const [notSuggestedMembers, setNotSuggestedMembers] = useState<MemberModel[]>(
+  const [membersNotSignedIn, setMembersNotSignedIn] = useState<MemberModel[]>(
     []
   );
-  const [suggestedMembers, setSuggestedMembers] = useState<MemberModel[]>([]);
+  const [index, setIndex] = useState<number>(5);
+  const [loadAnimation, setLoadAnimation] = useState<boolean>(true);
 
   useEffect(() => {
     getEvent(groupId, eventId).then((event) => {
       setEvent(event);
-      const membersNotSignedIn = members.filter(
-        (m) => !event.members?.some((signedIn) => signedIn.id === m.id)
+      setMembersNotSignedIn(
+        members.filter(
+          (m) => !event.members?.some((signedIn) => signedIn.id === m.id)
+        )
       );
-      setSuggestedMembers(membersNotSignedIn.slice(0, 3));
-      setNotSuggestedMembers(membersNotSignedIn.slice(3));
     });
   }, [members]);
 
@@ -52,19 +53,28 @@ export default function Event({
     let prevSearchActive = searchActive;
     setSearchActive(searchInput.length > 0);
     if (prevSearchActive || searchInput.length > 0) {
+      setLoadAnimation(false);
       const { suggested, notSuggested } = searchForMemberByName(
-        suggestedMembers.concat(notSuggestedMembers),
+        membersNotSignedIn,
         searchInput
       );
-      setSuggestedMembers(suggested);
-      setNotSuggestedMembers(notSuggested);
+      setMembersNotSignedIn(suggested.concat(notSuggested));
+      setIndex(suggested.length);
+    } else if (prevSearchActive && searchInput.length === 0) {
+      setIndex(5);
     }
   }, [searchInput]);
+
+  useEffect(() => {
+    if (searchInput.length === 0) {
+      setLoadAnimation(true);
+    }
+  }, [membersNotSignedIn]);
 
   return (
     event && (
       <AuthCheck>
-        <div>
+        <div className="relative">
           <div className="mx-6">
             <div className="mb-3">
               <EventDetailsHeader />
@@ -77,67 +87,46 @@ export default function Event({
               />
             </div>
           </div>
-          <div
-            className={
-              "mb-8 " + (notSuggestedMembers.length > 0 ? "h-[275px]" : "")
-            }
-          >
+          <div className="absolute w-full">
             <AttendanceSuggested
               attendance={event.members?.length ?? 0}
-              suggested={suggestedMembers}
+              suggested={membersNotSignedIn.slice(0, index)}
+              loadAnimation={loadAnimation}
               action={(member: MemberModel) => {
                 setEvent((prevEvent) => ({
                   ...prevEvent,
                   members: [...(prevEvent.members ?? []), member],
                 }));
-                setNotSuggestedMembers((prevNotSuggestedMembers) => {
-                  const addSuggestedMember = prevNotSuggestedMembers.slice(
-                    0,
-                    1
-                  );
-                  if (addSuggestedMember.length === 1) {
-                    setSuggestedMembers((prevMembers) => [
-                      ...prevMembers,
-                      addSuggestedMember[0],
-                    ]);
-                  }
-                  return prevNotSuggestedMembers;
-                });
                 addMemberToEvent(groupId, eventId, member.id);
               }}
               end={(member: MemberModel) => {
-                setSuggestedMembers((prevMembers) =>
+                setMembersNotSignedIn((prevMembers) =>
                   prevMembers.filter((m) => m.id !== member.id)
                 );
-                setNotSuggestedMembers((prevNotSuggestedMembers) =>
-                  prevNotSuggestedMembers.slice(1)
-                );
+                if (searchInput.length > 0) {
+                  setIndex((prevIndex) => prevIndex - 1);
+                }
               }}
             />
           </div>
-          <AttendanceSignedIn
-            signedIn={event.members}
-            action={(member: MemberModel) => {
-              setSuggestedMembers((prevMembers) => {
-                if (prevMembers.length < 3) {
-                  return [...prevMembers, member];
-                } else {
-                  setNotSuggestedMembers((prevNotSuggestedMembers) => [
-                    ...prevNotSuggestedMembers,
-                    member,
-                  ]);
-                  return prevMembers;
-                }
-              });
-            }}
-            end={(member: MemberModel) => {
-              setEvent((prevEvent) => ({
-                ...prevEvent,
-                members: prevEvent.members.filter((m) => m.id !== member.id),
-              }));
-              removeMemberFromEvent(groupId, eventId, member.id);
-            }}
-          />
+          <div className="absolute mt-64 z-40 w-full">
+            <AttendanceSignedIn
+              signedIn={event.members}
+              action={(member: MemberModel) => {
+                setMembersNotSignedIn((prevMembers) => [
+                  ...prevMembers,
+                  member,
+                ]);
+              }}
+              end={(member: MemberModel) => {
+                setEvent((prevEvent) => ({
+                  ...prevEvent,
+                  members: prevEvent.members.filter((m) => m.id !== member.id),
+                }));
+                removeMemberFromEvent(groupId, eventId, member.id);
+              }}
+            />
+          </div>
         </div>
       </AuthCheck>
     )

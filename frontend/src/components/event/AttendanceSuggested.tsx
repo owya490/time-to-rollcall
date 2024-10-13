@@ -6,6 +6,7 @@ interface AttendanceSuggested {
   action: (member: MemberModel) => void;
   end: (member: MemberModel) => void;
   attendance: number;
+  loadAnimation: boolean;
 }
 
 export default function AttendanceSuggested({
@@ -13,6 +14,7 @@ export default function AttendanceSuggested({
   action,
   end,
   attendance,
+  loadAnimation,
 }: AttendanceSuggested) {
   return (
     <>
@@ -36,7 +38,7 @@ export default function AttendanceSuggested({
               end,
             }}
             refreshDependency={suggested}
-            triggerAddAnimation
+            triggerAddAnimation={loadAnimation}
           />
         );
       })}
