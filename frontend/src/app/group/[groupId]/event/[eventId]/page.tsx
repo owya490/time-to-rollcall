@@ -109,6 +109,7 @@ export default function Event({
                   setIndex((prevIndex) => prevIndex - 1);
                 }
               }}
+              searchInput={searchInput}
             />
           </div>
           <div className="absolute mt-[275px] z-40 w-full">

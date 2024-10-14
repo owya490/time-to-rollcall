@@ -6,6 +6,7 @@ interface AttendanceSuggested {
   action: (member: MemberModel) => void;
   end: (member: MemberModel) => void;
   loadAnimation: boolean;
+  searchInput: string;
 }
 
 export default function AttendanceSuggested({
@@ -13,14 +14,20 @@ export default function AttendanceSuggested({
   action,
   end,
   loadAnimation,
+  searchInput,
 }: AttendanceSuggested) {
   return (
     <>
       <div className="flex items-center h-fit mx-6 mb-2">
         <p className="text-gray-500 text-[10px] font-light align-middle">
-          SUGGESTED
+          NOT SIGNED IN
         </p>
       </div>
+      {suggested.length === 0 && (
+        <div className="mx-6 flex h-20 items-center">
+          TODO: Create new member
+        </div>
+      )}
       {suggested.map((member) => {
         return (
           <MemberSignIn

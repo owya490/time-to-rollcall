@@ -24,7 +24,7 @@ export default function LogIn() {
   return (
     <main>
       {loading ? (
-        <p>Loading</p>
+        <></>
       ) : !user ? (
         <h2>
           Sign in: <SignInButton />

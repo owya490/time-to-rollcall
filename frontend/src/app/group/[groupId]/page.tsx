@@ -10,7 +10,7 @@ import { EventModel, InitSubmitEvent, SubmitEventModel } from "@/models/Event";
 import { useContext, useEffect, useState } from "react";
 import { GroupId } from "@/models/Group";
 import { addGroupToUserGroups } from "@/lib/users";
-import { TagModel } from "@/models/Tag";
+import { TagId, TagModel } from "@/models/Tag";
 import { getGroup } from "@/lib/groups";
 
 export default function Group({ params }: { params: { groupId: GroupId } }) {
@@ -21,6 +21,8 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const [filter, setFilter] = useState<Filter>(InitFilter);
+  const [filteredTags, setFilteredTags] = useState<TagId[]>([]);
+  const [tagsOpen, setTagsOpen] = useState(false);
 
   const [submitEventForm, setSubmitEventForm] =
     useState<SubmitEventModel>(InitSubmitEvent);
@@ -40,7 +42,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
       submitEvent(group.id, submitEventForm).then((submittedEvent) => {
         let newEvents = [submittedEvent].concat(events);
         setEvents(newEvents);
-        setShowedEvents(filter.sort(newEvents));
+        setShowedEvents(filter.sort(newEvents, filteredTags));
         setSelectedIndex(0);
       });
       setSubmitEventForm(InitSubmitEvent);
@@ -88,28 +90,37 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
           </div>
         </div>
       ))}
-      <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />
-      <div className="p-2">
-        <div className="flex items-center justify-between">
-          {filter.name === "Tag" &&
-            group &&
-            group.tags &&
-            group.tags.map((tag, i) => (
-              <button key={i} onClick={() => {}}>
-                {tag.name}
-              </button>
-            ))}
+      {showedEvents.length > 0 && (
+        <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />
+      )}
+      {showedEvents.length > 0 && (
+        <div className="mx-6">
+          <p>TODO: Scroll load</p>
         </div>
-      </div>
-      <p>TODO: Sort by tags</p>
-      <p>TODO: Scroll load</p>
+      )}
       <Botbar
         filter={filter}
         filterEvents={(f) => {
-          setShowedEvents(f.sort(events));
+          setShowedEvents(f.sort(events, filteredTags));
           setFilter(f);
         }}
+        filteredTags={filteredTags}
+        filterEventsByTags={(tagIds: TagId[]) => {
+          setShowedEvents(
+            tagIds.length > 0
+              ? events.filter((e) =>
+                  tagIds.every((tagId) =>
+                    e.tags.map((t) => t.id).includes(tagId)
+                  )
+                )
+              : events
+          );
+          setFilteredTags(tagIds);
+        }}
         openModal={openModal}
+        tags={group?.tags ?? []}
+        tagsOpen={tagsOpen}
+        setTagsOpen={setTagsOpen}
       />
     </AuthCheck>
   );

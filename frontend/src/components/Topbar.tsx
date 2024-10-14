@@ -25,8 +25,10 @@ export default function Topbar() {
           >
             {group.name}
           </Link>
-        ) : (
+        ) : user ? (
           <p className="text-lg text-gray-500">Hi {user?.displayName}</p>
+        ) : (
+          <></>
         )}
         {group && (
           <div className="flex items-center justify-end gap-4">

@@ -21,17 +21,20 @@ export default function Groups() {
   return (
     <AuthCheck>
       <Topbar />
-      <h1 className="text-2xl text-gray-500">Your Teams</h1>
-      <div className="flex gap-2 my-4">
-        {groups.map((group, i) => (
-          <Link
-            key={i}
-            className="bg-gray-500 text-white rounded-3xl text-sm p-1 px-3"
-            href={`${Path.Group}/${group.id}`}
-          >
-            {group.name}
-          </Link>
-        ))}
+      <div className="mx-6">
+        <h1 className="text-2xl text-gray-700 mb-4">Your Teams</h1>
+        <div className="flex gap-2 my-4">
+          {groups.map((group, i) => (
+            <Link
+              key={i}
+              className="bg-gray-700 text-white rounded-3xl text-sm py-2 px-3 mb-4"
+              href={`${Path.Group}/${group.id}`}
+            >
+              {group.name}
+            </Link>
+          ))}
+        </div>
+        <p>TODO: Create Team</p>
       </div>
     </AuthCheck>
   );
