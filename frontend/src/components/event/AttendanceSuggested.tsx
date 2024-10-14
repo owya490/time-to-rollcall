@@ -5,7 +5,6 @@ interface AttendanceSuggested {
   suggested: MemberModel[];
   action: (member: MemberModel) => void;
   end: (member: MemberModel) => void;
-  attendance: number;
   loadAnimation: boolean;
 }
 
@@ -13,7 +12,6 @@ export default function AttendanceSuggested({
   suggested,
   action,
   end,
-  attendance,
   loadAnimation,
 }: AttendanceSuggested) {
   return (
@@ -22,9 +20,6 @@ export default function AttendanceSuggested({
         <p className="text-gray-500 text-[10px] font-light align-middle">
           SUGGESTED
         </p>
-        <div className="ml-auto py-1.5 px-1.5 rounded-lg bg-gray-100">
-          <p className="text-[10px] font-light">ATTENDANCE: {attendance}</p>
-        </div>
       </div>
       {suggested.map((member) => {
         return (

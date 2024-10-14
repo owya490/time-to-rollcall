@@ -89,7 +89,6 @@ export default function Event({
           </div>
           <div className="absolute w-full">
             <AttendanceSuggested
-              attendance={event.members?.length ?? 0}
               suggested={membersNotSignedIn.slice(0, index)}
               loadAnimation={loadAnimation}
               action={(member: MemberModel) => {

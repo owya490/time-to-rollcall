@@ -80,6 +80,12 @@ function MemberSignInCard({
   useGSAP(() => {
     const handleDragEnd = (e) => {
       if (e.pageX === 0 && e.pageY === 0) {
+        selectedRef.current = false;
+        gsap.to(frontRef.current, {
+          x: 0,
+          y: 0,
+          duration: 0.3,
+        });
         return;
       }
       const velocity =

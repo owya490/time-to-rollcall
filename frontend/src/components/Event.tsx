@@ -2,6 +2,7 @@ import { Path } from "@/helper/Path";
 import { EventModel } from "@/models/Event";
 import { inBetween, sameDay, toddMMYYYY } from "helper/Time";
 import Link from "next/link";
+import LiveBadge from "./event/LiveBadge";
 
 function EventHappeningNow({
   event,
@@ -20,15 +21,7 @@ function EventHappeningNow({
             : ""}
         </p>
         <div className="flex items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="w-4 h-4"
-          >
-            <circle cx="12" cy="12" r="6"></circle>
-          </svg>
-          <p className="text-xs font-medium">LIVE</p>
+          <LiveBadge />
         </div>
       </div>
       <h1 className="text-2xl font-semibold pb-32">{event.name}</h1>
