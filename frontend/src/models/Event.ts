@@ -23,7 +23,7 @@ export const InitSubmitEvent = {
   name: "",
   tagIds: [],
   dateStart: new Date(),
-  dateEnd: new Date(),
+  dateEnd: new Date(new Date().getTime() + 7200000),
 };
 
 export const InitEvent: EventModel = {
@@ -31,5 +31,5 @@ export const InitEvent: EventModel = {
   name: "",
   tags: [],
   dateStart: new Date(),
-  dateEnd: new Date(),
+  dateEnd: new Date(new Date().getTime() + 7200000),
 };

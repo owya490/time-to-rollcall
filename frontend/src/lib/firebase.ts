@@ -73,9 +73,11 @@ export async function convertToJavascript(document: DocumentSnapshot) {
       Array.isArray(value) &&
       value.every((item) => item instanceof DocumentReference)
     ) {
-      data[key] = await Promise.all(
-        value.map(async (v) => convertToJavascript(await getDoc(v)))
-      );
+      data[key] = (
+        await Promise.all(
+          value.map(async (v) => convertToJavascript(await getDoc(v)))
+        )
+      ).filter((v) => v !== undefined);
     } else {
       data[key] = value;
     }
@@ -89,5 +91,7 @@ export function convertToFirestore(data: { id: string }) {
 }
 
 export async function convertCollectionToJavascript(docs: DocumentSnapshot[]) {
-  return Promise.all(docs.map((doc) => convertToJavascript(doc)));
+  return (
+    await Promise.all(docs.map((doc) => convertToJavascript(doc)))
+  ).filter((d) => d !== undefined);
 }

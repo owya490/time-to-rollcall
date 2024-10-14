@@ -39,7 +39,7 @@ export default function CreateEvent({
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 z-30 w-full"
+        className="fixed inset-0 z-50 w-full"
         onClose={closeModal}
       >
         <Transition.Child
@@ -269,6 +269,9 @@ export default function CreateEvent({
                                 dateEnd: new Date(event.target.value),
                               })
                             }
+                            min={convertToDateTimeLocalString(
+                              submitEventForm.dateStart
+                            )}
                           />
                         </div>
                       </ul>

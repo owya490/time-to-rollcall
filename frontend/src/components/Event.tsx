@@ -21,7 +21,7 @@ function EventHappeningNow({
           disabled
           className="text-gray-900 bg-[#e8e8e8] rounded-md font-medium text-xs p-1.5"
         >
-          ATTENDANCE: {event.members?.length}
+          ATTENDANCE: {event.members?.length ?? 0}
         </button>
         <Link
           type="button"
@@ -54,7 +54,7 @@ function EventOther({
           disabled
           className="text-gray-900 bg-[#e8e8e8] rounded-md font-medium text-xs p-1.5"
         >
-          ATTENDANCE: {event.members?.length}
+          ATTENDANCE: {event.members?.length ?? 0}
         </button>
         <Link
           type="button"

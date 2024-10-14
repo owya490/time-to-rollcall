@@ -11,8 +11,9 @@ export default function GroupSettings() {
     <AuthCheck>
       <p>This is the settings creation page {user?.displayName}</p>
       <p>Change settings</p>
-      <p>Name: Dom</p>
-      <p>Photo: </p>
+      <p>TODO: change group name</p>
+      <p>TODO: change tag names</p>
+      <p>TODO: remove tags</p>
     </AuthCheck>
   );
 }
