@@ -117,7 +117,6 @@ export default function CreateEvent({
                           ? "w-12 h-0.5 rounded-xl bg-blue-500"
                           : "w-12 h-0.5 rounded-xl bg-blue-100"
                       }
-                      disabled={submitEventForm.tagIds.length === 0}
                     />
                   </Tab.List>
                   <Tab.Panels className="mt-3">
@@ -171,8 +170,8 @@ export default function CreateEvent({
                               key={i}
                               className={
                                 submitEventForm.tagIds.includes(t.id)
-                                  ? "rounded-3xl border-solid border-blue-800 border-2 bg-blue-100 px-4 py-2 mx-1 my-1 text-xs font-medium text-blue-900"
-                                  : "rounded-3xl border-transparent border-2 bg-blue-100 px-4 py-2 mx-1 my-1 text-xs font-medium text-blue-900"
+                                  ? "rounded-3xl border-solid border-blue-800 border-2 bg-blue-100 px-2 py-1 mx-1 my-1 text-xs font-medium text-blue-900"
+                                  : "rounded-3xl border-transparent border-2 bg-blue-100 px-2 py-1 mx-1 my-1 text-xs font-medium text-blue-900"
                               }
                               onClick={() =>
                                 setSubmitEventForm({
@@ -201,7 +200,7 @@ export default function CreateEvent({
                             <input
                               type="text"
                               placeholder="Weekly Meeting"
-                              className="rounded-3xl border-transparent border-2 text-center bg-cyan-800 py-2 mx-1 my-1 text-xs font-medium w-32 text-blue-100"
+                              className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mx-1 my-1 text-xs font-medium w-32 text-black"
                               value={newTag}
                               onChange={(event) =>
                                 setNewTag(event.target.value)
@@ -225,10 +224,10 @@ export default function CreateEvent({
                           ) : (
                             <button
                               type="button"
-                              className="rounded-3xl border-transparent border-2 bg-blue-100 px-4 py-2 mx-1 my-1 text-xs font-medium text-blue-900"
+                              className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-xs font-medium text-blue-900"
                               onClick={() => setToggleAddTag(true)}
                             >
-                              Create Tag +
+                              Create New Tag +
                             </button>
                           )}
                         </div>
@@ -281,7 +280,7 @@ export default function CreateEvent({
                       selectedIndex === 0
                         ? !submitEventForm.name
                         : selectedIndex === 1
-                        ? submitEventForm.tagIds.length === 0
+                        ? false
                         : selectedIndex === 2
                         ? !submitEventForm.dateStart || !submitEventForm.dateEnd
                         : false
