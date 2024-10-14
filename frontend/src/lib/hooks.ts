@@ -1,7 +1,7 @@
 import { auth } from "@/lib/firebase";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { getUser } from "./users";
+import { addGroupToUserGroups, getUser } from "./users";
 import { User } from "@/models/User";
 import { GroupModel } from "@/models/Group";
 import { getGroup } from "./groups";
@@ -29,8 +29,15 @@ export function useGroupData(user: User | null | undefined, groupId: string) {
   const groupState = useState<GroupModel | null>(null);
 
   useEffect(() => {
-    if (user && groupId)
-      getGroup(groupId).then((group) => groupState[1](group));
+    if (user && groupId) {
+      if (!user.groups?.includes(groupId)) {
+        addGroupToUserGroups(user.id, groupId).then(() =>
+          window.location.reload()
+        );
+      } else {
+        getGroup(groupId).then((group) => groupState[1](group));
+      }
+    }
   }, [user]);
 
   return groupState;
@@ -40,8 +47,9 @@ export function useMembersData(user: User | null | undefined, groupId: string) {
   const membersState = useState<MemberModel[]>([]);
 
   useEffect(() => {
-    if (user && groupId)
+    if (user && user.groups?.includes(groupId)) {
       getMembers(groupId).then((members) => membersState[1](members));
+    }
   }, [user]);
 
   return membersState;

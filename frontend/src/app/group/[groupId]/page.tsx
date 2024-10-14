@@ -4,17 +4,14 @@ import Botbar from "@/components/Botbar";
 import EventComponent from "@/components/Event";
 import CreateEvent from "@/components/CreateEvent";
 import { Filter, InitFilter } from "@/helper/Filter";
-import { GroupContext, UserContext } from "@/lib/context";
+import { GroupContext } from "@/lib/context";
 import { getEvents, submitEvent } from "@/lib/events";
 import { EventModel, InitSubmitEvent, SubmitEventModel } from "@/models/Event";
 import { useContext, useEffect, useState } from "react";
 import { GroupId } from "@/models/Group";
-import { addGroupToUserGroups } from "@/lib/users";
 import { TagId, TagModel } from "@/models/Tag";
-import { getGroup } from "@/lib/groups";
 
 export default function Group({ params }: { params: { groupId: GroupId } }) {
-  const [user, setUser] = useContext(UserContext);
   const [group, setGroup] = useContext(GroupContext);
   const [events, setEvents] = useState<EventModel[]>([]);
   const [showedEvents, setShowedEvents] = useState<EventModel[]>([]);
@@ -51,19 +48,13 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   }
 
   useEffect(() => {
-    if (user?.id && (!user.groups || !user.groups.includes(params.groupId))) {
-      addGroupToUserGroups(user.id, params.groupId).then(() =>
-        getGroup(params.groupId).then((group) => {
-          setGroup(group);
-          setUser({ ...user, groups: [...user.groups, params.groupId] });
-        })
-      );
+    if (group) {
+      getEvents(params.groupId).then((events: EventModel[]) => {
+        setEvents(events);
+        setShowedEvents(events);
+      });
     }
-    getEvents(params.groupId).then((events) => {
-      setEvents(events);
-      setShowedEvents(events);
-    });
-  }, [user, params.groupId]);
+  }, [group, params.groupId]);
 
   return (
     <AuthCheck>

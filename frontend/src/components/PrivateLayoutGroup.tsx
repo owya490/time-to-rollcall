@@ -13,6 +13,7 @@ export default function PrivateLayoutGroup({
   params: { groupId: GroupId; page: string };
 }) {
   const [user] = useContext(UserContext);
+
   const groupData = useGroupData(user, params.groupId);
   const membersData = useMembersData(user, params.groupId);
   return (
