@@ -1,5 +1,5 @@
 import { MemberModel } from "@/models/Member";
-import MemberSignInCard from "./MemberSignInCard";
+import { MemberSignIn } from "./MemberSignInCard";
 
 interface AttendanceSignedInProps {
   signedIn?: MemberModel[];
@@ -19,10 +19,10 @@ export default function AttendanceSignedIn({
           SIGNED-IN
         </p>
       </div>
-      {signedIn?.map((member, index) => {
+      {signedIn?.map((member) => {
         return (
-          <MemberSignInCard
-            key={index}
+          <MemberSignIn
+            key={member.id}
             member={member}
             dragConfig={{
               draggable: true,

@@ -1,5 +1,5 @@
 import { MemberModel } from "@/models/Member";
-import MemberSignInCard from "./MemberSignInCard";
+import { MemberSignIn } from "./MemberSignInCard";
 
 interface AttendanceSuggested {
   suggested: MemberModel[];
@@ -26,10 +26,10 @@ export default function AttendanceSuggested({
           <p className="text-[10px] font-light">ATTENDANCE: {attendance}</p>
         </div>
       </div>
-      {suggested.map((member, index) => {
+      {suggested.map((member) => {
         return (
-          <MemberSignInCard
-            key={index}
+          <MemberSignIn
+            key={member.id}
             member={member}
             dragConfig={{
               draggable: true,

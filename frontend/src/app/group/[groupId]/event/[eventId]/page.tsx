@@ -51,8 +51,9 @@ export default function Event({
   useEffect(() => {
     let prevSearchActive = searchActive;
     setSearchActive(searchInput.length > 0);
-    if (prevSearchActive || searchInput.length > 0) {
+    if (searchInput.length > 0) {
       setLoadAnimation(false);
+      console.log(searchInput);
       const { suggested, notSuggested } = searchForMemberByName(
         membersNotSignedIn,
         searchInput
@@ -78,7 +79,7 @@ export default function Event({
             <div className="mb-3">
               <EventDetailsHeader event={event} />
             </div>
-            <h1 className="text-2xl mb-16">{event.name}</h1>
+            <h1 className="text-2xl mb-8">{event.name}</h1>
             <div className="mb-8">
               <AttendanceSearchBar
                 searchInput={searchInput}
