@@ -31,6 +31,7 @@ export default function Event({
   const [searchInput, setSearchInput] = useState<string>("");
   const [event, setEvent] = useState<EventModel>(InitEvent);
   const [members] = useContext(MembersContext);
+  const [loading, setLoading] = useState(true);
   const [membersNotSignedIn, setMembersNotSignedIn] = useState<MemberModel[]>(
     []
   );
@@ -45,6 +46,7 @@ export default function Event({
           (m) => !event.members?.some((signedIn) => signedIn.id === m.id)
         )
       );
+      setLoading(false);
     });
   }, [members]);
 
@@ -70,7 +72,9 @@ export default function Event({
       setLoadAnimation(true);
     }
   }, [membersNotSignedIn]);
-
+  if (loading) {
+    return <p>loading</p>;
+  }
   return (
     event && (
       <AuthCheck>

@@ -1,12 +1,14 @@
 "use client";
-import { Path } from "@/helper/Path";
+import { GroupPath, Path } from "@/helper/Path";
 import { GroupContext, UserContext } from "@/lib/context";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useContext } from "react";
+import { UserIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 
 export default function Topbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [user] = useContext(UserContext);
   const [group] = useContext(GroupContext);
   return (
@@ -26,38 +28,22 @@ export default function Topbar() {
         ) : (
           <p className="text-lg text-gray-500">Hi {user?.displayName}</p>
         )}
-        <div className="flex items-center justify-end gap-4">
-          {group && (
-            <Link href={Path.GroupMember}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="gray"
-                className="w-6 h-6"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </Link>
-          )}
-          {/* <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="gray"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+        {group && (
+          <div className="flex items-center justify-end gap-4">
+            <UserIcon
+              className="w-6 h-6 mr-2 text-gray-500"
+              onClick={() =>
+                router.push(Path.Group + "/" + group.id + GroupPath.Members)
+              }
             />
-          </svg> */}
-        </div>
+            <Cog6ToothIcon
+              className="w-6 h-6 mr-2 text-gray-500"
+              onClick={() =>
+                router.push(Path.Group + "/" + group.id + GroupPath.Settings)
+              }
+            />
+          </div>
+        )}
       </div>
     </nav>
   );
