@@ -41,7 +41,6 @@ function MemberSignInCard({
   refreshDependency,
   triggerAddAnimation,
 }: MemberSignInCardProps) {
-  console.log("rerender: " + member.name);
   const selectedRef = useRef(false);
   const id = member.id;
   const frontId = id + "Front";
@@ -80,6 +79,9 @@ function MemberSignInCard({
 
   useGSAP(() => {
     const handleDragEnd = (e) => {
+      if (e.pageX === 0 && e.pageY === 0) {
+        return;
+      }
       const velocity =
         (positionX.current - e.pageX) / (e.timeStamp - timeStamp.current);
       if (
