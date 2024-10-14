@@ -15,18 +15,10 @@ function Redirect() {
 
 export default function LogIn() {
   const [user] = useUserData();
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    if (user !== undefined) {
-      setLoading(false);
-    }
-  }, [user]);
   return (
     <main>
-      {loading ? (
-        <></>
-      ) : !user ? (
-        <h2>
+      {!user ? (
+        <h2 className="m-6">
           Sign in: <SignInButton />
         </h2>
       ) : (
