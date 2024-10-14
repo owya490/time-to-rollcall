@@ -66,8 +66,9 @@ export default function Botbar({
               tabIndex={-1}
             >
               <div role="none">
-                {tags.map((t) => (
+                {tags.map((t, i) => (
                   <Tag
+                    key={i}
                     className="block w-36 rounded-none"
                     selected={filteredTags.includes(t.id)}
                     tag={t}
