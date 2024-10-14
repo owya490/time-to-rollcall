@@ -4,6 +4,7 @@ import EventComponent from "@/components/Event";
 import AttendanceSearchBar from "@/components/event/AttendanceSearchBar";
 import AttendanceSignedIn from "@/components/event/AttendanceSignedIn";
 import AttendanceSuggested from "@/components/event/AttendanceSuggested";
+import Loader from "@/components/Loader";
 import { MembersContext } from "@/lib/context";
 import {
   addMemberToEvent,
@@ -55,7 +56,6 @@ export default function Event({
     setSearchActive(searchInput.length > 0);
     if (searchInput.length > 0) {
       setLoadAnimation(false);
-      console.log(searchInput);
       const { suggested, notSuggested } = searchForMemberByName(
         membersNotSignedIn,
         searchInput
@@ -73,7 +73,11 @@ export default function Event({
     }
   }, [membersNotSignedIn]);
   if (loading) {
-    return <p>loading</p>;
+    return (
+      <div className="flex justify-center items-center">
+        <Loader show />
+      </div>
+    );
   }
   return (
     event && (
@@ -109,7 +113,6 @@ export default function Event({
                   setIndex((prevIndex) => prevIndex - 1);
                 }
               }}
-              searchInput={searchInput}
             />
           </div>
           <div className="absolute mt-[275px] z-40 w-full">

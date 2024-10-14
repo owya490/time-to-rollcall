@@ -6,7 +6,6 @@ interface AttendanceSuggested {
   action: (member: MemberModel) => void;
   end: (member: MemberModel) => void;
   loadAnimation: boolean;
-  searchInput: string;
 }
 
 export default function AttendanceSuggested({
@@ -14,7 +13,6 @@ export default function AttendanceSuggested({
   action,
   end,
   loadAnimation,
-  searchInput,
 }: AttendanceSuggested) {
   return (
     <>

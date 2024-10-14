@@ -169,6 +169,7 @@ export default function CreateEvent({
                             <Tag
                               key={i}
                               tag={t}
+                              selected={submitEventForm.tagIds.includes(t.id)}
                               onClick={() =>
                                 setSubmitEventForm({
                                   ...submitEventForm,

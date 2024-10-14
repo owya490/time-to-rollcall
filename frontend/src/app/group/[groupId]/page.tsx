@@ -10,6 +10,7 @@ import { EventModel, InitSubmitEvent, SubmitEventModel } from "@/models/Event";
 import { useContext, useEffect, useState } from "react";
 import { GroupId } from "@/models/Group";
 import { TagId, TagModel } from "@/models/Tag";
+import Loader from "@/components/Loader";
 
 export default function Group({ params }: { params: { groupId: GroupId } }) {
   const [group, setGroup] = useContext(GroupContext);
@@ -20,11 +21,12 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   const [filter, setFilter] = useState<Filter>(InitFilter);
   const [filteredTags, setFilteredTags] = useState<TagId[]>([]);
   const [tagsOpen, setTagsOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [submitEventForm, setSubmitEventForm] =
     useState<SubmitEventModel>(InitSubmitEvent);
 
-  let [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
     setIsOpen(false);
@@ -52,10 +54,18 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
       getEvents(params.groupId).then((events: EventModel[]) => {
         setEvents(events);
         setShowedEvents(events);
+        setLoading(false);
       });
     }
   }, [group, params.groupId]);
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center">
+        <Loader show />
+      </div>
+    );
+  }
   return (
     <AuthCheck>
       {group && (
