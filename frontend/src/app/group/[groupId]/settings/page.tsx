@@ -13,6 +13,7 @@ export default function GroupSettings() {
       <p>Change settings</p>
       <p>TODO: change group name</p>
       <p>TODO: change tag names</p>
+      <p>TODO: change tag colours</p>
       <p>TODO: remove tags</p>
     </AuthCheck>
   );

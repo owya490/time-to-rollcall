@@ -1,13 +1,14 @@
 import { EventModel } from "@/models/Event";
 import LiveBadge from "./LiveBadge";
 import { hoursAndMinutes, inBetween, sameDay, toddMMYYYY } from "@/helper/Time";
+import Tag from "./Tag";
 
 export default function EventDetailsHeader({ event }: { event: EventModel }) {
   const now = new Date();
   const happeningNow = inBetween(event.dateStart, now, event.dateEnd);
   return (
     <>
-      <div className="flex items-center w-full h-min">
+      <div className="flex items-center w-full h-min mb-3">
         <p className="text-gray-500 text-xs font-medium">
           {toddMMYYYY(event.dateStart)}
           {sameDay(event.dateStart, event.dateEnd)
@@ -24,18 +25,18 @@ export default function EventDetailsHeader({ event }: { event: EventModel }) {
           )}
         </div>
       </div>
-      <div className="flex flex-wrap justify-start">
+      <div className="flex flex-wrap justify-start pt-4">
         {event.tags?.map((t, i) => (
-          <button
-            type="button"
-            key={i}
-            disabled
-            className="rounded-3xl border-transparent border-2 bg-blue-100 px-2 py-1 mr-2 my-1 text-xs font-medium text-blue-900"
-          >
-            {t.name}
-          </button>
+          <Tag key={i} tag={t} disabled />
         ))}
       </div>
+      <h1
+        className={
+          happeningNow ? "text-2xl font-semibold" : "text-lg font-semibold"
+        }
+      >
+        {event.name}
+      </h1>
     </>
   );
 }

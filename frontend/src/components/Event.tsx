@@ -12,14 +12,13 @@ function EventHappeningNow({
   groupId: string;
 }) {
   return (
-    <div className="mx-6">
+    <div className="mx-6 my-4">
       <EventDetailsHeader event={event} />
-      <h1 className="text-2xl font-semibold pb-28 mt-4">{event.name}</h1>
       <div className="flex items-center justify-between">
         <button
           type="button"
           disabled
-          className="text-gray-900 bg-[#e8e8e8] rounded-md font-medium text-xs p-1.5"
+          className="text-gray-900 bg-gray-200 rounded-md font-medium text-xs p-1.5"
         >
           ATTENDANCE: {event.members?.length ?? 0}
         </button>
@@ -43,19 +42,14 @@ function EventOther({
   groupId: string;
 }) {
   return (
-    <div className="mx-6">
+    <div className="mx-6 my-4">
       <div className="mb-3">
         <EventDetailsHeader event={event} />
       </div>
-      <h1 className="text-lg font-semibold pb-8">{event.name}</h1>
       <div className="flex items-center justify-between">
-        <button
-          type="button"
-          disabled
-          className="text-gray-900 bg-[#e8e8e8] rounded-md font-medium text-xs p-1.5"
-        >
+        <p className="text-gray-900 font-medium text-xs">
           ATTENDANCE: {event.members?.length ?? 0}
-        </button>
+        </p>
         <Link
           type="button"
           href={`${Path.Group}/${groupId}/event/${event.id}`}

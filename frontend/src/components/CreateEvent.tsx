@@ -5,6 +5,7 @@ import { GroupId } from "@/models/Group";
 import { TagModel } from "@/models/Tag";
 import { Dialog, Tab, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
+import Tag from "./event/Tag";
 
 export default function CreateEvent({
   groupId,
@@ -165,14 +166,9 @@ export default function CreateEvent({
                         </p>
                         <div className="flex flex-wrap justify-center">
                           {tags?.map((t, i) => (
-                            <button
-                              type="button"
+                            <Tag
                               key={i}
-                              className={
-                                submitEventForm.tagIds.includes(t.id)
-                                  ? "rounded-3xl border-solid border-blue-800 border-2 bg-blue-100 px-2 py-1 mx-1 my-1 text-xs font-medium text-blue-900"
-                                  : "rounded-3xl border-transparent border-2 bg-blue-100 px-2 py-1 mx-1 my-1 text-xs font-medium text-blue-900"
-                              }
+                              tag={t}
                               onClick={() =>
                                 setSubmitEventForm({
                                   ...submitEventForm,
@@ -192,9 +188,7 @@ export default function CreateEvent({
                                     : submitEventForm.tagIds.concat(t.id),
                                 })
                               }
-                            >
-                              {t.name}
-                            </button>
+                            />
                           ))}
                           {toggleAddTag ? (
                             <input

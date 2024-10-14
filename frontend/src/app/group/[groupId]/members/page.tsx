@@ -8,9 +8,8 @@ export default function GroupMember() {
   return (
     <AuthCheck>
       <p>This is the group member page {user?.displayName}</p>
-      <p>Create Member</p>
-      <p>Name: </p>
-      <p>Photo: </p>
+      <p>TODO: Create New Member</p>
+      <p>TODO: Edit Members</p>
     </AuthCheck>
   );
 }

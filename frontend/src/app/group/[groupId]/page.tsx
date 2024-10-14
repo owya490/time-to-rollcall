@@ -99,6 +99,8 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
             ))}
         </div>
       </div>
+      <p>TODO: Sort by tags</p>
+      <p>TODO: Scroll load</p>
       <Botbar
         filter={filter}
         filterEvents={(f) => {
