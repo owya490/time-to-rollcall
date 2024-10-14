@@ -1,17 +1,17 @@
 import { EventModel } from "@/models/Event";
 import LiveBadge from "./LiveBadge";
-import { inBetween, sameDay, toddMMYYYY } from "@/helper/Time";
+import { hoursAndMinutes, inBetween, sameDay, toddMMYYYY } from "@/helper/Time";
 
 export default function EventDetailsHeader({ event }: { event: EventModel }) {
   const now = new Date();
   const happeningNow = inBetween(event.dateStart, now, event.dateEnd);
   return (
     <div className="flex items-center w-full h-min">
-      <p className="text-gray-500 font-light text-sm">
+      <p className="text-gray-500 text-xs font-medium">
         {toddMMYYYY(event.dateStart)}
-        {!sameDay(event.dateStart, event.dateEnd)
-          ? " - " + toddMMYYYY(event.dateEnd)
-          : ""}
+        {sameDay(event.dateStart, event.dateEnd)
+          ? " - " + hoursAndMinutes(event.dateEnd)
+          : " - " + toddMMYYYY(event.dateEnd)}
       </p>
       <div className="flex ml-auto">
         {happeningNow ? (

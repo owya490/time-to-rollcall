@@ -25,3 +25,11 @@ export const InitSubmitEvent = {
   dateStart: new Date(),
   dateEnd: new Date(),
 };
+
+export const InitEvent: EventModel = {
+  id: "1",
+  name: "",
+  tags: [],
+  dateStart: new Date(),
+  dateEnd: new Date(),
+};

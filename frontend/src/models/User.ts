@@ -6,5 +6,5 @@ export interface User {
   id: UserId;
   email: string;
   groups: GroupId[];
-  displayName?: string;
+  displayName: string | null;
 }

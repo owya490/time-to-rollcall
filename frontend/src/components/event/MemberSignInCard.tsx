@@ -78,7 +78,7 @@ function MemberSignInCard({
   }, [triggerAddAnimation]);
 
   useGSAP(() => {
-    const handleDragEnd = (e) => {
+    const handleDragEnd = (e: any) => {
       if (e.pageX === 0 && e.pageY === 0) {
         selectedRef.current = false;
         gsap.to(frontRef.current, {

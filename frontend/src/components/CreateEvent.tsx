@@ -212,7 +212,10 @@ export default function CreateEvent({
                                 event.key === "Enter" &&
                                 addTag(groupId, newTag).then((tagId) => {
                                   setTags(
-                                    tags.concat({ id: tagId, name: newTag })
+                                    (tags ?? []).concat({
+                                      id: tagId,
+                                      name: newTag,
+                                    })
                                   );
                                   setToggleAddTag(false);
                                   setNewTag("");

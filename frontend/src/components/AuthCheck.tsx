@@ -5,7 +5,10 @@ import { redirect, usePathname } from "next/navigation";
 import { Path } from "@/helper/Path";
 
 // Component's children only shown to logged-in users
-export default function AuthCheck(props) {
+export default function AuthCheck(props: {
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
+}) {
   const [user] = useContext(UserContext);
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);

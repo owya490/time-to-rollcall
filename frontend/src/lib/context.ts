@@ -4,11 +4,11 @@ import { User } from "@/models/User";
 import { Dispatch, SetStateAction, createContext } from "react";
 
 export const UserContext = createContext<
-  [User | null, Dispatch<SetStateAction<User>>]
+  [User | null | undefined, Dispatch<SetStateAction<User | null | undefined>>]
 >([null, () => {}]);
 
 export const GroupContext = createContext<
-  [GroupModel | null, Dispatch<SetStateAction<GroupModel>>]
+  [GroupModel | null, Dispatch<SetStateAction<GroupModel | null>>]
 >([null, () => {}]);
 
 export const MembersContext = createContext<

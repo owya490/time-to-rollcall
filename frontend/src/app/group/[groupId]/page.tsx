@@ -36,13 +36,15 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   }
 
   function createEvent() {
-    submitEvent(group.id, submitEventForm).then((submittedEvent) => {
-      let newEvents = [submittedEvent].concat(events);
-      setEvents(newEvents);
-      setShowedEvents(filter.sort(newEvents));
-      setSelectedIndex(0);
-    });
-    setSubmitEventForm(InitSubmitEvent);
+    if (group) {
+      submitEvent(group.id, submitEventForm).then((submittedEvent) => {
+        let newEvents = [submittedEvent].concat(events);
+        setEvents(newEvents);
+        setShowedEvents(filter.sort(newEvents));
+        setSelectedIndex(0);
+      });
+      setSubmitEventForm(InitSubmitEvent);
+    }
     closeModal();
   }
 

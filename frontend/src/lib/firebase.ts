@@ -30,7 +30,7 @@ const firebaseConfig = {
   appId: "1:242180253857:web:d96b375b23cbfb6b9668e0",
   measurementId: "G-0WVS694BHZ",
 };
-function createFirebaseApp(config) {
+function createFirebaseApp(config: any) {
   try {
     return getApp();
   } catch {

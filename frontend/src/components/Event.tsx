@@ -1,8 +1,8 @@
 import { Path } from "@/helper/Path";
 import { EventModel } from "@/models/Event";
-import { inBetween, sameDay, toddMMYYYY } from "helper/Time";
+import { inBetween } from "helper/Time";
 import Link from "next/link";
-import LiveBadge from "./event/LiveBadge";
+import EventDetailsHeader from "./event/EventDetailsHeader";
 
 function EventHappeningNow({
   event,
@@ -13,25 +13,15 @@ function EventHappeningNow({
 }) {
   return (
     <div className="mx-6">
-      <div className="flex items-start justify-between">
-        <p className="text-gray-500 text-xs font-medium pb-2">
-          {toddMMYYYY(event.dateStart)}
-          {!sameDay(event.dateStart, event.dateEnd)
-            ? " - " + toddMMYYYY(event.dateEnd)
-            : ""}
-        </p>
-        <div className="flex items-center">
-          <LiveBadge />
-        </div>
-      </div>
-      <h1 className="text-2xl font-semibold pb-32">{event.name}</h1>
+      <EventDetailsHeader event={event} />
+      <h1 className="text-2xl font-semibold pb-28 mt-4">{event.name}</h1>
       <div className="flex items-center justify-between">
         <button
           type="button"
           disabled
           className="text-gray-900 bg-[#e8e8e8] rounded-md font-medium text-xs p-1.5"
         >
-          ATTENDANCE: 20
+          ATTENDANCE: {event.members?.length}
         </button>
         <Link
           type="button"
@@ -52,23 +42,20 @@ function EventOther({
   event: EventModel;
   groupId: string;
 }) {
-  const now = new Date();
   return (
     <div className="mx-6">
-      <div className="flex items-start justify-between">
-        <p className="text-gray-500 text-xs font-medium pb-2">
-          {toddMMYYYY(event.dateStart)}
-          {!sameDay(event.dateStart, event.dateEnd)
-            ? " - " + toddMMYYYY(event.dateEnd)
-            : ""}
-        </p>
-        <p className="text-xs font-medium text-gray-500">
-          {now < event.dateStart ? "NOT YET" : "ENDED"}
-        </p>
+      <div className="mb-3">
+        <EventDetailsHeader event={event} />
       </div>
       <h1 className="text-lg font-semibold pb-8">{event.name}</h1>
       <div className="flex items-center justify-between">
-        <p className="text-gray-900 font-medium text-xs">ATTENDANCE: 20</p>
+        <button
+          type="button"
+          disabled
+          className="text-gray-900 bg-[#e8e8e8] rounded-md font-medium text-xs p-1.5"
+        >
+          ATTENDANCE: {event.members?.length}
+        </button>
         <Link
           type="button"
           href={`${Path.Group}/${groupId}/event/${event.id}`}

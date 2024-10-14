@@ -10,7 +10,7 @@ import {
   getEvent,
   removeMemberFromEvent,
 } from "@/lib/events";
-import { EventId, EventModel } from "@/models/Event";
+import { EventId, EventModel, InitEvent } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import { MemberModel } from "@/models/Member";
 import { useGSAP } from "@gsap/react";
@@ -29,7 +29,7 @@ export default function Event({
   const { groupId, eventId } = params;
   const [searchActive, setSearchActive] = useState(false);
   const [searchInput, setSearchInput] = useState<string>("");
-  const [event, setEvent] = useState<EventModel>();
+  const [event, setEvent] = useState<EventModel>(InitEvent);
   const [members] = useContext(MembersContext);
   const [membersNotSignedIn, setMembersNotSignedIn] = useState<MemberModel[]>(
     []
@@ -79,7 +79,7 @@ export default function Event({
             <div className="mb-3">
               <EventDetailsHeader event={event} />
             </div>
-            <h1 className="text-2xl mb-8">{event.name}</h1>
+            <h1 className="text-lg font-semibold pb-8">{event.name}</h1>
             <div className="mb-8">
               <AttendanceSearchBar
                 searchInput={searchInput}
@@ -94,7 +94,7 @@ export default function Event({
               action={(member: MemberModel) => {
                 setEvent((prevEvent) => ({
                   ...prevEvent,
-                  members: (prevEvent.members ?? []).concat(member),
+                  members: (prevEvent?.members ?? []).concat(member),
                 }));
                 addMemberToEvent(groupId, eventId, member.id);
               }}
@@ -119,7 +119,8 @@ export default function Event({
               end={(member: MemberModel) => {
                 setEvent((prevEvent) => ({
                   ...prevEvent,
-                  members: prevEvent.members.filter((m) => m.id !== member.id),
+                  members:
+                    prevEvent.members?.filter((m) => m.id !== member.id) ?? [],
                 }));
                 removeMemberFromEvent(groupId, eventId, member.id);
               }}

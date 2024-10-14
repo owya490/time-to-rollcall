@@ -25,7 +25,7 @@ export function useUserData() {
   return userState;
 }
 
-export function useGroupData(user: User, groupId: string) {
+export function useGroupData(user: User | null | undefined, groupId: string) {
   const groupState = useState<GroupModel | null>(null);
 
   useEffect(() => {
@@ -36,8 +36,8 @@ export function useGroupData(user: User, groupId: string) {
   return groupState;
 }
 
-export function useMembersData(user: User, groupId: string) {
-  const membersState = useState<MemberModel[] | null>([]);
+export function useMembersData(user: User | null | undefined, groupId: string) {
+  const membersState = useState<MemberModel[]>([]);
 
   useEffect(() => {
     if (user && groupId)
