@@ -1,7 +1,7 @@
 "use client";
 import AuthCheck from "@/components/AuthCheck";
 import Botbar from "@/components/Botbar";
-import Event from "@/components/Event";
+import EventComponent from "@/components/Event";
 import CreateEvent from "@/components/CreateEvent";
 import { Filter, InitFilter } from "@/helper/Filter";
 import { GroupContext, UserContext } from "@/lib/context";
@@ -83,7 +83,9 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
       {showedEvents.map((event, i) => (
         <div key={i}>
           <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />
-          <Event event={event} groupId={params.groupId} />
+          <div className="mx-6 my-4">
+            <EventComponent event={event} groupId={params.groupId} showButton />
+          </div>
         </div>
       ))}
       <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />

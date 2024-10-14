@@ -1,9 +1,9 @@
 "use client";
 import AuthCheck from "@/components/AuthCheck";
+import EventComponent from "@/components/Event";
 import AttendanceSearchBar from "@/components/event/AttendanceSearchBar";
 import AttendanceSignedIn from "@/components/event/AttendanceSignedIn";
 import AttendanceSuggested from "@/components/event/AttendanceSuggested";
-import EventDetailsHeader from "@/components/event/EventDetailsHeader";
 import { MembersContext } from "@/lib/context";
 import {
   addMemberToEvent,
@@ -81,9 +81,8 @@ export default function Event({
         <div className="relative">
           <div className="mx-6">
             <div className="mb-3">
-              <EventDetailsHeader event={event} />
+              <EventComponent event={event} groupId={groupId} />
             </div>
-            <h1 className="text-lg font-semibold pb-8">{event.name}</h1>
             <div className="mb-8">
               <AttendanceSearchBar
                 searchInput={searchInput}
