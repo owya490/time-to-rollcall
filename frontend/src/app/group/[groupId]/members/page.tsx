@@ -9,8 +9,14 @@ import { useContext, useEffect, useState } from "react";
 import { searchForMemberByName } from "services/attendanceService";
 import EditMember from "@/components/members/EditMember";
 import { University } from "@/models/University";
+import { createMember, updateMember } from "@/lib/members";
+import { GroupId } from "@/models/Group";
 
-export default function GroupMember() {
+export default function GroupMember({
+  params,
+}: {
+  params: { groupId: GroupId };
+}) {
   const [searchActive, setSearchActive] = useState(false);
   const [searchInput, setSearchInput] = useState<string>("");
   const [members, setMembers] = useContext(MembersContext);
@@ -19,6 +25,7 @@ export default function GroupMember() {
   );
   const [membersShown, setMembersShown] = useState<MemberModel[]>([]);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -45,9 +52,26 @@ export default function GroupMember() {
     setIsOpen(true);
   }
 
-  function updateMember() {
-    // TODO create or update
+  async function editMember() {
+    setUpdating(true);
+    if (selectedMember.id === "placeholder") {
+      let newMember = await createMember(params.groupId, selectedMember);
+      setMembers((prevMembers) => prevMembers.concat(newMember));
+    } else {
+      await updateMember(params.groupId, selectedMember);
+      members.findIndex((m) => m.id === selectedMember.id);
+      setMembers((prevMembers) => {
+        let index = prevMembers.findIndex((m) => m.id === selectedMember.id);
+        return [
+          ...prevMembers.slice(0, index),
+          selectedMember,
+          ...prevMembers.slice(index + 1),
+        ];
+      });
+    }
+    setUpdating(false);
     closeModal();
+    setSearchInput("");
   }
 
   if (loading) {
@@ -64,7 +88,8 @@ export default function GroupMember() {
         closeModal={closeModal}
         member={selectedMember}
         setMember={setSelectedMember}
-        submit={updateMember}
+        submit={editMember}
+        updating={updating}
       />
       <div className="relative">
         <div className="mx-6">

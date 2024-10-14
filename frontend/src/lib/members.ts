@@ -1,11 +1,31 @@
 import { convertCollectionToJavascript, firestore } from "@/lib/firebase";
 import { GroupId } from "@/models/Group";
 import { MemberModel } from "@/models/Member";
-import { collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, setDoc } from "firebase/firestore";
 
 export async function getMembers(groupId: GroupId) {
   const members = await getDocs(
     collection(firestore, "groups", groupId, "members")
   );
   return (await convertCollectionToJavascript(members.docs)) as MemberModel[];
+}
+
+export async function createMember(groupId: GroupId, member: MemberModel) {
+  const ref = await addDoc(
+    collection(firestore, "groups", groupId, "members"),
+    convertMemberToDocument(member)
+  );
+  return { ...member, id: ref.id } as MemberModel;
+}
+
+export async function updateMember(groupId: GroupId, member: MemberModel) {
+  await setDoc(
+    doc(firestore, "groups", groupId, "members", member.id),
+    convertMemberToDocument(member)
+  );
+}
+
+function convertMemberToDocument(member: MemberModel) {
+  const { id, ...memberWithoutId } = member;
+  return memberWithoutId;
 }

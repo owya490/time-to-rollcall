@@ -10,7 +10,7 @@ export default function PrivateLayoutGroup({
   params,
 }: {
   children: React.ReactNode;
-  params: { groupId: GroupId; page: string };
+  params: { groupId: GroupId };
 }) {
   const [user] = useContext(UserContext);
 

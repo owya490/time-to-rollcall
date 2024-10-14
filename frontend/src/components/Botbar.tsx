@@ -59,7 +59,7 @@ export default function Botbar({
           </div>
           {tagsOpen && (
             <div
-              className="absolute right-10 bottom-12 z-10 mt-2 w-36 origin-bottom rounded-md bg-transparent focus:outline-none"
+              className="absolute right-10 bottom-12 z-10 mt-2 w-32 origin-bottom rounded-md bg-transparent focus:outline-none"
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="menu-button"
@@ -69,7 +69,7 @@ export default function Botbar({
                 {tags.map((t, i) => (
                   <Tag
                     key={i}
-                    className="block w-36"
+                    className="block w-32 "
                     selected={filteredTags.includes(t.id)}
                     tag={t}
                     onClick={() => {

@@ -1,5 +1,5 @@
 "use client";
-import { MemberModel } from "@/models/Member";
+import { getYearString, MemberModel } from "@/models/Member";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { FC, memo } from "react";
@@ -39,12 +39,12 @@ function MemberCard({ member, action }: MemberCardProps) {
             />
             <div>
               <h3 className="font-light mb-2">{member.name}</h3>
-              <p className="text-xs text-gray-500 font-thin">
-                TODO: 2nd Year • Student Leader
+              <p className="text-xs text-gray-500 font-extralight">
+                {getYearString(member.year)} • {member.role}
               </p>
             </div>
             <div className="ml-auto">
-              <GroupBadge />
+              <GroupBadge campus={member.campus} />
             </div>
           </div>
         </div>

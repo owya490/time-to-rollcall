@@ -3,7 +3,18 @@ import { addTag } from "@/lib/tags";
 import { SubmitEventModel } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import { TagModel } from "@/models/Tag";
-import { Dialog, Tab, Transition } from "@headlessui/react";
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Tab,
+  TabGroup,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Transition,
+  TransitionChild,
+} from "@headlessui/react";
 import { Fragment, useState } from "react";
 import Tag from "./event/Tag";
 
@@ -43,7 +54,7 @@ export default function CreateEvent({
         className="fixed inset-0 z-50 w-full"
         onClose={closeModal}
       >
-        <Transition.Child
+        <TransitionChild
           as={Fragment}
           enter="ease-out duration-300"
           enterFrom="opacity-0"
@@ -53,10 +64,10 @@ export default function CreateEvent({
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-black/25" />
-        </Transition.Child>
+        </TransitionChild>
         <div className="fixed inset-0">
           <div className="absolute w-full bottom-0">
-            <Transition.Child
+            <TransitionChild
               enter="transition ease-in-out duration-300 transform"
               enterFrom="transform translate-y-full"
               enterTo="transform translate-y-0"
@@ -64,7 +75,7 @@ export default function CreateEvent({
               leaveFrom="transform translate-y-0"
               leaveTo="transform translate-y-full"
             >
-              <Dialog.Panel className="rounded-t-3xl bg-white p-6 text-center shadow-xl">
+              <DialogPanel className="rounded-t-3xl bg-white p-6 text-center shadow-xl">
                 <div className="absolute right-6 top-6">
                   <svg
                     className="hover:cursor-pointer"
@@ -92,11 +103,11 @@ export default function CreateEvent({
                     />
                   </svg>
                 </div>
-                <Tab.Group
+                <TabGroup
                   selectedIndex={selectedIndex}
                   onChange={setSelectedIndex}
                 >
-                  <Tab.List className="flex justify-center space-x-2 rounded-xl p-1.5">
+                  <TabList className="flex justify-center space-x-2 rounded-xl p-1.5">
                     <Tab
                       className={({ selected }) =>
                         selected || selectedIndex >= 1
@@ -119,16 +130,16 @@ export default function CreateEvent({
                           : "w-12 h-0.5 rounded-xl bg-blue-100"
                       }
                     />
-                  </Tab.List>
-                  <Tab.Panels className="mt-3">
-                    <Tab.Panel>
+                  </TabList>
+                  <TabPanels className="mt-3">
+                    <TabPanel>
                       <ul>
-                        <Dialog.Title
+                        <DialogTitle
                           as="h3"
                           className="text-xl font-medium leading-6 text-gray-900"
                         >
                           Create Your event.
-                        </Dialog.Title>
+                        </DialogTitle>
                         <p className="mt-2 px-12 text-sm text-gray-500">
                           Start by naming your event. This will be the name
                           displayed for everyone but it can always be changed
@@ -148,15 +159,15 @@ export default function CreateEvent({
                           }
                         />
                       </ul>
-                    </Tab.Panel>
-                    <Tab.Panel>
+                    </TabPanel>
+                    <TabPanel>
                       <ul>
-                        <Dialog.Title
+                        <DialogTitle
                           as="h3"
                           className="text-xl font-medium leading-6 text-gray-900"
                         >
                           Categorise your event.
-                        </Dialog.Title>
+                        </DialogTitle>
                         <p className="mt-2 px-8 text-sm text-gray-500">
                           Attach relevant tags make it easier to organise your
                           events into categories.
@@ -227,15 +238,15 @@ export default function CreateEvent({
                           )}
                         </div>
                       </ul>
-                    </Tab.Panel>
-                    <Tab.Panel>
+                    </TabPanel>
+                    <TabPanel>
                       <ul>
-                        <Dialog.Title
+                        <DialogTitle
                           as="h3"
                           className="text-xl font-medium leading-6 text-gray-900"
                         >
                           Set the day and time.
-                        </Dialog.Title>
+                        </DialogTitle>
                         <div className="flex flex-wrap mt-16 mb-4 justify-between items-center">
                           <p className="text-xs">Start Time</p>
                           <input
@@ -270,8 +281,8 @@ export default function CreateEvent({
                           />
                         </div>
                       </ul>
-                    </Tab.Panel>
-                  </Tab.Panels>
+                    </TabPanel>
+                  </TabPanels>
                   <button
                     type="button"
                     disabled={
@@ -288,9 +299,9 @@ export default function CreateEvent({
                   >
                     {selectedIndex === 2 ? "Create event" : "Next"}
                   </button>
-                </Tab.Group>
-              </Dialog.Panel>
-            </Transition.Child>
+                </TabGroup>
+              </DialogPanel>
+            </TransitionChild>
           </div>
         </div>
       </Dialog>
