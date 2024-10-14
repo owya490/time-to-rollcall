@@ -160,7 +160,7 @@ function MemberSignInCard({
             <div>
               <h3 className="font-light mb-2">{member.name}</h3>
               <p className="text-xs text-gray-500 font-thin">
-                2nd Year • Student Leader
+                TODO: 2nd Year • Student Leader
               </p>
             </div>
             <div className="ml-auto">
