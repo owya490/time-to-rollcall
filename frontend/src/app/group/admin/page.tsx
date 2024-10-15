@@ -3,23 +3,20 @@ import AuthCheck from "@/components/AuthCheck";
 import Topbar from "@/components/Topbar";
 import { Path } from "@/helper/Path";
 import { UserContext } from "@/lib/context";
-import { getGroups } from "@/lib/groups";
-import { GroupModel } from "@/models/Group";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 
 export default function GroupAdmin() {
   const [user] = useContext(UserContext);
   const router = useRouter();
-  const [groups, setGroups] = useState<GroupModel[]>([]);
 
   useEffect(() => {
     if (user) {
       if (user?.role !== "admin") {
         router.push(Path.Group);
       }
-      getGroups(user.groups).then((groups) => setGroups(groups));
     }
+    // eslint-disable-next-line
   }, [user]);
 
   return (

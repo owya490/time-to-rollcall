@@ -113,6 +113,7 @@ export default function EditGroup({
                     {group.tags?.map((t, i) =>
                       editTag?.id === t.id ? (
                         <input
+                          key={i}
                           type="text"
                           style={{
                             width: `${editTag.name.length + 3}ch`,

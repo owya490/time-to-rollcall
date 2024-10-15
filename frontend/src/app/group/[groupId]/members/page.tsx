@@ -43,6 +43,7 @@ export default function GroupMember({
     } else if (prevSearchActive && searchInput.length === 0) {
       setMembersShown(members);
     }
+    // eslint-disable-next-line
   }, [searchInput]);
 
   function closeModal() {

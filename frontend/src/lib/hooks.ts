@@ -38,7 +38,6 @@ export function useGroupData(user: User | null | undefined, groupId: string) {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(user);
     if (user && groupId) {
       if (user.groups?.includes(groupId)) {
         getGroup(groupId).then((group) => {
@@ -65,7 +64,8 @@ export function useGroupData(user: User | null | undefined, groupId: string) {
         );
       }
     }
-  }, [user]);
+    // eslint-disable-next-line
+  }, [user, groupId]);
 
   return groupState;
 }
@@ -77,7 +77,8 @@ export function useMembersData(user: User | null | undefined, groupId: string) {
     if (user && user.groups?.includes(groupId)) {
       getMembers(groupId).then((members) => membersState[1](members));
     }
-  }, [user]);
+    // eslint-disable-next-line
+  }, [user, groupId]);
 
   return membersState;
 }
@@ -100,7 +101,8 @@ export function useEventData(
         }
       });
     }
-  }, [user]);
+    // eslint-disable-next-line
+  }, [user, groupId, eventId]);
 
   return eventState;
 }

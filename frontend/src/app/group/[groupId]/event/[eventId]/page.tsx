@@ -99,13 +99,16 @@ export default function Event({
     } else if (prevSearchActive && searchInput.length === 0) {
       setIndex(5);
     }
+    // eslint-disable-next-line
   }, [searchInput]);
 
   useEffect(() => {
     if (searchInput.length === 0) {
       setLoadAnimation(true);
     }
+    // eslint-disable-next-line
   }, [membersNotSignedIn]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center">
