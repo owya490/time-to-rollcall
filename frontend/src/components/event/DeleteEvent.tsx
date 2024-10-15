@@ -8,7 +8,7 @@ import {
 import { Fragment } from "react";
 import Loader from "../Loader";
 
-export default function EditEvent({
+export default function DeleteEvent({
   isOpen,
   closeModal,
   deleteEvent,

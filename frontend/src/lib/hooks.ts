@@ -78,7 +78,7 @@ export function useMembersData(
   user: User | null | undefined,
   group: GroupModel | null
 ) {
-  const membersState = useState<MemberModel[]>([]);
+  const membersState = useState<MemberModel[] | null>(null);
 
   useEffect(() => {
     if (user && group && user.groups?.includes(group.id)) {

@@ -13,8 +13,8 @@ export const GroupContext = createContext<
 >([null, () => {}]);
 
 export const MembersContext = createContext<
-  [MemberModel[], Dispatch<SetStateAction<MemberModel[]>>]
->([[], () => {}]);
+  [MemberModel[] | null, Dispatch<SetStateAction<MemberModel[] | null>>]
+>([null, () => {}]);
 
 export const EventContext = createContext<
   [EventModel | null, Dispatch<SetStateAction<EventModel | null>>]

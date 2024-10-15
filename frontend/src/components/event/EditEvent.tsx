@@ -67,7 +67,7 @@ export default function EditEvent({
       {deleteConfirmationIsOpen !== undefined &&
         closeDeleteConfirmationModal &&
         deleteEvent &&
-        updatingDelete && (
+        updatingDelete !== undefined && (
           <DeleteEvent
             isOpen={deleteConfirmationIsOpen}
             closeModal={closeDeleteConfirmationModal}

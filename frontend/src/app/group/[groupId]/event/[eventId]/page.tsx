@@ -56,17 +56,21 @@ export default function Event({
     setUpdating(true);
     if (selectedMember.id === "placeholder") {
       let newMember = await createMember(params.groupId, selectedMember);
-      setMembers((prevMembers) => prevMembers.concat(newMember));
+      setMembers((prevMembers) => (prevMembers ?? []).concat(newMember));
+      setMembersNotSignedIn((prevMembers) => prevMembers.concat(newMember));
     } else {
       await updateMember(params.groupId, selectedMember);
-      members.findIndex((m) => m.id === selectedMember.id);
       setMembers((prevMembers) => {
-        let index = prevMembers.findIndex((m) => m.id === selectedMember.id);
-        return [
-          ...prevMembers.slice(0, index),
-          selectedMember,
-          ...prevMembers.slice(index + 1),
-        ];
+        let index = prevMembers?.findIndex((m) => m.id === selectedMember.id);
+        if (index && index !== -1) {
+          return [
+            ...(prevMembers ?? []).slice(0, index),
+            selectedMember,
+            ...(prevMembers ?? []).slice(index + 1),
+          ];
+        } else {
+          return prevMembers;
+        }
       });
     }
     setUpdating(false);
@@ -75,7 +79,7 @@ export default function Event({
   }
 
   useEffect(() => {
-    if (event) {
+    if (event && members !== null && loading) {
       setMembersNotSignedIn(
         members.filter(
           (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)
@@ -84,7 +88,7 @@ export default function Event({
       setLoading(false);
     }
     // eslint-disable-next-line
-  }, [members, event]);
+  }, [event, members]);
 
   useEffect(() => {
     let prevSearchActive = searchActive;
