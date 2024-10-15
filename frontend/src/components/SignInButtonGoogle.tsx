@@ -1,7 +1,7 @@
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleAuthProvider } from "@/lib/firebase";
 
-export default function SignInButton() {
+export default function SignInButtonGoogle() {
   const signInWithGoogle = async () => {
     await signInWithPopup(auth, googleAuthProvider);
   };
