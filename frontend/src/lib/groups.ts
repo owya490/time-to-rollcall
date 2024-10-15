@@ -3,7 +3,7 @@ import { convertToJavascript, firestore } from "@/lib/firebase";
 import { GroupModel } from "@/models/Group";
 import { getTags } from "./tags";
 import { addGroupToUserGroups } from "./users";
-import { UserId } from "@/models/User";
+import { User } from "@/models/User";
 
 export async function getGroups(groupIds?: string[]) {
   const groups: GroupModel[] = [];
@@ -21,31 +21,27 @@ export async function getGroups(groupIds?: string[]) {
 
 export async function getGroup(groupId: string) {
   let groupDoc = await getDoc(doc(firestore, "groups", groupId));
-  let tags = await getTags(groupId);
   let data = await convertToJavascript(groupDoc);
   if (data) {
+    let tags = await getTags(groupId);
     return { ...(await convertToJavascript(groupDoc)), tags } as GroupModel;
   } else {
     return undefined;
   }
 }
 
-export async function createGroup(
-  name: string,
-  tagNames: string[],
-  userId: UserId
-) {
+export async function createGroup(user: User, group: GroupModel) {
   const addedDoc = await addDoc(collection(firestore, "groups"), {
-    name,
+    name: group.name,
   });
-  await addGroupToUserGroups(userId, addedDoc.id);
-  for (const tagName of tagNames) {
+  await addGroupToUserGroups(user.id, addedDoc.id);
+  for (const tag of group.tags) {
     await addDoc(collection(firestore, "groups", addedDoc.id, "tags"), {
-      name: tagName,
+      name: tag.name,
     });
   }
 
-  return getGroup(addedDoc.id);
+  return await getGroup(addedDoc.id);
 }
 
 export async function updateGroup(group: GroupModel) {

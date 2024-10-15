@@ -20,10 +20,12 @@ export default function AttendanceSearchBar({
           setSearchInput(e.target.value);
         }}
       />
-      <XCircleIcon
-        className="w-6 h-6 mr-2 text-gray-500"
-        onClick={() => setSearchInput("")}
-      />
+      <div className="cursor-pointer p-0.5">
+        <XCircleIcon
+          className=" w-7 h-7 mr-2 text-gray-500"
+          onClick={() => setSearchInput("")}
+        />
+      </div>
     </div>
   );
 }

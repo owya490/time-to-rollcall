@@ -37,7 +37,7 @@ export default function Event({
     []
   );
   const [index, setIndex] = useState<number>(5);
-  const [loadAnimation, setLoadAnimation] = useState<boolean>(false);
+  const [loadAnimation, setLoadAnimation] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [selectedMember, setSelectedMember] = useState<MemberModel>(
@@ -75,7 +75,7 @@ export default function Event({
   }
 
   useEffect(() => {
-    if (event) {
+    if (event && loading) {
       setMembersNotSignedIn(
         members.filter(
           (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)
@@ -83,6 +83,7 @@ export default function Event({
       );
       setLoading(false);
     }
+    // eslint-disable-next-line
   }, [members, event]);
 
   useEffect(() => {
@@ -132,31 +133,29 @@ export default function Event({
             <div className="mb-3">
               <EventComponent event={event} groupId={groupId} />
             </div>
-            <div className="mb-8">
-              <AttendanceSearchBar
-                searchInput={searchInput}
-                setSearchInput={setSearchInput}
-              />
+            <div className="flex justify-center w-full mb-4">
+              <button
+                type="button"
+                className="text-[10px] py-1.5 px-1.5 rounded-lg bg-blue-100 font-light"
+                onClick={() => {
+                  setSelectedMember(
+                    InitMember(
+                      searchInput,
+                      (group?.name as University) ?? University.UTS
+                    )
+                  );
+                  openModal();
+                }}
+              >
+                Create New Member
+              </button>
             </div>
+            <AttendanceSearchBar
+              searchInput={searchInput}
+              setSearchInput={setSearchInput}
+            />
           </div>
-          <div className="flex justify-center w-full mb-4">
-            <button
-              type="button"
-              className="text-[10px] py-1.5 px-1.5 rounded-lg bg-gray-200 font-light"
-              onClick={() => {
-                setSelectedMember(
-                  InitMember(
-                    searchInput,
-                    (group?.name as University) ?? University.UTS
-                  )
-                );
-                openModal();
-              }}
-            >
-              Create New Member
-            </button>
-          </div>
-          <div className="absolute w-full z-40">
+          <div className="absolute w-full z-30">
             <AttendanceSuggested
               suggested={membersNotSignedIn.slice(0, index)}
               loadAnimation={loadAnimation}
@@ -181,7 +180,7 @@ export default function Event({
               }}
             />
           </div>
-          <div className="absolute mt-[275px] z-40 w-full">
+          <div className="absolute mt-72 z-30 w-full">
             <AttendanceSignedIn
               signedIn={event.members}
               action={(member: MemberModel) => {

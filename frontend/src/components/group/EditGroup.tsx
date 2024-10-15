@@ -97,7 +97,7 @@ export default function EditGroup({
                     type="text"
                     autoFocus
                     className="w-full rounded-none resize-none border-t-0 bg-transparent font-sans text-lg font-semibold text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
-                    placeholder="Jane Doe"
+                    placeholder="Group Name"
                     value={group.name}
                     onChange={(e) =>
                       setGroup({
@@ -107,42 +107,25 @@ export default function EditGroup({
                     }
                   />
                 </div>
-                <div className="my-4">
-                  <p className="text-sm text-gray-900">Tags</p>
-                  <div className="flex flex-wrap justify-center">
-                    {group.tags?.map((t, i) =>
-                      editTag?.id === t.id ? (
-                        <input
-                          key={i}
-                          type="text"
-                          style={{
-                            width: `${editTag.name.length + 3}ch`,
-                          }}
-                          className="rounded-3xl w-auto border-transparent text-center border-2 px-2 py-1 mr-2 my-1 text-xs font-medium bg-white text-black"
-                          value={editTag.name}
-                          onChange={(e) =>
-                            setEditTag({ ...editTag, name: e.target.value })
-                          }
-                          autoFocus
-                          onBlur={async () => {
-                            await updateTag(group.id, editTag);
-                            setGroup({
-                              ...group,
-                              tags: [
-                                ...group.tags.slice(
-                                  0,
-                                  group.tags.map((t) => t.id).indexOf(t.id)
-                                ),
-                                editTag,
-                                ...group.tags.slice(
-                                  group.tags.map((t) => t.id).indexOf(t.id) + 1
-                                ),
-                              ],
-                            });
-                            setEditTag(null);
-                          }}
-                          onKeyDown={async (event) => {
-                            if (event.key === "Enter") {
+                {!newGroup && (
+                  <div className="my-4">
+                    <p className="text-sm text-gray-900">Tags</p>
+                    <div className="flex flex-wrap justify-center">
+                      {group.tags?.map((t, i) =>
+                        editTag?.id === t.id ? (
+                          <input
+                            key={i}
+                            type="text"
+                            style={{
+                              width: `${editTag.name.length + 3}ch`,
+                            }}
+                            className="rounded-3xl w-auto border-transparent text-center border-2 px-2 py-1 mr-2 my-1 text-xs font-medium bg-white text-black"
+                            value={editTag.name}
+                            onChange={(e) =>
+                              setEditTag({ ...editTag, name: e.target.value })
+                            }
+                            autoFocus
+                            onBlur={async () => {
                               await updateTag(group.id, editTag);
                               setGroup({
                                 ...group,
@@ -159,55 +142,76 @@ export default function EditGroup({
                                 ],
                               });
                               setEditTag(null);
+                            }}
+                            onKeyDown={async (event) => {
+                              if (event.key === "Enter") {
+                                await updateTag(group.id, editTag);
+                                setGroup({
+                                  ...group,
+                                  tags: [
+                                    ...group.tags.slice(
+                                      0,
+                                      group.tags.map((t) => t.id).indexOf(t.id)
+                                    ),
+                                    editTag,
+                                    ...group.tags.slice(
+                                      group.tags
+                                        .map((t) => t.id)
+                                        .indexOf(t.id) + 1
+                                    ),
+                                  ],
+                                });
+                                setEditTag(null);
+                              }
+                            }}
+                          />
+                        ) : (
+                          <Tag
+                            key={i}
+                            tag={t}
+                            selected={group.tags.includes(t)}
+                            onClick={() => setEditTag(t)}
+                          />
+                        )
+                      )}
+                      {editTag?.id === "placeholder" ? (
+                        <input
+                          placeholder="Roadtrip"
+                          style={{
+                            width: `${editTag.name.length + 3}ch`,
+                            minWidth: "101px",
+                          }}
+                          className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mx-1 my-1 text-xs font-medium text-black"
+                          value={editTag.name}
+                          onChange={(e) =>
+                            setEditTag({ ...editTag, name: e.target.value })
+                          }
+                          autoFocus
+                          onBlur={() => setEditTag(null)}
+                          onKeyDown={async (event) => {
+                            if (event.key === "Enter") {
+                              await addTag(group.id, editTag);
+
+                              setGroup({
+                                ...group,
+                                tags: group.tags.concat(editTag),
+                              });
+                              setEditTag(null);
                             }
                           }}
                         />
                       ) : (
-                        <Tag
-                          key={i}
-                          tag={t}
-                          selected={group.tags.includes(t)}
-                          onClick={() => setEditTag(t)}
-                        />
-                      )
-                    )}
-                    {editTag?.id === "placeholder" ? (
-                      <input
-                        placeholder="Roadtrip"
-                        style={{
-                          width: `${editTag.name.length + 3}ch`,
-                          minWidth: "101px",
-                        }}
-                        className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mx-1 my-1 text-xs font-medium text-black"
-                        value={editTag.name}
-                        onChange={(e) =>
-                          setEditTag({ ...editTag, name: e.target.value })
-                        }
-                        autoFocus
-                        onBlur={() => setEditTag(null)}
-                        onKeyDown={async (event) => {
-                          if (event.key === "Enter") {
-                            await addTag(group.id, editTag);
-
-                            setGroup({
-                              ...group,
-                              tags: group.tags.concat(editTag),
-                            });
-                            setEditTag(null);
-                          }
-                        }}
-                      />
-                    ) : (
-                      <button
-                        type="button"
-                        className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-xs font-medium text-blue-900"
-                        onClick={() => setEditTag(InitTag)}
-                      >
-                        Create Tag +
-                      </button>
-                    )}
+                        <button
+                          type="button"
+                          className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-xs font-medium text-blue-900"
+                          onClick={() => setEditTag(InitTag)}
+                        >
+                          Create Tag +
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
                 {updating ? (
                   <div className="flex justify-center items-center">
                     <Loader show />

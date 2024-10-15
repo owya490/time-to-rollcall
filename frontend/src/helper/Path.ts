@@ -8,5 +8,4 @@ export enum Path {
 
 export enum GroupPath {
   Members = "/members",
-  Settings = "/settings",
 }

@@ -42,7 +42,6 @@ export function useGroupData(user: User | null | undefined, groupId: string) {
       if (user.groups?.includes(groupId)) {
         getGroup(groupId).then((group) => {
           if (group) {
-            console.log(group);
             groupState[1](group);
           } else {
             removeGroupFromUserGroups(user.id, groupId).then(() =>

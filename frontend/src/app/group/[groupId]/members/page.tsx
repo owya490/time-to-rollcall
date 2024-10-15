@@ -93,34 +93,32 @@ export default function GroupMember({
         submit={editMember}
         updating={updating}
       />
+      <h1 className="mx-6 text-2xl mb-3">Members</h1>
+      <div className="flex justify-center w-full mb-4">
+        <button
+          type="button"
+          className="text-[10px] py-1.5 px-1.5 rounded-lg bg-blue-100 font-light"
+          onClick={() => {
+            setSelectedMember(
+              InitMember(
+                searchInput,
+                (group?.name as University) ?? University.UTS
+              )
+            );
+            openModal();
+          }}
+        >
+          Create New Member
+        </button>
+      </div>
       <div className="relative">
         <div className="mx-6">
-          <div className="mb-3">
-            <h1>Edit Members</h1>
-          </div>
           <div className="mb-6">
             <AttendanceSearchBar
               searchInput={searchInput}
               setSearchInput={setSearchInput}
             />
           </div>
-        </div>
-        <div className="flex justify-center w-full mb-2">
-          <button
-            type="button"
-            className="text-[10px] py-1.5 px-1.5 rounded-lg bg-gray-200 font-light"
-            onClick={() => {
-              setSelectedMember(
-                InitMember(
-                  searchInput,
-                  (group?.name as University) ?? University.UTS
-                )
-              );
-              openModal();
-            }}
-          >
-            Create New Member
-          </button>
         </div>
         <div className="absolute z-40 w-full">
           <Members

@@ -55,7 +55,7 @@ function MemberSignInCard({
   const selectedRef = useRef(false);
   const editRef = useRef(false);
   const id = member.id;
-  const frontId = "front-" + member.id;
+  const frontId = "front-" + id;
   const remove = () => {
     const timeline = gsap.timeline({
       onStart: () => {
@@ -80,7 +80,7 @@ function MemberSignInCard({
   };
   const edit = () => {
     const timeline = gsap.timeline({
-      onComplete: () => {
+      onStart: () => {
         dragConfig?.edit(member);
       },
     });
