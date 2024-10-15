@@ -9,8 +9,13 @@ export default function AuthCheck(props: { children: React.ReactNode }) {
   return user ? (
     props.children
   ) : (
-    <h2 className="m-6">
-      Sign in: <SignInButton />
-    </h2>
+    <div>
+      <div className="flex justify-center w-full my-6">
+        <SignInButton />
+      </div>
+      <div className="flex justify-center w-full my-12">
+        <SignInButton />
+      </div>
+    </div>
   );
 }
