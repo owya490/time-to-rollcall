@@ -1,7 +1,11 @@
 import { auth } from "@/lib/firebase";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { addGroupToUserGroups, getUser } from "./users";
+import {
+  addGroupToUserGroups,
+  getUser,
+  removeGroupFromUserGroups,
+} from "./users";
 import { User } from "@/models/User";
 import { GroupModel } from "@/models/Group";
 import { getGroup } from "./groups";
@@ -9,6 +13,8 @@ import { MemberModel } from "@/models/Member";
 import { getMembers } from "./members";
 import { getEvent } from "./events";
 import { EventModel } from "@/models/Event";
+import { useRouter } from "next/navigation";
+import { Path } from "@/helper/Path";
 
 export function useUserData() {
   const [userAuth] = useAuthState(auth);
@@ -29,15 +35,34 @@ export function useUserData() {
 
 export function useGroupData(user: User | null | undefined, groupId: string) {
   const groupState = useState<GroupModel | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
+    console.log(user);
     if (user && groupId) {
-      if (!user.groups?.includes(groupId)) {
-        addGroupToUserGroups(user.id, groupId).then(() =>
-          window.location.reload()
-        );
+      if (user.groups?.includes(groupId)) {
+        getGroup(groupId).then((group) => {
+          if (group) {
+            console.log(group);
+            groupState[1](group);
+          } else {
+            removeGroupFromUserGroups(user.id, groupId).then(() =>
+              router.push(Path.Group)
+            );
+          }
+        });
       } else {
-        getGroup(groupId).then((group) => groupState[1](group));
+        addGroupToUserGroups(user.id, groupId).then(() =>
+          getGroup(groupId).then((group) => {
+            if (group) {
+              groupState[1](group);
+            } else {
+              removeGroupFromUserGroups(user.id, groupId).then(() =>
+                router.push(Path.Group)
+              );
+            }
+          })
+        );
       }
     }
   }, [user]);
@@ -63,10 +88,17 @@ export function useEventData(
   eventId: string
 ) {
   const eventState = useState<EventModel | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (user && user.groups?.includes(groupId)) {
-      getEvent(groupId, eventId).then((event) => eventState[1](event));
+      getEvent(groupId, eventId).then((event) => {
+        if (event) {
+          eventState[1](event);
+        } else {
+          router.push(Path.Group);
+        }
+      });
     }
   }, [user]);
 

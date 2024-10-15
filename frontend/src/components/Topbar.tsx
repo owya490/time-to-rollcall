@@ -51,18 +51,21 @@ export default function Topbar({ openModal }: { openModal?: () => void }) {
         )}
         {event ? (
           <div className="flex items-center justify-end gap-4">
-            <PencilIcon className="w-6 h-6 text-gray-500" onClick={openModal} />
+            <PencilIcon
+              className="cursor-pointer w-6 h-6 text-gray-500"
+              onClick={openModal}
+            />
           </div>
         ) : group ? (
           <div className="flex items-center justify-end gap-4">
             <UserGroupIcon
-              className="w-6 h-6 text-gray-500"
+              className="cursor-pointer w-6 h-6 text-gray-500"
               onClick={() =>
                 router.push(Path.Group + "/" + group.id + GroupPath.Members)
               }
             />
             <Cog6ToothIcon
-              className="w-6 h-6 text-gray-500"
+              className="cursor-pointer w-6 h-6 text-gray-500"
               onClick={openModal}
             />
           </div>

@@ -10,6 +10,7 @@ import { GroupModel } from "@/models/Group";
 import Loader from "../Loader";
 import Tag from "../event/Tag";
 import { InitTag, TagModel } from "@/models/Tag";
+import { addTag, updateTag } from "@/lib/tags";
 
 export default function EditGroup({
   isOpen,
@@ -113,23 +114,46 @@ export default function EditGroup({
                       editTag?.id === t.id ? (
                         <input
                           type="text"
-                          placeholder="Weekly Meeting"
-                          className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mx-1 my-1 text-xs font-medium w-32 text-black"
+                          style={{
+                            width: `${editTag.name.length + 3}ch`,
+                          }}
+                          className="rounded-3xl w-auto border-transparent text-center border-2 px-2 py-1 mr-2 my-1 text-xs font-medium bg-white text-black"
                           value={editTag.name}
                           onChange={(e) =>
                             setEditTag({ ...editTag, name: e.target.value })
                           }
                           autoFocus
-                          onBlur={() => setEditTag(null)}
-                          onKeyDown={(event) => {
+                          onBlur={async () => {
+                            await updateTag(group.id, editTag);
+                            setGroup({
+                              ...group,
+                              tags: [
+                                ...group.tags.slice(
+                                  0,
+                                  group.tags.map((t) => t.id).indexOf(t.id)
+                                ),
+                                editTag,
+                                ...group.tags.slice(
+                                  group.tags.map((t) => t.id).indexOf(t.id) + 1
+                                ),
+                              ],
+                            });
+                            setEditTag(null);
+                          }}
+                          onKeyDown={async (event) => {
                             if (event.key === "Enter") {
+                              await updateTag(group.id, editTag);
                               setGroup({
                                 ...group,
                                 tags: [
-                                  ...group.tags.slice(0, group.tags.indexOf(t)),
+                                  ...group.tags.slice(
+                                    0,
+                                    group.tags.map((t) => t.id).indexOf(t.id)
+                                  ),
                                   editTag,
                                   ...group.tags.slice(
-                                    group.tags.indexOf(t) + 1
+                                    group.tags.map((t) => t.id).indexOf(t.id) +
+                                      1
                                   ),
                                 ],
                               });
@@ -148,17 +172,22 @@ export default function EditGroup({
                     )}
                     {editTag?.id === "placeholder" ? (
                       <input
-                        type="text"
-                        placeholder="Weekly Meeting"
-                        className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mx-1 my-1 text-xs font-medium w-32 text-black"
+                        placeholder="Roadtrip"
+                        style={{
+                          width: `${editTag.name.length + 3}ch`,
+                          minWidth: "101px",
+                        }}
+                        className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mx-1 my-1 text-xs font-medium text-black"
                         value={editTag.name}
                         onChange={(e) =>
                           setEditTag({ ...editTag, name: e.target.value })
                         }
                         autoFocus
                         onBlur={() => setEditTag(null)}
-                        onKeyDown={(event) => {
+                        onKeyDown={async (event) => {
                           if (event.key === "Enter") {
+                            await addTag(group.id, editTag);
+
                             setGroup({
                               ...group,
                               tags: group.tags.concat(editTag),
@@ -173,7 +202,7 @@ export default function EditGroup({
                         className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-xs font-medium text-blue-900"
                         onClick={() => setEditTag(InitTag)}
                       >
-                        Create New Tag +
+                        Create Tag +
                       </button>
                     )}
                   </div>

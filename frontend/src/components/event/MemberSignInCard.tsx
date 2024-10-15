@@ -175,19 +175,19 @@ function MemberSignInCard({
   return (
     <div className="relative overflow-hidden" id={id} key={id}>
       <div className="relative z-10" id={frontId} ref={frontRef}>
-        <div className={"flex h-20 w-[calc(100vw+168px)]"}>
+        <div className={"flex h-20 w-[calc(100vw+84px)]"}>
           <div
-            className="absolute w-[84px] top-0 -left-full z-10"
+            className="absolute top-0 -left-[calc(200vw)] z-10"
             onClick={() => {
               if (editRef.current) edit();
             }}
           >
-            <div className="bg-gray-600 h-20 flex w-screen justify-end items-center">
+            <div className="bg-gray-600 h-20 flex w-[calc(200vw)] justify-end items-center">
               <PencilIcon className="h-5 w-5 mr-8 text-white" />
             </div>
           </div>
           <div
-            className="flex w-screen px-6 bg-white items-center"
+            className="flex w-[calc(200vw)] px-6 bg-white items-center"
             onClick={(e) => {
               if (selectedRef.current || editRef.current) {
                 selectedRef.current = false;

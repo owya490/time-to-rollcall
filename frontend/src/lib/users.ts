@@ -1,4 +1,10 @@
-import { arrayUnion, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { firestore } from "./firebase";
 import { User, UserId } from "@/models/User";
 import { GroupId } from "@/models/Group";
@@ -11,5 +17,11 @@ export async function getUser(id: UserId) {
 export async function addGroupToUserGroups(id: UserId, groupId: GroupId) {
   await updateDoc(doc(firestore, "users", id), {
     groups: arrayUnion(groupId),
+  });
+}
+
+export async function removeGroupFromUserGroups(id: UserId, groupId: GroupId) {
+  await updateDoc(doc(firestore, "users", id), {
+    groups: arrayRemove(groupId),
   });
 }

@@ -12,7 +12,9 @@ import Topbar from "./Topbar";
 import { EventId } from "@/models/Event";
 import EditEvent from "./event/EditEvent";
 import { TagModel } from "@/models/Tag";
-import { updateEvent } from "@/lib/events";
+import { deleteEvent, updateEvent } from "@/lib/events";
+import { useRouter } from "next/navigation";
+import { Path } from "@/helper/Path";
 
 export default function PrivateLayoutEvent({
   children,
@@ -22,12 +24,12 @@ export default function PrivateLayoutEvent({
   params: { groupId: GroupId; eventId: EventId };
 }) {
   const [user] = useContext(UserContext);
+  const router = useRouter();
 
   const groupData = useGroupData(user, params.groupId);
   const membersData = useMembersData(user, params.groupId);
   const eventData = useEventData(user, params.groupId, params.eventId);
   const [updating, setUpdating] = useState(false);
-
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -49,6 +51,28 @@ export default function PrivateLayoutEvent({
     setIsOpen(true);
   }
 
+  async function deleteEventIn() {
+    setUpdatingDelete(true);
+    if (groupData[0] && eventData[0]) {
+      await deleteEvent(groupData[0].id, eventData[0].id);
+      router.push(Path.Group + "/" + groupData[0].id);
+    }
+    setUpdatingDelete(false);
+    closeModal();
+  }
+
+  const [updatingDelete, setUpdatingDelete] = useState(false);
+  const [deleteConfirmationIsOpen, setDeleteConfirmationIsOpen] =
+    useState(false);
+
+  function closeDeleteConfirmationModal() {
+    setDeleteConfirmationIsOpen(false);
+  }
+
+  function openDeleteConfirmationModal() {
+    setDeleteConfirmationIsOpen(true);
+  }
+
   return (
     <GroupContext.Provider value={groupData}>
       <MembersContext.Provider value={membersData}>
@@ -62,9 +86,14 @@ export default function PrivateLayoutEvent({
               }
               isOpen={isOpen}
               closeModal={closeModal}
+              deleteConfirmationIsOpen={deleteConfirmationIsOpen}
+              openDeleteConfirmationModal={openDeleteConfirmationModal}
+              closeDeleteConfirmationModal={closeDeleteConfirmationModal}
               submitEventForm={eventData[0]}
               setSubmitEventForm={eventData[1]}
               createEvent={editEvent}
+              deleteEvent={deleteEventIn}
+              updatingDelete={updatingDelete}
               selectedIndex={selectedIndex}
               setSelectedIndex={setSelectedIndex}
               updating={updating}

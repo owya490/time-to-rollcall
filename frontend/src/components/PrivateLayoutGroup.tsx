@@ -25,8 +25,7 @@ export default function PrivateLayoutGroup({
   async function editGroup() {
     setUpdating(true);
     if (groupData[0]) {
-      const updatedGroup = await updateGroup(groupData[0]);
-      groupData[1](updatedGroup);
+      await updateGroup(groupData[0]);
     }
     setUpdating(false);
     closeModal();

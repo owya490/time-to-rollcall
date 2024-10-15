@@ -10,6 +10,7 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
+  deleteDoc,
 } from "firebase/firestore";
 import {
   convertCollectionToJavascript,
@@ -69,6 +70,10 @@ export async function updateEvent(groupId: GroupId, event: EventModel) {
     doc(firestore, "groups", groupId, "events", event.id),
     convertEventToDocument(groupId, event)
   );
+}
+
+export async function deleteEvent(groupId: GroupId, eventId: EventId) {
+  await deleteDoc(doc(firestore, "groups", groupId, "events", eventId));
 }
 
 function convertEventToDocument(groupId: GroupId, event: EventModel) {
