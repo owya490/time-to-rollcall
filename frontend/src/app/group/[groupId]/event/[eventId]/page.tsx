@@ -75,7 +75,7 @@ export default function Event({
   }
 
   useEffect(() => {
-    if (event && members.length > 0 && loading) {
+    if (event) {
       setMembersNotSignedIn(
         members.filter(
           (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)

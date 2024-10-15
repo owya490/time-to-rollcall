@@ -11,12 +11,15 @@ export default function GroupBadge({
   campus: University;
   className?: string;
 }) {
+  const universityKey = getUniversityKey(campus);
   return (
-    <p
-      className={`rounded-full py-1 px-1 bg-black text-white font-light text-center ${className}`}
-      style={{ backgroundColor: universityColours[campus] }}
-    >
-      {getUniversityKey(campus)}
-    </p>
+    universityKey && (
+      <p
+        className={`rounded-full py-1 px-1 bg-black text-white font-light text-center ${className}`}
+        style={{ backgroundColor: universityColours[campus] }}
+      >
+        {getUniversityKey(campus)}
+      </p>
+    )
   );
 }

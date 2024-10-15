@@ -190,6 +190,11 @@ export default function EditEvent({
                                 name: event.target.value,
                               })
                             }
+                            onKeyDown={(event) =>
+                              event.key === "Enter" &&
+                              submitEventForm.name.length > 0 &&
+                              incrementStep()
+                            }
                           />
                         </ul>
                       </TabPanel>
