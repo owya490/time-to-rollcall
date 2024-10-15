@@ -173,11 +173,11 @@ function MemberSignInCard({
   }, [refreshDependency]);
 
   return (
-    <div className="relative overflow-hidden" id={id} key={id}>
-      <div className="relative z-10" id={frontId} ref={frontRef}>
+    <div className="overflow-hidden" id={id} key={id}>
+      <div className="z-10" id={frontId} ref={frontRef}>
         <div className={"flex h-20 w-[calc(100vw+84px)]"}>
           <div
-            className="absolute top-0 -left-[calc(200vw)] z-10"
+            className="absolute top-0 -left-[calc(200vw)]"
             onClick={() => {
               if (editRef.current) edit();
             }}
@@ -232,7 +232,7 @@ function MemberSignInCard({
             </div>
           </div>
           <div
-            className="w-[84px] top-0 z-10"
+            className="w-[84px] top-0"
             onClick={() => {
               if (selectedRef.current) remove();
             }}

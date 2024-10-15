@@ -17,12 +17,14 @@ export default function AttendanceSuggested({
   loadAnimation,
 }: AttendanceSuggested) {
   return (
-    <div className="z-20 pt-8 bg-white">
-      <div className="flex items-center h-fit mx-6 mb-2">
-        <p className="text-gray-500 text-[10px] font-light align-middle">
-          NOT SIGNED IN
-        </p>
-      </div>
+    <div className="z-20 bg-white">
+      {suggested.length > 0 && (
+        <div className="flex items-center h-fit mx-6 mb-2 mt-8">
+          <p className="text-gray-500 text-[10px] font-light align-middle">
+            SEARCH RESULTS
+          </p>
+        </div>
+      )}
       {suggested.map((member) => {
         return (
           <MemberSignIn

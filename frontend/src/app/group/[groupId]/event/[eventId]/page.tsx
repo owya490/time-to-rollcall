@@ -36,7 +36,7 @@ export default function Event({
   const [membersNotSignedIn, setMembersNotSignedIn] = useState<MemberModel[]>(
     []
   );
-  const [index, setIndex] = useState<number>(5);
+  const [index, setIndex] = useState<number>(0);
   const [loadAnimation, setLoadAnimation] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
@@ -61,12 +61,12 @@ export default function Event({
     } else {
       await updateMember(params.groupId, selectedMember);
       setMembers((prevMembers) => {
-        let index = prevMembers?.findIndex((m) => m.id === selectedMember.id);
-        if (index && index !== -1) {
+        let i = prevMembers?.findIndex((m) => m.id === selectedMember.id);
+        if (i && i !== -1) {
           return [
-            ...(prevMembers ?? []).slice(0, index),
+            ...(prevMembers ?? []).slice(0, i),
             selectedMember,
-            ...(prevMembers ?? []).slice(index + 1),
+            ...(prevMembers ?? []).slice(i + 1),
           ];
         } else {
           return prevMembers;
@@ -80,11 +80,10 @@ export default function Event({
 
   useEffect(() => {
     if (event && members !== null && loading) {
-      setMembersNotSignedIn(
-        members.filter(
-          (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)
-        )
+      let membersNotSignedIn = members.filter(
+        (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)
       );
+      setMembersNotSignedIn(membersNotSignedIn);
       setLoading(false);
     }
     // eslint-disable-next-line
@@ -102,7 +101,7 @@ export default function Event({
       setMembersNotSignedIn(suggested.concat(notSuggested));
       setIndex(suggested.length);
     } else if (prevSearchActive && searchInput.length === 0) {
-      setIndex(5);
+      setIndex(0);
     }
     // eslint-disable-next-line
   }, [searchInput]);
@@ -130,81 +129,78 @@ export default function Event({
             submit={editMember}
             updating={updating}
           />
-          <div className="relative">
-            <div className="mx-4">
-              <div className="mb-3">
-                <EventComponent event={event} groupId={groupId} />
-              </div>
-              <div className="flex justify-center w-full mb-4">
-                <button
-                  type="button"
-                  className="text-[10px] py-1.5 px-1.5 rounded-lg bg-blue-100 font-light"
-                  onClick={() => {
-                    setSelectedMember(
-                      InitMember(
-                        searchInput,
-                        (group?.name as University) ?? University.UTS
-                      )
-                    );
-                    openModal();
-                  }}
-                >
-                  Create New Member
-                </button>
-              </div>
-              <AttendanceSearchBar
-                searchInput={searchInput}
-                setSearchInput={setSearchInput}
-              />
+          <div className="mx-4">
+            <div className="mb-3">
+              <EventComponent event={event} groupId={groupId} />
             </div>
-            <div className="absolute w-full z-30">
-              <AttendanceSuggested
-                suggested={membersNotSignedIn.slice(0, index)}
-                loadAnimation={loadAnimation}
-                action={(member: MemberModel) => {
-                  setEvent((prevEvent) => ({
-                    ...(prevEvent ?? InitEvent),
-                    members: (prevEvent?.members ?? []).concat(member),
-                  }));
-                  addMemberToEvent(groupId, eventId, member.id);
-                }}
-                end={(member: MemberModel) => {
-                  setMembersNotSignedIn((prevMembers) =>
-                    prevMembers.filter((m) => m.id !== member.id)
+            <div className="flex justify-center w-full mb-4">
+              <button
+                type="button"
+                className="text-[10px] py-1.5 px-1.5 rounded-lg bg-blue-100 font-light"
+                onClick={() => {
+                  setSelectedMember(
+                    InitMember(
+                      searchInput,
+                      (group?.name as University) ?? University.UTS
+                    )
                   );
-                  if (searchInput.length > 0) {
-                    setIndex((prevIndex) => prevIndex - 1);
-                  }
-                }}
-                edit={(member: MemberModel) => {
-                  setSelectedMember(member);
                   openModal();
                 }}
-              />
+              >
+                Create New Member
+              </button>
             </div>
-            <div className="absolute mt-72 z-30 w-full">
-              <AttendanceSignedIn
-                signedIn={event.members}
-                action={(member: MemberModel) => {
-                  setMembersNotSignedIn((prevMembers) =>
-                    prevMembers.concat(member)
-                  );
-                }}
-                end={(member: MemberModel) => {
-                  setEvent((prevEvent) => ({
-                    ...(prevEvent ?? InitEvent),
-                    members:
-                      prevEvent?.members?.filter((m) => m.id !== member.id) ??
-                      [],
-                  }));
-                  removeMemberFromEvent(groupId, eventId, member.id);
-                }}
-                edit={(member: MemberModel) => {
-                  setSelectedMember(member);
-                  openModal();
-                }}
-              />
-            </div>
+            <AttendanceSearchBar
+              searchInput={searchInput}
+              setSearchInput={setSearchInput}
+            />
+          </div>
+          <div className="w-full z-30">
+            <AttendanceSuggested
+              suggested={membersNotSignedIn.slice(0, index)}
+              loadAnimation={loadAnimation}
+              action={(member: MemberModel) => {
+                setEvent((prevEvent) => ({
+                  ...(prevEvent ?? InitEvent),
+                  members: (prevEvent?.members ?? []).concat(member),
+                }));
+                addMemberToEvent(groupId, eventId, member.id);
+              }}
+              end={(member: MemberModel) => {
+                setMembersNotSignedIn((prevMembers) =>
+                  prevMembers.filter((m) => m.id !== member.id)
+                );
+                if (searchInput.length > 0) {
+                  setIndex((prevIndex) => prevIndex - 1);
+                }
+              }}
+              edit={(member: MemberModel) => {
+                setSelectedMember(member);
+                openModal();
+              }}
+            />
+          </div>
+          <div className="z-30 w-full">
+            <AttendanceSignedIn
+              signedIn={event.members}
+              action={(member: MemberModel) => {
+                setMembersNotSignedIn((prevMembers) =>
+                  prevMembers.concat(member)
+                );
+              }}
+              end={(member: MemberModel) => {
+                setEvent((prevEvent) => ({
+                  ...(prevEvent ?? InitEvent),
+                  members:
+                    prevEvent?.members?.filter((m) => m.id !== member.id) ?? [],
+                }));
+                removeMemberFromEvent(groupId, eventId, member.id);
+              }}
+              edit={(member: MemberModel) => {
+                setSelectedMember(member);
+                openModal();
+              }}
+            />
           </div>
         </>
       ) : (
