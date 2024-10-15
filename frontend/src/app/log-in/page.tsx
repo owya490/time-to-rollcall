@@ -3,7 +3,7 @@ import SignInButton from "@/components/SignInButton";
 import { useUserData } from "@/lib/hooks";
 import { redirect } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 
 function Redirect() {
   const searchParams = useSearchParams();

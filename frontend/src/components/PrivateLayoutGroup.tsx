@@ -51,7 +51,7 @@ export default function PrivateLayoutGroup({
             updating={updating}
           />
         )}
-        {groupData[0] && <Topbar openModal={openModal} />}
+        <Topbar openModal={openModal} />
         {children}
       </MembersContext.Provider>
     </GroupContext.Provider>

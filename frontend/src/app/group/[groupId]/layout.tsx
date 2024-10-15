@@ -10,9 +10,7 @@ export default function GroupLayout({
 }) {
   return (
     <PrivateLayout>
-      <PrivateLayoutGroup params={params}>
-        <div className="my-24">{children}</div>
-      </PrivateLayoutGroup>
+      <PrivateLayoutGroup params={params}>{children}</PrivateLayoutGroup>
     </PrivateLayout>
   );
 }

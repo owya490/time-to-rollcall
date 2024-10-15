@@ -1,6 +1,6 @@
 "use client";
 import { GroupPath, Path } from "@/helper/Path";
-import { EventContext, GroupContext } from "@/lib/context";
+import { EventContext, GroupContext, UserContext } from "@/lib/context";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useContext } from "react";
@@ -8,14 +8,17 @@ import {
   UserGroupIcon,
   Cog6ToothIcon,
   PencilIcon,
+  ArrowLeftEndOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { UserGroupIcon as UserGroupIconSolid } from "@heroicons/react/24/solid";
 import GroupBadge from "./event/GroupBadge";
 import { getUniversityKey, University } from "@/models/University";
+import { logOut } from "@/lib/auth";
 
 export default function Topbar({ openModal }: { openModal?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [user] = useContext(UserContext);
   const [group] = useContext(GroupContext);
   const [event] = useContext(EventContext);
 
@@ -48,8 +51,10 @@ export default function Topbar({ openModal }: { openModal?: () => void }) {
               {group.name}
             </Link>
           )
+        ) : user ? (
+          <div>Hi {user.displayName}</div>
         ) : (
-          <></>
+          <div />
         )}
         {event ? (
           <div className="flex items-center justify-end">
@@ -76,6 +81,13 @@ export default function Topbar({ openModal }: { openModal?: () => void }) {
             <Cog6ToothIcon
               className="cursor-pointer w-7 h-7 text-gray-500"
               onClick={openModal}
+            />
+          </div>
+        ) : user ? (
+          <div className="flex items-center justify-end gap-4">
+            <ArrowLeftEndOnRectangleIcon
+              className="cursor-pointer w-7 h-7 text-gray-500"
+              onClick={logOut}
             />
           </div>
         ) : (

@@ -100,7 +100,7 @@ export default function PrivateLayoutEvent({
             />
           )}
           <Topbar openModal={openModal} />
-          <div>{children}</div>
+          {children}
         </EventContext.Provider>
       </MembersContext.Provider>
     </GroupContext.Provider>
