@@ -5,3 +5,8 @@ export interface TagModel {
   name: string;
   colour?: string;
 }
+
+export const InitTag = {
+  id: "placeholder",
+  name: "",
+};

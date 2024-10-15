@@ -7,6 +7,8 @@ import { GroupModel } from "@/models/Group";
 import { getGroup } from "./groups";
 import { MemberModel } from "@/models/Member";
 import { getMembers } from "./members";
+import { getEvent } from "./events";
+import { EventModel } from "@/models/Event";
 
 export function useUserData() {
   const [userAuth] = useAuthState(auth);
@@ -53,4 +55,20 @@ export function useMembersData(user: User | null | undefined, groupId: string) {
   }, [user]);
 
   return membersState;
+}
+
+export function useEventData(
+  user: User | null | undefined,
+  groupId: string,
+  eventId: string
+) {
+  const eventState = useState<EventModel | null>(null);
+
+  useEffect(() => {
+    if (user && user.groups?.includes(groupId)) {
+      getEvent(groupId, eventId).then((event) => eventState[1](event));
+    }
+  }, [user]);
+
+  return eventState;
 }

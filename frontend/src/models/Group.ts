@@ -7,3 +7,9 @@ export interface GroupModel {
   name: string;
   tags: TagModel[];
 }
+
+export const InitGroup = {
+  id: "placeholder",
+  name: "",
+  tags: [],
+};

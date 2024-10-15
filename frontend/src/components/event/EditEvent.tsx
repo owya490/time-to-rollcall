@@ -1,8 +1,7 @@
 import { convertToDateTimeLocalString } from "@/helper/Time";
 import { addTag } from "@/lib/tags";
-import { SubmitEventModel } from "@/models/Event";
 import { GroupId } from "@/models/Group";
-import { TagModel } from "@/models/Tag";
+import { InitTag, TagModel } from "@/models/Tag";
 import {
   Dialog,
   DialogPanel,
@@ -16,9 +15,11 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import { Fragment, useState } from "react";
-import Tag from "./event/Tag";
+import Tag from "./Tag";
+import { EventModel } from "@/models/Event";
+import Loader from "../Loader";
 
-export default function CreateEvent({
+export default function EditEvent({
   groupId,
   tags,
   setTags,
@@ -29,20 +30,22 @@ export default function CreateEvent({
   createEvent,
   selectedIndex,
   setSelectedIndex,
+  updating,
 }: {
   groupId: GroupId;
   tags?: TagModel[];
   setTags: (tags: TagModel[]) => void;
   isOpen: boolean;
   closeModal: () => void;
-  submitEventForm: SubmitEventModel;
-  setSubmitEventForm: (event: SubmitEventModel) => void;
+  submitEventForm: EventModel;
+  setSubmitEventForm: (event: EventModel) => void;
   createEvent: () => void;
   selectedIndex: number;
   setSelectedIndex: (i: number) => void;
+  updating: boolean;
 }) {
-  const [toggleAddTag, setToggleAddTag] = useState(false);
-  const [newTag, setNewTag] = useState("");
+  const newEvent = submitEventForm.id === "placeholder";
+  const [editTag, setEditTag] = useState<TagModel | null>(null);
 
   function incrementStep() {
     setSelectedIndex(selectedIndex + 1);
@@ -138,7 +141,7 @@ export default function CreateEvent({
                           as="h3"
                           className="text-xl font-medium leading-6 text-gray-900"
                         >
-                          Create Your event.
+                          {newEvent ? "Create" : "Edit"} Your event.
                         </DialogTitle>
                         <p className="mt-2 px-12 text-sm text-gray-500">
                           Start by naming your event. This will be the name
@@ -180,50 +183,46 @@ export default function CreateEvent({
                             <Tag
                               key={i}
                               tag={t}
-                              selected={submitEventForm.tagIds.includes(t.id)}
+                              selected={submitEventForm.tags.includes(t)}
                               onClick={() =>
                                 setSubmitEventForm({
                                   ...submitEventForm,
-                                  tagIds: submitEventForm.tagIds.includes(t.id)
-                                    ? submitEventForm.tagIds
+                                  tags: submitEventForm.tags.includes(t)
+                                    ? submitEventForm.tags
                                         .slice(
                                           0,
-                                          submitEventForm.tagIds.indexOf(t.id)
+                                          submitEventForm.tags.indexOf(t)
                                         )
                                         .concat(
-                                          submitEventForm.tagIds.slice(
-                                            submitEventForm.tagIds.indexOf(
-                                              t.id
-                                            ) + 1
+                                          submitEventForm.tags.slice(
+                                            submitEventForm.tags.indexOf(t) + 1
                                           )
                                         )
-                                    : submitEventForm.tagIds.concat(t.id),
+                                    : submitEventForm.tags.concat(t),
                                 })
                               }
                             />
                           ))}
-                          {toggleAddTag ? (
+                          {editTag?.id === "placeholder" ? (
                             <input
                               type="text"
                               placeholder="Weekly Meeting"
                               className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mx-1 my-1 text-xs font-medium w-32 text-black"
-                              value={newTag}
-                              onChange={(event) =>
-                                setNewTag(event.target.value)
+                              value={editTag.name}
+                              onChange={(e) =>
+                                setEditTag({ ...editTag, name: e.target.value })
                               }
                               autoFocus
-                              onBlur={() => setToggleAddTag(false)}
+                              onBlur={() => setEditTag(null)}
                               onKeyDown={(event) =>
                                 event.key === "Enter" &&
-                                addTag(groupId, newTag).then((tagId) => {
-                                  setTags(
-                                    (tags ?? []).concat({
-                                      id: tagId,
-                                      name: newTag,
-                                    })
-                                  );
-                                  setToggleAddTag(false);
-                                  setNewTag("");
+                                addTag(groupId, editTag).then((tag) => {
+                                  setTags((tags ?? []).concat(tag));
+                                  setSubmitEventForm({
+                                    ...submitEventForm,
+                                    tags: submitEventForm.tags.concat(tag),
+                                  });
+                                  setEditTag(null);
                                 })
                               }
                             />
@@ -231,7 +230,7 @@ export default function CreateEvent({
                             <button
                               type="button"
                               className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-xs font-medium text-blue-900"
-                              onClick={() => setToggleAddTag(true)}
+                              onClick={() => setEditTag(InitTag)}
                             >
                               Create New Tag +
                             </button>
@@ -283,22 +282,33 @@ export default function CreateEvent({
                       </ul>
                     </TabPanel>
                   </TabPanels>
-                  <button
-                    type="button"
-                    disabled={
-                      selectedIndex === 0
-                        ? !submitEventForm.name
-                        : selectedIndex === 1
-                        ? false
-                        : selectedIndex === 2
-                        ? !submitEventForm.dateStart || !submitEventForm.dateEnd
-                        : false
-                    }
-                    className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                    onClick={selectedIndex === 2 ? createEvent : incrementStep}
-                  >
-                    {selectedIndex === 2 ? "Create event" : "Next"}
-                  </button>
+                  {updating ? (
+                    <div className="flex justify-center items-center">
+                      <Loader show />
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={
+                        selectedIndex === 0
+                          ? !submitEventForm.name
+                          : selectedIndex === 1
+                          ? false
+                          : selectedIndex === 2
+                          ? !submitEventForm.dateStart ||
+                            !submitEventForm.dateEnd
+                          : false
+                      }
+                      className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={
+                        selectedIndex === 2 ? createEvent : incrementStep
+                      }
+                    >
+                      {selectedIndex === 2
+                        ? (newEvent ? "Create" : "Edit") + " event"
+                        : "Next"}
+                    </button>
+                  )}
                 </TabGroup>
               </DialogPanel>
             </TransitionChild>

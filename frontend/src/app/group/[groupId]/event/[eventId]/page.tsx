@@ -1,19 +1,15 @@
 "use client";
 import AuthCheck from "@/components/AuthCheck";
-import EventComponent from "@/components/Event";
+import EventComponent from "@/components/event/Event";
 import AttendanceSearchBar from "@/components/event/AttendanceSearchBar";
 import AttendanceSignedIn from "@/components/event/AttendanceSignedIn";
 import AttendanceSuggested from "@/components/event/AttendanceSuggested";
 import Loader from "@/components/Loader";
 import EditMember from "@/components/members/EditMember";
-import { GroupContext, MembersContext } from "@/lib/context";
-import {
-  addMemberToEvent,
-  getEvent,
-  removeMemberFromEvent,
-} from "@/lib/events";
+import { EventContext, GroupContext, MembersContext } from "@/lib/context";
+import { addMemberToEvent, removeMemberFromEvent } from "@/lib/events";
 import { createMember, updateMember } from "@/lib/members";
-import { EventId, EventModel, InitEvent } from "@/models/Event";
+import { EventId, InitEvent } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import { InitMember, MemberModel } from "@/models/Member";
 import { University } from "@/models/University";
@@ -33,7 +29,7 @@ export default function Event({
   const { groupId, eventId } = params;
   const [searchActive, setSearchActive] = useState(false);
   const [searchInput, setSearchInput] = useState<string>("");
-  const [event, setEvent] = useState<EventModel>(InitEvent);
+  const [event, setEvent] = useContext(EventContext);
   const [group] = useContext(GroupContext);
   const [members, setMembers] = useContext(MembersContext);
   const [loading, setLoading] = useState(true);
@@ -79,16 +75,15 @@ export default function Event({
   }
 
   useEffect(() => {
-    getEvent(groupId, eventId).then((event) => {
-      setEvent(event);
+    if (event) {
       setMembersNotSignedIn(
         members.filter(
-          (m) => !event.members?.some((signedIn) => signedIn.id === m.id)
+          (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)
         )
       );
       setLoading(false);
-    });
-  }, [members]);
+    }
+  }, [members, event]);
 
   useEffect(() => {
     let prevSearchActive = searchActive;
@@ -164,7 +159,7 @@ export default function Event({
               loadAnimation={loadAnimation}
               action={(member: MemberModel) => {
                 setEvent((prevEvent) => ({
-                  ...prevEvent,
+                  ...(prevEvent ?? InitEvent),
                   members: (prevEvent?.members ?? []).concat(member),
                 }));
                 addMemberToEvent(groupId, eventId, member.id);
@@ -193,9 +188,9 @@ export default function Event({
               }}
               end={(member: MemberModel) => {
                 setEvent((prevEvent) => ({
-                  ...prevEvent,
+                  ...(prevEvent ?? InitEvent),
                   members:
-                    prevEvent.members?.filter((m) => m.id !== member.id) ?? [],
+                    prevEvent?.members?.filter((m) => m.id !== member.id) ?? [],
                 }));
                 removeMemberFromEvent(groupId, eventId, member.id);
               }}

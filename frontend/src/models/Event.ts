@@ -1,5 +1,5 @@
 import { MemberModel } from "./Member";
-import { TagModel, TagId } from "./Tag";
+import { TagModel } from "./Tag";
 
 export type EventId = string;
 
@@ -11,20 +11,6 @@ export interface EventModel {
   dateEnd: Date;
   members?: MemberModel[];
 }
-
-export interface SubmitEventModel {
-  name: string;
-  tagIds: TagId[];
-  dateStart: Date;
-  dateEnd: Date;
-}
-
-export const InitSubmitEvent = {
-  name: "",
-  tagIds: [],
-  dateStart: new Date(),
-  dateEnd: new Date(new Date().getTime() + 7200000),
-};
 
 export const InitEvent: EventModel = {
   id: "1",

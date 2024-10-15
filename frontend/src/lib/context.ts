@@ -1,3 +1,4 @@
+import { EventModel } from "@/models/Event";
 import { GroupModel } from "@/models/Group";
 import { MemberModel } from "@/models/Member";
 import { User } from "@/models/User";
@@ -14,3 +15,7 @@ export const GroupContext = createContext<
 export const MembersContext = createContext<
   [MemberModel[], Dispatch<SetStateAction<MemberModel[]>>]
 >([[], () => {}]);
+
+export const EventContext = createContext<
+  [EventModel | null, Dispatch<SetStateAction<EventModel | null>>]
+>([null, () => {}]);

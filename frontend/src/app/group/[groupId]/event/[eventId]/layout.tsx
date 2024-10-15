@@ -1,16 +1,16 @@
 import PrivateLayout from "@/components/PrivateLayout";
-import PrivateLayoutGroup from "@/components/PrivateLayoutGroup";
+import PrivateLayoutEvent from "@/components/PrivateLayoutEvent";
 
 export default function EventsPagesLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { groupId: string };
+  params: { groupId: string; eventId: string };
 }) {
   return (
     <PrivateLayout>
-      <PrivateLayoutGroup params={params}>{children}</PrivateLayoutGroup>
+      <PrivateLayoutEvent params={params}>{children}</PrivateLayoutEvent>
     </PrivateLayout>
   );
 }

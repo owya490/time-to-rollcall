@@ -1,17 +1,22 @@
 "use client";
 import { GroupPath, Path } from "@/helper/Path";
-import { GroupContext } from "@/lib/context";
+import { EventContext, GroupContext } from "@/lib/context";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useContext } from "react";
-import { UserGroupIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
+import {
+  UserGroupIcon,
+  Cog6ToothIcon,
+  PencilIcon,
+} from "@heroicons/react/24/outline";
 import GroupBadge from "./event/GroupBadge";
 import { getUniversityKey, University } from "@/models/University";
 
-export default function Topbar() {
+export default function Topbar({ openModal }: { openModal?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
   const [group] = useContext(GroupContext);
+  const [event] = useContext(EventContext);
   return (
     <nav className="bg-white fixed w-full z-50 top-0 start-0">
       <div className="flex items-center justify-between px-6 py-6">
@@ -44,21 +49,25 @@ export default function Topbar() {
         ) : (
           <></>
         )}
-        {group && (
+        {event ? (
+          <div className="flex items-center justify-end gap-4">
+            <PencilIcon className="w-6 h-6 text-gray-500" onClick={openModal} />
+          </div>
+        ) : group ? (
           <div className="flex items-center justify-end gap-4">
             <UserGroupIcon
-              className="w-6 h-6 mr-2 text-gray-500"
+              className="w-6 h-6 text-gray-500"
               onClick={() =>
                 router.push(Path.Group + "/" + group.id + GroupPath.Members)
               }
             />
             <Cog6ToothIcon
-              className="w-6 h-6 mr-2 text-gray-500"
-              onClick={() =>
-                router.push(Path.Group + "/" + group.id + GroupPath.Settings)
-              }
+              className="w-6 h-6 text-gray-500"
+              onClick={openModal}
             />
           </div>
+        ) : (
+          <></>
         )}
       </div>
     </nav>

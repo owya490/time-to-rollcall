@@ -1,7 +1,7 @@
-import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { convertToJavascript, firestore } from "@/lib/firebase";
 import { GroupModel } from "@/models/Group";
-import { getTags } from "./tags";
+import { addTag, getTags, updateTag } from "./tags";
 import { addGroupToUserGroups } from "./users";
 import { UserId } from "@/models/User";
 
@@ -23,12 +23,12 @@ export async function getGroup(groupId: string) {
 }
 
 export async function createGroup(
-  groupName: string,
+  name: string,
   tagNames: string[],
   userId: UserId
 ) {
   const addedDoc = await addDoc(collection(firestore, "groups"), {
-    name: groupName,
+    name,
   });
   await addGroupToUserGroups(userId, addedDoc.id);
   for (const tagName of tagNames) {
@@ -38,4 +38,24 @@ export async function createGroup(
   }
 
   return getGroup(addedDoc.id);
+}
+
+export async function updateGroup(group: GroupModel) {
+  await updateDoc(
+    doc(firestore, "groups", group.id),
+    convertGroupToDocument(group)
+  );
+  for (const tag of group.tags) {
+    if (tag.id === "placeholder") {
+      await addTag(group.id, tag);
+    } else {
+      await updateTag(group.id, tag);
+    }
+  }
+  return getGroup(group.id);
+}
+
+function convertGroupToDocument(group: GroupModel) {
+  const { id, tags, ...groupWithoutId } = group;
+  return groupWithoutId;
 }

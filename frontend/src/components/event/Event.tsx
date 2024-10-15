@@ -2,8 +2,8 @@ import { EventModel } from "@/models/Event";
 import { hoursAndMinutes, inBetween, sameDay, toddMMYYYY } from "@/helper/Time";
 import Link from "next/link";
 import { Path } from "@/helper/Path";
-import LiveBadge from "./event/LiveBadge";
-import Tag from "./event/Tag";
+import LiveBadge from "./LiveBadge";
+import Tag from "./Tag";
 
 export default function EventComponent({
   event,

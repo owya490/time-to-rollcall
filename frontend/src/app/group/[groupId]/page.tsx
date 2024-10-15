@@ -1,12 +1,12 @@
 "use client";
 import AuthCheck from "@/components/AuthCheck";
 import Botbar from "@/components/Botbar";
-import EventComponent from "@/components/Event";
-import CreateEvent from "@/components/CreateEvent";
+import EventComponent from "@/components/event/Event";
+import EditEvent from "@/components/event/EditEvent";
 import { Filter, InitFilter } from "@/helper/Filter";
 import { GroupContext } from "@/lib/context";
 import { getEvents, submitEvent } from "@/lib/events";
-import { EventModel, InitSubmitEvent, SubmitEventModel } from "@/models/Event";
+import { EventModel, InitEvent } from "@/models/Event";
 import { useContext, useEffect, useState } from "react";
 import { GroupId } from "@/models/Group";
 import { TagId, TagModel } from "@/models/Tag";
@@ -22,9 +22,9 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   const [filteredTags, setFilteredTags] = useState<TagId[]>([]);
   const [tagsOpen, setTagsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
 
-  const [submitEventForm, setSubmitEventForm] =
-    useState<SubmitEventModel>(InitSubmitEvent);
+  const [submitEventForm, setSubmitEventForm] = useState<EventModel>(InitEvent);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -36,16 +36,17 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
     setIsOpen(true);
   }
 
-  function createEvent() {
+  async function createEvent() {
+    setUpdating(true);
     if (group) {
-      submitEvent(group.id, submitEventForm).then((submittedEvent) => {
-        let newEvents = [submittedEvent].concat(events);
-        setEvents(newEvents);
-        setShowedEvents(filter.sort(newEvents, filteredTags));
-        setSelectedIndex(0);
-      });
-      setSubmitEventForm(InitSubmitEvent);
+      const submittedEvent = await submitEvent(group.id, submitEventForm);
+      let newEvents = [submittedEvent].concat(events);
+      setEvents(newEvents);
+      setShowedEvents(filter.sort(newEvents, filteredTags));
+      setSelectedIndex(0);
+      setSubmitEventForm(InitEvent);
     }
+    setUpdating(false);
     closeModal();
   }
 
@@ -69,7 +70,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   return (
     <AuthCheck>
       {group && (
-        <CreateEvent
+        <EditEvent
           groupId={group.id}
           tags={group.tags}
           setTags={(tags: TagModel[]) => setGroup({ ...group, tags })}
@@ -80,6 +81,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
           createEvent={createEvent}
           selectedIndex={selectedIndex}
           setSelectedIndex={setSelectedIndex}
+          updating={updating}
         />
       )}
       <h1 className="mx-6 text-2xl mb-16">Events</h1>

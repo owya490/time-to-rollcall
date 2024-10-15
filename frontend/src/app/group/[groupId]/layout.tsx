@@ -6,7 +6,7 @@ export default function PagesLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { groupId: string, page: "Groups" };
+  params: { groupId: string };
 }) {
   return (
     <PrivateLayout>
