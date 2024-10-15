@@ -18,16 +18,9 @@ export interface SubmitMemberModel {
   campus: University;
 }
 
-export const InitSubmitMember = (campus: University) => ({
-  name: "",
-  year: 1,
-  role: Role.Member,
-  campus,
-});
-
-export const InitMember = (campus: University): MemberModel => ({
+export const InitMember = (name: string, campus: University): MemberModel => ({
   id: "placeholder",
-  name: "",
+  name,
   year: 1,
   role: Role.Member,
   campus,

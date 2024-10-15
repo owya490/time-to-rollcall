@@ -6,10 +6,18 @@ export enum University {
   ACU = "Australian Catholic University",
 }
 
-export function getUniversityKey(value: University): string {
+export const universityColours: Record<University, string> = {
+  [University.USYD]: "#B5403D",
+  [University.UNSW]: "#619445",
+  [University.UTS]: "#3B5499",
+  [University.MACQ]: "#F2C259",
+  [University.ACU]: "#57427A",
+};
+
+export function getUniversityKey(value: University): string | undefined {
   return Object.keys(University).find(
     (key) => University[key as keyof typeof University] === value
-  ) as string;
+  );
 }
 
 export const universities = Object.values(University);

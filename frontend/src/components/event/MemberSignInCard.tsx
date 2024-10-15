@@ -1,7 +1,11 @@
 "use client";
 import { getYearString, MemberModel } from "@/models/Member";
 import { useGSAP } from "@gsap/react";
-import { ArrowRightIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightIcon,
+  PencilIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline";
 import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
 import Image from "next/image";
@@ -14,7 +18,13 @@ export const MemberSignIn: FC<MemberSignInCardProps> = memo(
     return <MemberSignInCard {...props} />;
   },
   (prevProps, nextProps) => {
-    return prevProps.member.id === nextProps.member.id;
+    return (
+      prevProps.member.id === nextProps.member.id &&
+      prevProps.member.campus === nextProps.member.campus &&
+      prevProps.member.name === nextProps.member.name &&
+      prevProps.member.role === nextProps.member.role &&
+      prevProps.member.year === nextProps.member.year
+    );
   }
 );
 MemberSignIn.displayName = "MemberSignIn";
@@ -26,6 +36,7 @@ export interface DragConfig {
   dragType: DragType;
   action: (member: MemberModel) => void;
   end: (member: MemberModel) => void;
+  edit: (member: MemberModel) => void;
 }
 
 export interface MemberSignInCardProps {
@@ -42,8 +53,9 @@ function MemberSignInCard({
   triggerAddAnimation,
 }: MemberSignInCardProps) {
   const selectedRef = useRef(false);
+  const editRef = useRef(false);
   const id = member.id;
-  const frontId = id + "Front";
+  const frontId = "front-" + member.id;
   const remove = () => {
     const timeline = gsap.timeline({
       onStart: () => {
@@ -56,13 +68,32 @@ function MemberSignInCard({
     timeline.to(
       frontRef.current,
       {
-        x: -screen.width,
+        x: -window.innerWidth,
         y: 0,
         height: 0,
         duration: 0.3,
       },
       "start"
     );
+    editRef.current = false;
+    selectedRef.current = false;
+  };
+  const edit = () => {
+    const timeline = gsap.timeline({
+      onComplete: () => {
+        dragConfig?.edit(member);
+      },
+    });
+    timeline.to(
+      frontRef.current,
+      {
+        x: 0,
+        y: 0,
+        duration: 0.3,
+      },
+      "start"
+    );
+    editRef.current = false;
     selectedRef.current = false;
   };
 
@@ -80,6 +111,7 @@ function MemberSignInCard({
   useGSAP(() => {
     const handleDragEnd = (e: any) => {
       if (e.pageX === 0 && e.pageY === 0) {
+        editRef.current = false;
         selectedRef.current = false;
         gsap.to(frontRef.current, {
           x: 0,
@@ -92,14 +124,29 @@ function MemberSignInCard({
         (positionX.current - e.pageX) / (e.timeStamp - timeStamp.current);
       if (
         positionX.current - e.pageX + (selectedRef.current ? 104 : 20) >
-          screen.width / 2 ||
+          window.innerWidth / 2 ||
         velocity > 1.2
       ) {
         remove();
+      } else if (
+        e.pageX - positionX.current + (editRef.current ? 104 : 20) >
+          window.innerWidth / 2 ||
+        velocity < -1.2
+      ) {
+        edit();
+        selectedRef.current = false;
+        editRef.current = false;
       } else if (!selectedRef.current && positionX.current - e.pageX > 47) {
         selectedRef.current = true;
         gsap.to(frontRef.current, {
           x: -84,
+          y: 0,
+          duration: 0.3,
+        });
+      } else if (!editRef.current && e.pageX - positionX.current > 47) {
+        editRef.current = true;
+        gsap.to(frontRef.current, {
+          x: 84,
           y: 0,
           duration: 0.3,
         });
@@ -115,7 +162,6 @@ function MemberSignInCard({
 
     Draggable.create(`#${frontId}`, {
       type: "x",
-      bounds: { maxX: 0 },
       onDragStart: function (e) {
         positionX.current = e.pageX;
         timeStamp.current = e.timeStamp;
@@ -128,22 +174,40 @@ function MemberSignInCard({
 
   return (
     <div className="relative overflow-hidden" id={id} key={id}>
-      <div className="relative z-30" id={frontId} ref={frontRef}>
-        <div className={"flex h-20 w-[calc(100vw+84px)]"}>
+      <div className="relative z-10" id={frontId} ref={frontRef}>
+        <div className={"flex h-20 w-[calc(100vw+168px)]"}>
+          <div
+            className="absolute w-[84px] top-0 -left-full z-10"
+            onClick={() => {
+              if (editRef.current) edit();
+            }}
+          >
+            <div className="bg-gray-600 h-20 flex w-screen justify-end items-center">
+              <PencilIcon className="h-5 w-5 mr-8 text-white" />
+            </div>
+          </div>
           <div
             className="flex w-screen px-6 bg-white items-center"
-            onClick={() => {
-              if (!selectedRef.current) {
-                selectedRef.current = true;
+            onClick={(e) => {
+              if (selectedRef.current || editRef.current) {
+                selectedRef.current = false;
+                editRef.current = false;
                 gsap.to(frontRef.current, {
-                  x: -84,
+                  x: 0,
+                  y: 0,
+                  duration: 0.2,
+                });
+              } else if (e.pageX < window.innerWidth / 2) {
+                editRef.current = true;
+                gsap.to(frontRef.current, {
+                  x: 84,
                   y: 0,
                   duration: 0.2,
                 });
               } else {
-                selectedRef.current = false;
+                selectedRef.current = true;
                 gsap.to(frontRef.current, {
-                  x: 0,
+                  x: -84,
                   y: 0,
                   duration: 0.2,
                 });
@@ -164,7 +228,7 @@ function MemberSignInCard({
               </p>
             </div>
             <div className="ml-auto">
-              <GroupBadge campus={member.campus} />
+              <GroupBadge campus={member.campus} className="w-14 text-sm" />
             </div>
           </div>
           <div
@@ -175,38 +239,25 @@ function MemberSignInCard({
           >
             {dragEnabled ? (
               dragConfig.dragType == "ADD" ? (
-                <div className="bg-blue-600 h-20 w-full flex justify-center items-center">
-                  <ArrowRightIcon className="h-5 ml-auto mr-8 text-white" />
+                <div className="bg-blue-600 h-20 flex w-screen justify-start items-center">
+                  <ArrowRightIcon className="h-5 w-5 ml-8 text-white" />
                 </div>
               ) : (
-                <div className="bg-red-600  h-20 w-full flex justify-center items-center">
-                  <TrashIcon className="h-5 ml-auto mr-8 text-white" />
+                <div className="bg-red-600 h-20 flex w-screen justify-start items-center">
+                  <TrashIcon className="h-5 w-5 ml-8 text-white" />
                 </div>
               )
             ) : null}
           </div>
         </div>
       </div>
-      <div>
-        {dragEnabled ? (
-          dragConfig.dragType == "ADD" ? (
-            <div className="bg-red-600 h-20 top-0 w-full absolute flex justify-center items-center">
-              <ArrowRightIcon className="h-5 ml-auto mr-8 text-white" />
-            </div>
-          ) : (
-            <div className="bg-red-600 h-20 top-0 w-full absolute flex justify-center items-center">
-              <TrashIcon className="h-5 ml-auto mr-8 text-white" />
-            </div>
-          )
-        ) : null}
-      </div>
       {dragEnabled ? (
         dragConfig.dragType == "ADD" ? (
-          <div className="z-10">
-            <div className="bg-blue-600 h-20 top-0 w-full absolute z-10 flex justify-center items-center"></div>
+          <div className="-z-10">
+            <div className="bg-blue-600 h-20 top-0 w-full absolute flex justify-center items-center"></div>
           </div>
         ) : (
-          <div className="bg-red-600 h-20 top-0 w-full absolute z-10 flex justify-center items-center"></div>
+          <div className="bg-red-600 h-20 top-0 w-full absolute flex justify-center items-center"></div>
         )
       ) : (
         <></>

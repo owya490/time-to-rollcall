@@ -3,7 +3,7 @@ import AuthCheck from "@/components/AuthCheck";
 import AttendanceSearchBar from "@/components/event/AttendanceSearchBar";
 import Members from "@/components/members/Members";
 import Loader from "@/components/Loader";
-import { MembersContext } from "@/lib/context";
+import { GroupContext, MembersContext } from "@/lib/context";
 import { InitMember, MemberModel } from "@/models/Member";
 import { useContext, useEffect, useState } from "react";
 import { searchForMemberByName } from "services/attendanceService";
@@ -20,8 +20,9 @@ export default function GroupMember({
   const [searchActive, setSearchActive] = useState(false);
   const [searchInput, setSearchInput] = useState<string>("");
   const [members, setMembers] = useContext(MembersContext);
+  const [group] = useContext(GroupContext);
   const [selectedMember, setSelectedMember] = useState<MemberModel>(
-    InitMember(University.UTS)
+    InitMember("Jane Doe", University.UTS)
   );
   const [membersShown, setMembersShown] = useState<MemberModel[]>([]);
   const [loading, setLoading] = useState(true);
@@ -96,12 +97,29 @@ export default function GroupMember({
           <div className="mb-3">
             <h1>Edit Members</h1>
           </div>
-          <div className="mb-8">
+          <div className="mb-6">
             <AttendanceSearchBar
               searchInput={searchInput}
               setSearchInput={setSearchInput}
             />
           </div>
+        </div>
+        <div className="flex justify-center w-full mb-2">
+          <button
+            type="button"
+            className="text-[10px] py-1.5 px-1.5 rounded-lg bg-gray-200 font-light"
+            onClick={() => {
+              setSelectedMember(
+                InitMember(
+                  searchInput,
+                  (group?.name as University) ?? University.UTS
+                )
+              );
+              openModal();
+            }}
+          >
+            Create New Member
+          </button>
         </div>
         <div className="absolute z-40 w-full">
           <Members

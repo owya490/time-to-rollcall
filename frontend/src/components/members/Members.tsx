@@ -8,7 +8,7 @@ interface MembersProps {
 
 export default function Members({ members, action }: MembersProps) {
   return (
-    <div className="z-30 pt-8 bg-white pb-28">
+    <div className="z-30 bg-white pb-16">
       <div className="flex items-center h-fit mx-6 mb-2">
         <p className="text-gray-500 text-[10px] font-light align-middle">
           MEMBERS

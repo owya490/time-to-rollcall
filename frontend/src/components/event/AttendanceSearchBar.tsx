@@ -14,7 +14,7 @@ export default function AttendanceSearchBar({
       <MagnifyingGlassIcon className="w-6 h-6 mr-2 text-gray-500" />
       <input
         value={searchInput}
-        placeholder="Search to add members"
+        placeholder="Search members"
         className="w-full placeholder:text-sm placeholder:font-thin placeholder:align-middle outline-none"
         onChange={(e) => {
           setSearchInput(e.target.value);

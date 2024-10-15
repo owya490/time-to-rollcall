@@ -44,7 +44,7 @@ function MemberCard({ member, action }: MemberCardProps) {
               </p>
             </div>
             <div className="ml-auto">
-              <GroupBadge campus={member.campus} />
+              <GroupBadge campus={member.campus} className="w-14 text-sm" />
             </div>
           </div>
         </div>

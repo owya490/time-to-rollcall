@@ -5,6 +5,7 @@ interface AttendanceSuggested {
   suggested: MemberModel[];
   action: (member: MemberModel) => void;
   end: (member: MemberModel) => void;
+  edit: (member: MemberModel) => void;
   loadAnimation: boolean;
 }
 
@@ -12,20 +13,16 @@ export default function AttendanceSuggested({
   suggested,
   action,
   end,
+  edit,
   loadAnimation,
 }: AttendanceSuggested) {
   return (
-    <>
+    <div className="z-20 pt-8 bg-white">
       <div className="flex items-center h-fit mx-6 mb-2">
         <p className="text-gray-500 text-[10px] font-light align-middle">
           NOT SIGNED IN
         </p>
       </div>
-      {suggested.length === 0 && (
-        <div className="mx-6 flex h-20 items-center">
-          TODO: Create new member
-        </div>
-      )}
       {suggested.map((member) => {
         return (
           <MemberSignIn
@@ -36,12 +33,13 @@ export default function AttendanceSuggested({
               dragType: "ADD",
               action,
               end,
+              edit,
             }}
             refreshDependency={suggested}
             triggerAddAnimation={loadAnimation}
           />
         );
       })}
-    </>
+    </div>
   );
 }

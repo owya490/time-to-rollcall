@@ -1,38 +1,52 @@
 "use client";
 import { GroupPath, Path } from "@/helper/Path";
-import { GroupContext, UserContext } from "@/lib/context";
+import { GroupContext } from "@/lib/context";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useContext } from "react";
-import { UserIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
+import { UserGroupIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
+import GroupBadge from "./event/GroupBadge";
+import { getUniversityKey, University } from "@/models/University";
 
 export default function Topbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [user] = useContext(UserContext);
   const [group] = useContext(GroupContext);
   return (
     <nav className="bg-white fixed w-full z-50 top-0 start-0">
       <div className="flex items-center justify-between px-6 py-6">
         {group ? (
-          <Link
-            href={
-              pathname === Path.Group + "/" + group.id
-                ? Path.Group
-                : Path.Group + "/" + group.id
-            }
-            className="bg-gray-500 text-white rounded-3xl text-sm p-1 px-3"
-          >
-            {group.name}
-          </Link>
-        ) : user ? (
-          <p className="text-lg text-gray-500">Hi {user?.displayName}</p>
+          getUniversityKey(group.name as University) ? (
+            <Link
+              href={
+                pathname === Path.Group + "/" + group.id
+                  ? Path.Group
+                  : Path.Group + "/" + group.id
+              }
+            >
+              <GroupBadge
+                campus={group.name as University}
+                className="px-4 text-base"
+              />
+            </Link>
+          ) : (
+            <Link
+              href={
+                pathname === Path.Group + "/" + group.id
+                  ? Path.Group
+                  : Path.Group + "/" + group.id
+              }
+              className="bg-gray-900 rounded-full py-1 px-4 text-white font-light text-center"
+            >
+              {group.name}
+            </Link>
+          )
         ) : (
           <></>
         )}
         {group && (
           <div className="flex items-center justify-end gap-4">
-            <UserIcon
+            <UserGroupIcon
               className="w-6 h-6 mr-2 text-gray-500"
               onClick={() =>
                 router.push(Path.Group + "/" + group.id + GroupPath.Members)
