@@ -93,7 +93,7 @@ export default function GroupMember({
         submit={editMember}
         updating={updating}
       />
-      <h1 className="mx-6 text-2xl mb-3">Members</h1>
+      <h1 className="mx-6 text-2xl mb-6">Members</h1>
       <div className="flex justify-center w-full mb-4">
         <button
           type="button"
@@ -120,7 +120,7 @@ export default function GroupMember({
             />
           </div>
         </div>
-        <div className="absolute z-40 w-full">
+        <div className="absolute z-20 w-full">
           <Members
             members={membersShown}
             action={(member: MemberModel) => {

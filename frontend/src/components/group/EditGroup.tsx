@@ -190,11 +190,10 @@ export default function EditGroup({
                           onBlur={() => setEditTag(null)}
                           onKeyDown={async (event) => {
                             if (event.key === "Enter") {
-                              await addTag(group.id, editTag);
-
+                              const addedTag = await addTag(group.id, editTag);
                               setGroup({
                                 ...group,
-                                tags: group.tags.concat(editTag),
+                                tags: group.tags.concat(addedTag),
                               });
                               setEditTag(null);
                             }

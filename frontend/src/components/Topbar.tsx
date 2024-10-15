@@ -18,8 +18,9 @@ export default function Topbar({ openModal }: { openModal?: () => void }) {
   const router = useRouter();
   const [group] = useContext(GroupContext);
   const [event] = useContext(EventContext);
+
   return (
-    <nav className="bg-white fixed w-full z-50 top-0 start-0">
+    <nav className="bg-white fixed w-full z-30 top-0 start-0">
       <div className="flex items-center justify-between px-6 py-6">
         {group ? (
           getUniversityKey(group.name as University) ? (
@@ -59,13 +60,16 @@ export default function Topbar({ openModal }: { openModal?: () => void }) {
           </div>
         ) : group ? (
           <div className="flex items-center justify-end gap-4">
-            {pathname === Path.Group + "/" + group.id + GroupPath.Members ? (
+            {pathname ===
+            Path.Group + "/" + group.id + "/" + GroupPath.Members ? (
               <UserGroupIconSolid className="cursor-pointer w-7 h-7 text-gray-500" />
             ) : (
               <UserGroupIcon
                 className="cursor-pointer w-7 h-7 text-gray-500"
                 onClick={() =>
-                  router.push(Path.Group + "/" + group.id + GroupPath.Members)
+                  router.push(
+                    Path.Group + "/" + group.id + "/" + GroupPath.Members
+                  )
                 }
               />
             )}

@@ -96,11 +96,6 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
       {showedEvents.length > 0 && (
         <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />
       )}
-      {showedEvents.length > 0 && (
-        <div className="mx-6">
-          <p>TODO: Scroll load</p>
-        </div>
-      )}
       <Botbar
         filter={filter}
         filterEvents={(f) => {

@@ -9,8 +9,6 @@ import {
 import { User } from "@/models/User";
 import { GroupModel } from "@/models/Group";
 import { getGroup } from "./groups";
-import { MemberModel } from "@/models/Member";
-import { getMembers } from "./members";
 import { getEvent } from "./events";
 import { EventModel } from "@/models/Event";
 import { useRouter } from "next/navigation";
@@ -67,19 +65,6 @@ export function useGroupData(user: User | null | undefined, groupId: string) {
   }, [user, groupId]);
 
   return groupState;
-}
-
-export function useMembersData(user: User | null | undefined, groupId: string) {
-  const membersState = useState<MemberModel[]>([]);
-
-  useEffect(() => {
-    if (user && user.groups?.includes(groupId)) {
-      getMembers(groupId).then((members) => membersState[1](members));
-    }
-    // eslint-disable-next-line
-  }, [user, groupId]);
-
-  return membersState;
 }
 
 export function useEventData(
