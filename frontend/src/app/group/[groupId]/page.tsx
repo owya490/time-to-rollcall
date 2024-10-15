@@ -60,66 +60,71 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
     }
   }, [group, params.groupId]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center">
-        <Loader show />
-      </div>
-    );
-  }
   return (
     <AuthCheck>
-      {group && (
-        <EditEvent
-          groupId={group.id}
-          tags={group.tags}
-          setTags={(tags: TagModel[]) => setGroup({ ...group, tags })}
-          isOpen={isOpen}
-          closeModal={closeModal}
-          submitEventForm={submitEventForm}
-          setSubmitEventForm={setSubmitEventForm}
-          createEvent={createEvent}
-          selectedIndex={selectedIndex}
-          setSelectedIndex={setSelectedIndex}
-          updating={updating}
-        />
-      )}
-      <h1 className="mx-6 text-2xl mb-16">Events</h1>
-      {showedEvents.map((event, i) => (
-        <div key={i}>
-          <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />
-          <div className="mx-6 my-4">
-            <EventComponent event={event} groupId={params.groupId} showButton />
-          </div>
+      {loading ? (
+        <div className="flex justify-center items-center">
+          <Loader show />
         </div>
-      ))}
-      {showedEvents.length > 0 && (
-        <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />
+      ) : (
+        <>
+          {group && (
+            <EditEvent
+              groupId={group.id}
+              tags={group.tags}
+              setTags={(tags: TagModel[]) => setGroup({ ...group, tags })}
+              isOpen={isOpen}
+              closeModal={closeModal}
+              submitEventForm={submitEventForm}
+              setSubmitEventForm={setSubmitEventForm}
+              createEvent={createEvent}
+              selectedIndex={selectedIndex}
+              setSelectedIndex={setSelectedIndex}
+              updating={updating}
+            />
+          )}
+          <h1 className="mx-6 text-2xl mb-16">Events</h1>
+          {showedEvents.map((event, i) => (
+            <div key={i}>
+              <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />
+              <div className="mx-6 my-4">
+                <EventComponent
+                  event={event}
+                  groupId={params.groupId}
+                  showButton
+                />
+              </div>
+            </div>
+          ))}
+          {showedEvents.length > 0 && (
+            <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />
+          )}
+          <Botbar
+            filter={filter}
+            filterEvents={(f) => {
+              setShowedEvents(f.sort(events, filteredTags));
+              setFilter(f);
+            }}
+            filteredTags={filteredTags}
+            filterEventsByTags={(tagIds: TagId[]) => {
+              setShowedEvents(
+                tagIds.length > 0
+                  ? events.filter((e) =>
+                      tagIds.every((tagId) =>
+                        e.tags.map((t) => t.id).includes(tagId)
+                      )
+                    )
+                  : events
+              );
+              setFilteredTags(tagIds);
+            }}
+            openModal={openModal}
+            tags={group?.tags ?? []}
+            tagsOpen={tagsOpen}
+            setTagsOpen={setTagsOpen}
+          />
+        </>
       )}
-      <Botbar
-        filter={filter}
-        filterEvents={(f) => {
-          setShowedEvents(f.sort(events, filteredTags));
-          setFilter(f);
-        }}
-        filteredTags={filteredTags}
-        filterEventsByTags={(tagIds: TagId[]) => {
-          setShowedEvents(
-            tagIds.length > 0
-              ? events.filter((e) =>
-                  tagIds.every((tagId) =>
-                    e.tags.map((t) => t.id).includes(tagId)
-                  )
-                )
-              : events
-          );
-          setFilteredTags(tagIds);
-        }}
-        openModal={openModal}
-        tags={group?.tags ?? []}
-        tagsOpen={tagsOpen}
-        setTagsOpen={setTagsOpen}
-      />
     </AuthCheck>
   );
 }
