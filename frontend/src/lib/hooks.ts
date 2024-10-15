@@ -9,6 +9,8 @@ import {
 import { User } from "@/models/User";
 import { GroupModel } from "@/models/Group";
 import { getGroup } from "./groups";
+import { MemberModel } from "@/models/Member";
+import { getMembers } from "./members";
 import { getEvent } from "./events";
 import { EventModel } from "@/models/Event";
 import { useRouter } from "next/navigation";
@@ -31,7 +33,11 @@ export function useUserData() {
   return userState;
 }
 
-export function useGroupData(user: User | null | undefined, groupId: string) {
+export function useGroupData(
+  user: User | null | undefined,
+  setUser: (user: User | null | undefined) => void,
+  groupId: string
+) {
   const groupState = useState<GroupModel | null>(null);
   const router = useRouter();
 
@@ -52,6 +58,7 @@ export function useGroupData(user: User | null | undefined, groupId: string) {
           getGroup(groupId).then((group) => {
             if (group) {
               groupState[1](group);
+              setUser({ ...user, groups: (user.groups ?? []).concat(groupId) });
             } else {
               removeGroupFromUserGroups(user.id, groupId).then(() =>
                 router.push(Path.Group)
@@ -65,6 +72,22 @@ export function useGroupData(user: User | null | undefined, groupId: string) {
   }, [user, groupId]);
 
   return groupState;
+}
+
+export function useMembersData(
+  user: User | null | undefined,
+  group: GroupModel | null
+) {
+  const membersState = useState<MemberModel[]>([]);
+
+  useEffect(() => {
+    if (user && group && user.groups?.includes(group.id)) {
+      getMembers(group.id).then((members) => membersState[1](members));
+    }
+    // eslint-disable-next-line
+  }, [user, group]);
+
+  return membersState;
 }
 
 export function useEventData(

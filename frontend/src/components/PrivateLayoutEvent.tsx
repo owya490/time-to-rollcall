@@ -5,9 +5,9 @@ import {
   MembersContext,
   UserContext,
 } from "@/lib/context";
-import { useEventData, useGroupData } from "@/lib/hooks";
+import { useEventData, useGroupData, useMembersData } from "@/lib/hooks";
 import { GroupId, InitGroup } from "@/models/Group";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import Topbar from "./Topbar";
 import { EventId } from "@/models/Event";
 import EditEvent from "./event/EditEvent";
@@ -15,8 +15,6 @@ import { TagModel } from "@/models/Tag";
 import { deleteEvent, updateEvent } from "@/lib/events";
 import { useRouter } from "next/navigation";
 import { Path } from "@/helper/Path";
-import { getMembers } from "@/lib/members";
-import { MemberModel } from "@/models/Member";
 
 export default function PrivateLayoutEvent({
   children,
@@ -25,18 +23,11 @@ export default function PrivateLayoutEvent({
   children: React.ReactNode;
   params: { groupId: GroupId; eventId: EventId };
 }) {
-  const [user] = useContext(UserContext);
   const router = useRouter();
+  const [user, setUser] = useContext(UserContext);
 
-  const [members, setMembers] = useState<MemberModel[]>([]);
-
-  const groupData = useGroupData(user, params.groupId);
-
-  useEffect(() => {
-    if (groupData[0]) {
-      getMembers(groupData[0].id).then((members) => setMembers(members));
-    }
-  }, [groupData[0]]);
+  const groupData = useGroupData(user, setUser, params.groupId);
+  const membersData = useMembersData(user, groupData[0]);
   const eventData = useEventData(user, params.groupId, params.eventId);
   const [updating, setUpdating] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -81,11 +72,10 @@ export default function PrivateLayoutEvent({
   function openDeleteConfirmationModal() {
     setDeleteConfirmationIsOpen(true);
   }
-  console.log("hey");
 
   return (
     <GroupContext.Provider value={groupData}>
-      <MembersContext.Provider value={[members, setMembers]}>
+      <MembersContext.Provider value={membersData}>
         <EventContext.Provider value={eventData}>
           {eventData[0] && groupData[0] && (
             <EditEvent

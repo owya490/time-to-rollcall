@@ -20,7 +20,7 @@ export default function Topbar({ openModal }: { openModal?: () => void }) {
   const [event] = useContext(EventContext);
 
   return (
-    <nav className="bg-white fixed w-full z-30 top-0 start-0">
+    <nav className="bg-white fixed w-full z-40 top-0 start-0">
       <div className="flex items-center justify-between px-6 py-6">
         {group ? (
           getUniversityKey(group.name as University) ? (

@@ -1,13 +1,11 @@
 "use client";
 import { GroupContext, MembersContext, UserContext } from "@/lib/context";
-import { useGroupData } from "@/lib/hooks";
+import { useGroupData, useMembersData } from "@/lib/hooks";
 import { GroupId } from "@/models/Group";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import Topbar from "./Topbar";
 import { updateGroup } from "@/lib/groups";
 import EditGroup from "./group/EditGroup";
-import { MemberModel } from "@/models/Member";
-import { getMembers } from "@/lib/members";
 
 export default function PrivateLayoutGroup({
   children,
@@ -16,16 +14,10 @@ export default function PrivateLayoutGroup({
   children: React.ReactNode;
   params: { groupId: GroupId };
 }) {
-  const [user] = useContext(UserContext);
-  const [members, setMembers] = useState<MemberModel[]>([]);
+  const [user, setUser] = useContext(UserContext);
 
-  const groupData = useGroupData(user, params.groupId);
-
-  useEffect(() => {
-    if (groupData[0]) {
-      getMembers(groupData[0].id).then((members) => setMembers(members));
-    }
-  }, [user, groupData[0]]);
+  const groupData = useGroupData(user, setUser, params.groupId);
+  const membersData = useMembersData(user, groupData[0]);
 
   const [isOpen, setIsOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
@@ -48,7 +40,7 @@ export default function PrivateLayoutGroup({
   }
   return (
     <GroupContext.Provider value={groupData}>
-      <MembersContext.Provider value={[members, setMembers]}>
+      <MembersContext.Provider value={membersData}>
         {groupData[0] && (
           <EditGroup
             isOpen={isOpen}

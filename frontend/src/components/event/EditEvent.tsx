@@ -346,7 +346,7 @@ export default function EditEvent({
                         }
                       >
                         {selectedIndex === 2
-                          ? (newEvent ? "Create" : "Edit") + " event"
+                          ? (newEvent ? "Create" : "Update") + " event"
                           : "Next"}
                       </button>
                     )}
