@@ -13,7 +13,7 @@ export interface EventModel {
 }
 
 export const InitEvent: EventModel = {
-  id: "1",
+  id: "placeholder",
   name: "",
   tags: [],
   dateStart: new Date(),
