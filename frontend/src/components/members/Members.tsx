@@ -2,7 +2,7 @@ import { MemberModel } from "@/models/Member";
 import { MemberCardMemo } from "./MemberCard";
 
 interface MembersProps {
-  members?: MemberModel[];
+  members: MemberModel[];
   action: (member: MemberModel) => void;
 }
 
@@ -19,7 +19,7 @@ export default function Members({ members, action }: MembersProps) {
           </p>
         </div>
       </div>
-      {members?.map((member) => {
+      {members.map((member) => {
         return (
           <MemberCardMemo
             key={member.id}

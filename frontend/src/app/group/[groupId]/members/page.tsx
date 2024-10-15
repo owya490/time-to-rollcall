@@ -24,7 +24,7 @@ export default function GroupMember({
   const [selectedMember, setSelectedMember] = useState<MemberModel>(
     InitMember("Jane Doe", University.UTS)
   );
-  const [membersShown, setMembersShown] = useState<MemberModel[]>([]);
+  const [membersShown, setMembersShown] = useState<MemberModel[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +38,7 @@ export default function GroupMember({
     let prevSearchActive = searchActive;
     setSearchActive(searchInput.length > 0);
     if (searchInput.length > 0) {
-      const { suggested } = searchForMemberByName(members, searchInput);
+      const { suggested } = searchForMemberByName(members ?? [], searchInput);
       setMembersShown(suggested);
     } else if (prevSearchActive && searchInput.length === 0) {
       setMembersShown(members);
@@ -58,17 +58,20 @@ export default function GroupMember({
     setUpdating(true);
     if (selectedMember.id === "placeholder") {
       let newMember = await createMember(params.groupId, selectedMember);
-      setMembers((prevMembers) => prevMembers.concat(newMember));
+      setMembers((prevMembers) => (prevMembers ?? []).concat(newMember));
     } else {
       await updateMember(params.groupId, selectedMember);
-      members.findIndex((m) => m.id === selectedMember.id);
       setMembers((prevMembers) => {
-        let index = prevMembers.findIndex((m) => m.id === selectedMember.id);
-        return [
-          ...prevMembers.slice(0, index),
-          selectedMember,
-          ...prevMembers.slice(index + 1),
-        ];
+        let index = prevMembers?.findIndex((m) => m.id === selectedMember.id);
+        if (index && index !== -1) {
+          return [
+            ...(prevMembers ?? []).slice(0, index),
+            selectedMember,
+            ...(prevMembers ?? []).slice(index + 1),
+          ];
+        } else {
+          return prevMembers;
+        }
       });
     }
     setUpdating(false);
@@ -122,7 +125,7 @@ export default function GroupMember({
         </div>
         <div className="absolute z-20 w-full">
           <Members
-            members={membersShown}
+            members={membersShown ?? []}
             action={(member: MemberModel) => {
               setSelectedMember(member);
               openModal();
