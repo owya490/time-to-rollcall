@@ -106,24 +106,22 @@ export default function GroupMember({
           />
         </div>
       </div>
-      <div className="min-h-screen flex items-end">
-        <div className="fixed z-40 flex justify-center bottom-0 text-center w-full text-gray-700">
-          <button
-            type="button"
-            className="text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
-            onClick={() => {
-              setSelectedMember(
-                InitMember(
-                  searchInput,
-                  (group?.name as University) ?? University.UTS
-                )
-              );
-              openModal();
-            }}
-          >
-            Create New Member
-          </button>
-        </div>
+      <div className="fixed z-40 flex justify-center bottom-0 text-center w-full text-gray-700">
+        <button
+          type="button"
+          className="text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
+          onClick={() => {
+            setSelectedMember(
+              InitMember(
+                searchInput,
+                (group?.name as University) ?? University.UTS
+              )
+            );
+            openModal();
+          }}
+        >
+          Create New Member
+        </button>
       </div>
     </AuthCheck>
   );
