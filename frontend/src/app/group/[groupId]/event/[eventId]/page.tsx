@@ -107,6 +107,31 @@ export default function Event({
     }
     // eslint-disable-next-line
   }, [membersNotSignedIn]);
+
+  const button = document.getElementById("button");
+  const input = document.getElementById("input");
+  let height = window.visualViewport?.height;
+  const viewport = window.visualViewport;
+
+  window.addEventListener("scroll", inputBlur);
+  window.visualViewport?.addEventListener("resize", resizeHandler);
+
+  function inputBlur() {
+    input?.blur();
+  }
+
+  function resizeHandler() {
+    if (!/iPhone|iPad|iPod/.test(window.navigator.userAgent)) {
+      height = viewport?.height;
+    }
+    if (button)
+      button.style.bottom = `${(height ?? 0) - (viewport?.height ?? 0)}px`;
+  }
+
+  function blurHandler() {
+    if (button) button.style.bottom = "10px";
+  }
+
   return (
     <AuthCheck>
       <Topbar
@@ -135,6 +160,7 @@ export default function Event({
               disabled={!toggleEdit}
               searchInput={searchInput}
               setSearchInput={setSearchInput}
+              blurHandler={blurHandler}
             />
           </div>
           {searchInput.length > 0 && index === 0 && (
@@ -210,7 +236,10 @@ export default function Event({
               }}
             />
           </div>
-          <div className="fixed z-40 flex justify-center bottom-0 text-center w-full text-gray-700">
+          <div
+            id="button"
+            className="fixed z-40 flex justify-center bottom-0 text-center w-full text-gray-700"
+          >
             <button
               type="button"
               className="text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
