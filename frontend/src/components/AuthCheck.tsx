@@ -7,7 +7,7 @@ import Loader from "./Loader";
 
 // Component's children only shown to logged-in users
 export default function AuthCheck(props: { children: React.ReactNode }) {
-  const [user] = useContext(UserContext);
+  const user = useContext(UserContext);
   if (user === null) {
     return (
       <div className="flex justify-center items-center">

@@ -4,22 +4,17 @@ import GroupBadge from "@/components/event/GroupBadge";
 import EditGroup from "@/components/group/EditGroup";
 import { Path } from "@/helper/Path";
 import { UserContext } from "@/lib/context";
-import { createGroup, getGroups } from "@/lib/groups";
+import { createGroup } from "@/lib/groups";
+import { useGroupsData } from "@/lib/hooks";
 import { GroupModel, InitGroup } from "@/models/Group";
 import { getUniversityKey, University } from "@/models/University";
 import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 export default function Groups() {
-  const [user, setUser] = useContext(UserContext);
-  const [groups, setGroups] = useState<GroupModel[]>([]);
+  const user = useContext(UserContext);
+  const groups = useGroupsData(user);
   const [group, setGroup] = useState<GroupModel>(InitGroup);
-
-  useEffect(() => {
-    if (user) {
-      getGroups(user.groups).then((groups) => setGroups(groups));
-    }
-  }, [user]);
 
   const [isOpen, setIsOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
@@ -27,10 +22,7 @@ export default function Groups() {
   async function createGroupIn() {
     setUpdating(true);
     if (user && group) {
-      const addedGroup = await createGroup(user, group);
-      if (addedGroup) {
-        setUser({ ...user, groups: (user.groups ?? []).concat(addedGroup.id) });
-      }
+      await createGroup(user, group, []);
     }
     setUpdating(false);
     closeModal();
@@ -49,7 +41,7 @@ export default function Groups() {
       <div className="mx-6">
         <h1 className="text-2xl mt-6 mb-3">Your Groups</h1>
         <div className="flex flex-wrap gap-2 my-4">
-          {groups.map((group, i) =>
+          {groups?.map((group, i) =>
             getUniversityKey(group.name as University) ? (
               <Link key={i} href={`${Path.Group}/${group.id}`}>
                 <GroupBadge

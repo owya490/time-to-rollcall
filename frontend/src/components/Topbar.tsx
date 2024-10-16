@@ -18,9 +18,9 @@ import { logOut } from "@/lib/auth";
 export default function Topbar({ openModal }: { openModal?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [user] = useContext(UserContext);
-  const [group] = useContext(GroupContext);
-  const [event] = useContext(EventContext);
+  const user = useContext(UserContext);
+  const group = useContext(GroupContext);
+  const event = useContext(EventContext);
 
   return (
     <nav className="bg-white fixed w-full z-40 top-0 start-0">

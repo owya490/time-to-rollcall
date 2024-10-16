@@ -12,7 +12,7 @@ import {
 import { Fragment } from "react";
 import { GroupModel } from "@/models/Group";
 import Loader from "../Loader";
-import { InitTag } from "@/models/Tag";
+import { InitTag, TagModel } from "@/models/Tag";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { colourClasses, getColourClasses } from "../event/Tag";
 
@@ -21,17 +21,21 @@ export default function EditGroup({
   closeModal,
   group,
   setGroup,
+  tags,
+  setTags,
   submit,
   updating,
 }: {
   isOpen: boolean;
   closeModal: () => void;
   group: GroupModel;
+  tags?: TagModel[];
+  setTags?: (tags: TagModel[]) => void;
   setGroup: (group: GroupModel) => void;
   submit: () => void;
   updating: boolean;
 }) {
-  const newGroup = group.id === "placeholder";
+  const newGroup = group?.id === "placeholder";
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
@@ -89,12 +93,14 @@ export default function EditGroup({
                     }
                   />
                 </div>
-                {!newGroup && (
-                  <div className="my-4">
-                    <p className="text-sm text-gray-900">Tags</p>
-                    <div className="flex flex-wrap">
-                      {group.tags &&
-                        group.tags?.map((t, i) => (
+                {!newGroup &&
+                  tags !== undefined &&
+                  tags !== null &&
+                  setTags && (
+                    <div className="my-4">
+                      <p className="text-sm text-gray-900">Tags</p>
+                      <div className="flex flex-wrap">
+                        {tags.map((t, i) => (
                           <div className="flex w-full justify-between" key={i}>
                             <input
                               id={i.toString()}
@@ -103,30 +109,21 @@ export default function EditGroup({
                               placeholder="Roadtrip"
                               value={t.name}
                               onChange={(e) => {
-                                console.log(t);
-                                console.log(e.target.value);
-                                console.log(i);
-                                setGroup({
-                                  ...group,
-                                  tags: [
-                                    ...group.tags.slice(0, i),
-                                    { ...t, name: e.target.value },
-                                    ...group.tags.slice(i + 1),
-                                  ],
-                                });
+                                setTags([
+                                  ...tags.slice(0, i),
+                                  { ...t, name: e.target.value },
+                                  ...tags.slice(i + 1),
+                                ]);
                               }}
                             />
                             <Listbox
                               value={t.colour ?? "blue"}
                               onChange={(colour) =>
-                                setGroup({
-                                  ...group,
-                                  tags: [
-                                    ...group.tags.slice(0, i),
-                                    { ...t, colour },
-                                    ...group.tags.slice(i + 1),
-                                  ],
-                                })
+                                setTags([
+                                  ...tags.slice(0, i),
+                                  { ...t, colour },
+                                  ...tags.slice(i + 1),
+                                ])
                               }
                             >
                               <ListboxButton>
@@ -146,7 +143,7 @@ export default function EditGroup({
                               <ListboxOptions
                                 anchor="top"
                                 transition
-                                className="h-52 rounded-xl border border-white/5 bg-white p-1 focus:outline-none transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
+                                className="h-52 rounded-xl border border-white/5 bg-gray-200 p-1 focus:outline-none transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
                               >
                                 {Object.entries(colourClasses).map(
                                   ([colour, clz], i) => (
@@ -154,23 +151,18 @@ export default function EditGroup({
                                       key={i}
                                       value={colour}
                                       onClick={() =>
-                                        setGroup({
-                                          ...group,
-                                          tags: [
-                                            ...group.tags.slice(
-                                              0,
-                                              group.tags
-                                                .map((t) => t.id)
-                                                .indexOf(t.id)
-                                            ),
-                                            { ...t, colour },
-                                            ...group.tags.slice(
-                                              group.tags
-                                                .map((t) => t.id)
-                                                .indexOf(t.id) + 1
-                                            ),
-                                          ],
-                                        })
+                                        setTags([
+                                          ...tags.slice(
+                                            0,
+                                            tags.map((t) => t.id).indexOf(t.id)
+                                          ),
+                                          { ...t, colour },
+                                          ...tags.slice(
+                                            tags
+                                              .map((t) => t.id)
+                                              .indexOf(t.id) + 1
+                                          ),
+                                        ])
                                       }
                                       className="group flex justify-between cursor-default items-center rounded-lg px-2 select-none data-[focus]:bg-white/10"
                                     >
@@ -193,23 +185,18 @@ export default function EditGroup({
                             </Listbox>
                           </div>
                         ))}
+                      </div>
+                      <div className="flex justify-center mt-4">
+                        <button
+                          type="button"
+                          className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-md font-medium text-blue-900"
+                          onClick={() => setTags([...tags, InitTag])}
+                        >
+                          Create Tag
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex justify-center mt-4">
-                      <button
-                        type="button"
-                        className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-md font-medium text-blue-900"
-                        onClick={() =>
-                          setGroup({
-                            ...group,
-                            tags: [...group.tags, InitTag],
-                          })
-                        }
-                      >
-                        Create Tag
-                      </button>
-                    </div>
-                  </div>
-                )}
+                  )}
                 {updating ? (
                   <div className="flex justify-center items-center">
                     <Loader show />
@@ -217,7 +204,7 @@ export default function EditGroup({
                 ) : (
                   <button
                     type="button"
-                    disabled={!group.name || group.tags.some((t) => !t.name)}
+                    disabled={!group.name || tags?.some((t) => !t.name)}
                     className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={submit}
                   >

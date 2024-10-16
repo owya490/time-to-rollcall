@@ -19,8 +19,8 @@ export default function GroupMember({
 }) {
   const [searchActive, setSearchActive] = useState(false);
   const [searchInput, setSearchInput] = useState<string>("");
-  const [members, setMembers] = useContext(MembersContext);
-  const [group] = useContext(GroupContext);
+  const members = useContext(MembersContext);
+  const group = useContext(GroupContext);
   const [selectedMember, setSelectedMember] = useState<MemberModel>(
     InitMember("Jane Doe", University.UTS)
   );
@@ -31,7 +31,7 @@ export default function GroupMember({
 
   useEffect(() => {
     setLoading(false);
-    setMembersShown(members);
+    setMembersShown(members ?? []);
   }, [members]);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function GroupMember({
       const { suggested } = searchForMemberByName(members ?? [], searchInput);
       setMembersShown(suggested);
     } else if (prevSearchActive && searchInput.length === 0) {
-      setMembersShown(members);
+      setMembersShown(members ?? []);
     }
     // eslint-disable-next-line
   }, [searchInput]);
@@ -57,22 +57,9 @@ export default function GroupMember({
   async function editMember() {
     setUpdating(true);
     if (selectedMember.id === "placeholder") {
-      let newMember = await createMember(params.groupId, selectedMember);
-      setMembers((prevMembers) => (prevMembers ?? []).concat(newMember));
+      await createMember(params.groupId, selectedMember);
     } else {
       await updateMember(params.groupId, selectedMember);
-      setMembers((prevMembers) => {
-        let index = prevMembers?.findIndex((m) => m.id === selectedMember.id);
-        if (index && index !== -1) {
-          return [
-            ...(prevMembers ?? []).slice(0, index),
-            selectedMember,
-            ...(prevMembers ?? []).slice(index + 1),
-          ];
-        } else {
-          return prevMembers;
-        }
-      });
     }
     setUpdating(false);
     closeModal();

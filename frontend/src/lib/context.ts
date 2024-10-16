@@ -1,21 +1,20 @@
 import { EventModel } from "@/models/Event";
 import { GroupModel } from "@/models/Group";
 import { MemberModel } from "@/models/Member";
+import { TagModel } from "@/models/Tag";
 import { User } from "@/models/User";
-import { Dispatch, SetStateAction, createContext } from "react";
+import { createContext } from "react";
 
-export const UserContext = createContext<
-  [User | null | undefined, Dispatch<SetStateAction<User | null | undefined>>]
->([null, () => {}]);
+export const UserContext = createContext<User | null | undefined>(null);
 
-export const GroupContext = createContext<
-  [GroupModel | null, Dispatch<SetStateAction<GroupModel | null>>]
->([null, () => {}]);
+export const GroupContext = createContext<GroupModel | null | undefined>(null);
 
-export const MembersContext = createContext<
-  [MemberModel[] | null, Dispatch<SetStateAction<MemberModel[] | null>>]
->([null, () => {}]);
+export const TagsContext = createContext<TagModel[] | null | undefined>(null);
 
-export const EventContext = createContext<
-  [EventModel | null, Dispatch<SetStateAction<EventModel | null>>]
->([null, () => {}]);
+export const MembersContext = createContext<MemberModel[] | null | undefined>(
+  null
+);
+
+// null = loading
+// undefined = not found
+export const EventContext = createContext<EventModel | null | undefined>(null);

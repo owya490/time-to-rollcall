@@ -24,7 +24,6 @@ import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 export default function EditEvent({
   groupId,
   tags,
-  setTags,
   isOpen,
   closeModal,
   deleteConfirmationIsOpen,
@@ -41,7 +40,6 @@ export default function EditEvent({
 }: {
   groupId: GroupId;
   tags?: TagModel[];
-  setTags: (tags: TagModel[]) => void;
   isOpen: boolean;
   closeModal: () => void;
   deleteConfirmationIsOpen?: boolean;
@@ -250,7 +248,6 @@ export default function EditEvent({
                                 onBlur={() => {
                                   editTag.name.length > 0
                                     ? addTag(groupId, editTag).then((tag) => {
-                                        setTags((tags ?? []).concat(tag));
                                         setSubmitEventForm({
                                           ...submitEventForm,
                                           tags: submitEventForm.tags.concat(
@@ -264,7 +261,6 @@ export default function EditEvent({
                                 onKeyDown={(event) =>
                                   event.key === "Enter" &&
                                   addTag(groupId, editTag).then((tag) => {
-                                    setTags((tags ?? []).concat(tag));
                                     setSubmitEventForm({
                                       ...submitEventForm,
                                       tags: submitEventForm.tags.concat(tag),

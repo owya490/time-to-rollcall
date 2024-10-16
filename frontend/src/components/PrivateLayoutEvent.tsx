@@ -5,13 +5,17 @@ import {
   MembersContext,
   UserContext,
 } from "@/lib/context";
-import { useEventData, useGroupData, useMembersData } from "@/lib/hooks";
-import { GroupId, InitGroup } from "@/models/Group";
+import {
+  useEventData,
+  useGroupData,
+  useMembersData,
+  useTagsData,
+} from "@/lib/hooks";
+import { GroupId } from "@/models/Group";
 import React, { useContext, useEffect, useState } from "react";
 import Topbar from "./Topbar";
 import { EventId, InitEvent } from "@/models/Event";
 import EditEvent from "./event/EditEvent";
-import { TagModel } from "@/models/Tag";
 import { deleteEvent, updateEvent } from "@/lib/events";
 import { useRouter } from "next/navigation";
 import { Path } from "@/helper/Path";
@@ -24,11 +28,12 @@ export default function PrivateLayoutEvent({
   params: { groupId: GroupId; eventId: EventId };
 }) {
   const router = useRouter();
-  const [user, setUser] = useContext(UserContext);
+  const user = useContext(UserContext);
 
-  const groupData = useGroupData(user, setUser, params.groupId);
-  const membersData = useMembersData(user, groupData[0]);
-  const eventData = useEventData(user, params.groupId, params.eventId);
+  const group = useGroupData(user, params.groupId);
+  const tags = useTagsData(user, params.groupId);
+  const members = useMembersData(user, group?.id);
+  const event = useEventData(user, params.groupId, params.eventId);
   const [submitEventForm, setSubmitEventForm] = useState(InitEvent);
   const [updating, setUpdating] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -36,9 +41,8 @@ export default function PrivateLayoutEvent({
 
   async function editEvent() {
     setUpdating(true);
-    if (groupData[0] && eventData[0]) {
-      await updateEvent(groupData[0].id, submitEventForm);
-      eventData[1](submitEventForm);
+    if (group && event) {
+      await updateEvent(group.id, submitEventForm);
     }
     setUpdating(false);
     closeModal();
@@ -46,7 +50,7 @@ export default function PrivateLayoutEvent({
 
   function closeModal() {
     setIsOpen(false);
-    if (eventData[0]) setSubmitEventForm(eventData[0]);
+    if (event) setSubmitEventForm(event);
   }
 
   function openModal() {
@@ -55,9 +59,9 @@ export default function PrivateLayoutEvent({
 
   async function deleteEventIn() {
     setUpdatingDelete(true);
-    if (groupData[0] && eventData[0]) {
-      await deleteEvent(groupData[0].id, eventData[0].id);
-      router.push(Path.Group + "/" + groupData[0].id);
+    if (group && event) {
+      await deleteEvent(group.id, event.id);
+      router.push(Path.Group + "/" + group.id);
     }
     closeModal();
   }
@@ -75,21 +79,18 @@ export default function PrivateLayoutEvent({
   }
 
   useEffect(() => {
-    if (eventData[0]) setSubmitEventForm(eventData[0]);
+    if (event) setSubmitEventForm(event);
     // eslint-disable-next-line
-  }, [eventData[0]]);
+  }, [event]);
 
   return (
-    <GroupContext.Provider value={groupData}>
-      <MembersContext.Provider value={membersData}>
-        <EventContext.Provider value={eventData}>
-          {eventData[0] && groupData[0] && (
+    <GroupContext.Provider value={group}>
+      <MembersContext.Provider value={members}>
+        <EventContext.Provider value={event}>
+          {event && group && tags !== null && tags !== undefined && (
             <EditEvent
-              groupId={groupData[0].id}
-              tags={groupData[0].tags}
-              setTags={(tags: TagModel[]) =>
-                groupData[1]({ ...(groupData[0] ?? InitGroup), tags })
-              }
+              groupId={group.id}
+              tags={tags}
               isOpen={isOpen}
               closeModal={closeModal}
               deleteConfirmationIsOpen={deleteConfirmationIsOpen}

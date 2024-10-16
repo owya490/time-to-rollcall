@@ -1,11 +1,18 @@
 "use client";
-import { GroupContext, MembersContext, UserContext } from "@/lib/context";
-import { useGroupData, useMembersData } from "@/lib/hooks";
-import { GroupId, GroupModel, InitGroup } from "@/models/Group";
+import {
+  GroupContext,
+  MembersContext,
+  TagsContext,
+  UserContext,
+} from "@/lib/context";
+import { useGroupData, useMembersData, useTagsData } from "@/lib/hooks";
+import { GroupId, GroupModel } from "@/models/Group";
 import React, { useContext, useEffect, useState } from "react";
 import Topbar from "./Topbar";
 import { updateGroup } from "@/lib/groups";
 import EditGroup from "./group/EditGroup";
+import { TagModel } from "@/models/Tag";
+import Loader from "./Loader";
 
 export default function PrivateLayoutGroup({
   children,
@@ -14,20 +21,26 @@ export default function PrivateLayoutGroup({
   children: React.ReactNode;
   params: { groupId: GroupId };
 }) {
-  const [user, setUser] = useContext(UserContext);
-
-  const groupData = useGroupData(user, setUser, params.groupId);
-  const membersData = useMembersData(user, groupData[0]);
-  const [submitGroupForm, setSubmitGroupForm] = useState<GroupModel>(InitGroup);
+  const [submitGroupForm, setSubmitGroupForm] = useState<
+    GroupModel | null | undefined
+  >(null);
+  const [loading, setLoading] = useState(true);
 
   const [isOpen, setIsOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
 
+  const user = useContext(UserContext);
+  const group = useGroupData(user, params.groupId);
+  const members = useMembersData(user, group?.id);
+  const tags = useTagsData(user, group?.id);
+  const [submitTagsForm, setSubmitTagsForm] = useState<
+    TagModel[] | null | undefined
+  >(null);
+
   async function editGroup() {
     setUpdating(true);
-    if (groupData[0]) {
-      await updateGroup(submitGroupForm);
-      groupData[1](submitGroupForm);
+    if (submitGroupForm && submitTagsForm) {
+      await updateGroup(submitGroupForm, submitTagsForm);
     }
     setUpdating(false);
     closeModal();
@@ -35,7 +48,7 @@ export default function PrivateLayoutGroup({
 
   function closeModal() {
     setIsOpen(false);
-    if (groupData[0]) setSubmitGroupForm(groupData[0]);
+    if (group) setSubmitGroupForm(group);
   }
 
   function openModal() {
@@ -43,25 +56,43 @@ export default function PrivateLayoutGroup({
   }
 
   useEffect(() => {
-    if (groupData[0]) setSubmitGroupForm(groupData[0]);
+    if (group !== null && tags !== null) {
+      setSubmitGroupForm(group);
+      setSubmitTagsForm(tags);
+      setLoading(false);
+    }
     // eslint-disable-next-line
-  }, [groupData[0]]);
+  }, [group, tags]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center">
+        <Loader show />
+      </div>
+    );
+  }
 
   return (
-    <GroupContext.Provider value={groupData}>
-      <MembersContext.Provider value={membersData}>
-        {groupData[0] && (
-          <EditGroup
-            isOpen={isOpen}
-            closeModal={closeModal}
-            group={submitGroupForm}
-            setGroup={setSubmitGroupForm}
-            submit={editGroup}
-            updating={updating}
-          />
-        )}
-        <Topbar openModal={openModal} />
-        {children}
+    <GroupContext.Provider value={group}>
+      <MembersContext.Provider value={members}>
+        <TagsContext.Provider value={tags}>
+          {submitGroupForm &&
+            submitTagsForm !== null &&
+            submitTagsForm !== undefined && (
+              <EditGroup
+                isOpen={isOpen}
+                closeModal={closeModal}
+                group={submitGroupForm}
+                setGroup={setSubmitGroupForm}
+                tags={submitTagsForm}
+                setTags={setSubmitTagsForm}
+                submit={editGroup}
+                updating={updating}
+              />
+            )}
+          <Topbar openModal={openModal} />
+          {children}
+        </TagsContext.Provider>
       </MembersContext.Provider>
     </GroupContext.Provider>
   );

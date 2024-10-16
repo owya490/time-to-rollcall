@@ -9,7 +9,7 @@ import EditMember from "@/components/members/EditMember";
 import { EventContext, GroupContext, MembersContext } from "@/lib/context";
 import { addMemberToEvent, removeMemberFromEvent } from "@/lib/events";
 import { createMember, updateMember } from "@/lib/members";
-import { EventId, InitEvent } from "@/models/Event";
+import { EventId } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import { InitMember, MemberModel } from "@/models/Member";
 import { University } from "@/models/University";
@@ -29,9 +29,9 @@ export default function Event({
   const { groupId, eventId } = params;
   const [searchActive, setSearchActive] = useState(false);
   const [searchInput, setSearchInput] = useState<string>("");
-  const [event, setEvent] = useContext(EventContext);
-  const [group] = useContext(GroupContext);
-  const [members, setMembers] = useContext(MembersContext);
+  const event = useContext(EventContext);
+  const group = useContext(GroupContext);
+  const members = useContext(MembersContext);
   const [loading, setLoading] = useState(true);
   const [membersNotSignedIn, setMembersNotSignedIn] = useState<MemberModel[]>(
     []
@@ -56,22 +56,9 @@ export default function Event({
     setUpdating(true);
     if (selectedMember.id === "placeholder") {
       let newMember = await createMember(params.groupId, selectedMember);
-      setMembers((prevMembers) => (prevMembers ?? []).concat(newMember));
-      setMembersNotSignedIn((prevMembers) => prevMembers.concat(newMember));
+      await addMemberToEvent(params.groupId, params.eventId, newMember.id);
     } else {
       await updateMember(params.groupId, selectedMember);
-      setMembers((prevMembers) => {
-        let i = prevMembers?.findIndex((m) => m.id === selectedMember.id);
-        if (i && i !== -1) {
-          return [
-            ...(prevMembers ?? []).slice(0, i),
-            selectedMember,
-            ...(prevMembers ?? []).slice(i + 1),
-          ];
-        } else {
-          return prevMembers;
-        }
-      });
     }
     setUpdating(false);
     closeModal();
@@ -80,10 +67,10 @@ export default function Event({
 
   useEffect(() => {
     if (event && members !== null && loading) {
-      let membersNotSignedIn = members.filter(
+      let membersNotSignedIn = members?.filter(
         (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)
       );
-      setMembersNotSignedIn(membersNotSignedIn);
+      setMembersNotSignedIn(membersNotSignedIn ?? []);
       setLoading(false);
     }
     // eslint-disable-next-line
@@ -146,7 +133,7 @@ export default function Event({
                 </p>
               </div>
               <div className="flex flex-col items-center gap-2 text-center w-full my-4 text-gray-700">
-                <p>That member doesn't exist</p>
+                <p>That member doesn&apos;t exist</p>
                 <button
                   type="button"
                   className="text-sm py-1.5 px-1.5 rounded-lg bg-green-100 font-light"
@@ -176,10 +163,6 @@ export default function Event({
               suggested={membersNotSignedIn.slice(0, index)}
               loadAnimation={loadAnimation}
               action={(member: MemberModel) => {
-                setEvent((prevEvent) => ({
-                  ...(prevEvent ?? InitEvent),
-                  members: (prevEvent?.members ?? []).concat(member),
-                }));
                 addMemberToEvent(groupId, eventId, member.id);
               }}
               end={(member: MemberModel) => {
@@ -205,11 +188,6 @@ export default function Event({
                 );
               }}
               end={(member: MemberModel) => {
-                setEvent((prevEvent) => ({
-                  ...(prevEvent ?? InitEvent),
-                  members:
-                    prevEvent?.members?.filter((m) => m.id !== member.id) ?? [],
-                }));
                 removeMemberFromEvent(groupId, eventId, member.id);
               }}
               edit={(member: MemberModel) => {
@@ -232,7 +210,7 @@ export default function Event({
                 openModal();
               }}
             >
-              Create New Member
+              Create and Add New Member
             </button>
           </div>
         </>

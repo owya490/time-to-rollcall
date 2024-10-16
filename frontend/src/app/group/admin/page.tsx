@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 
 export default function GroupAdmin() {
-  const [user] = useContext(UserContext);
+  const user = useContext(UserContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function GroupAdmin() {
       }
     }
     // eslint-disable-next-line
-  }, [user]);
+  }, user);
 
   return (
     user && (

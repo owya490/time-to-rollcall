@@ -4,18 +4,19 @@ import Botbar from "@/components/Botbar";
 import EventComponent from "@/components/event/Event";
 import EditEvent from "@/components/event/EditEvent";
 import { Filter, InitFilter } from "@/helper/Filter";
-import { GroupContext } from "@/lib/context";
+import { GroupContext, TagsContext } from "@/lib/context";
 import { getEvents, submitEvent } from "@/lib/events";
 import { EventModel, InitEvent } from "@/models/Event";
 import { useContext, useEffect, useState } from "react";
 import { GroupId } from "@/models/Group";
-import { TagId, TagModel } from "@/models/Tag";
+import { TagId } from "@/models/Tag";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { GroupPath, Path } from "@/helper/Path";
 
 export default function Group({ params }: { params: { groupId: GroupId } }) {
-  const [group, setGroup] = useContext(GroupContext);
+  const group = useContext(GroupContext);
+  const tags = useContext(TagsContext);
   const [events, setEvents] = useState<EventModel[]>([]);
   const [showedEvents, setShowedEvents] = useState<EventModel[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -78,11 +79,10 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
         </div>
       ) : (
         <>
-          {group && (
+          {group && tags !== null && tags !== undefined && (
             <EditEvent
               groupId={group.id}
-              tags={group.tags}
-              setTags={(tags: TagModel[]) => setGroup({ ...group, tags })}
+              tags={tags}
               isOpen={isOpen}
               closeModal={closeModal}
               submitEventForm={submitEventForm}
@@ -129,7 +129,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
               setFilteredTags(tagIds);
             }}
             openModal={openModal}
-            tags={group?.tags ?? []}
+            tags={tags ?? []}
             tagsOpen={tagsOpen}
             setTagsOpen={setTagsOpen}
           />

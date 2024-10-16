@@ -6,7 +6,7 @@ type ColourClass = {
 };
 
 type ColourClasses = {
-  [key: string]: ColourClass; // You can also specify the keys if needed
+  [key: string]: ColourClass;
 };
 
 export const colourClasses: ColourClasses = {
@@ -97,9 +97,8 @@ export const colourClasses: ColourClasses = {
   },
 };
 
-// Optionally, you can define a function to get colour classes based on the input colour.
 export const getColourClasses = (colour?: keyof ColourClasses) => {
-  return colour ? colourClasses[colour] : colourClasses.blue; // Default to gray if colour not found
+  return colour ? colourClasses[colour] : colourClasses.blue;
 };
 
 export default function Tag({

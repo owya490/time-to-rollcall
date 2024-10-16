@@ -9,9 +9,9 @@ export default function PrivateLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const userData = useUserData();
+  const user = useUserData();
   return (
-    <UserContext.Provider value={userData}>
+    <UserContext.Provider value={user}>
       <Topbar />
       {children}
     </UserContext.Provider>
