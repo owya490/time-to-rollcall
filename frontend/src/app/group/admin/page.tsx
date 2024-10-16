@@ -17,7 +17,7 @@ export default function GroupAdmin() {
       }
     }
     // eslint-disable-next-line
-  }, user);
+  }, [user]);
 
   return (
     user && (
