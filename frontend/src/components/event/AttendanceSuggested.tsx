@@ -5,7 +5,6 @@ interface AttendanceSuggested {
   disabled: boolean;
   suggested: MemberModel[];
   action: (member: MemberModel) => void;
-  end: (member: MemberModel) => void;
   edit: (member: MemberModel) => void;
   loadAnimation: boolean;
 }
@@ -14,7 +13,6 @@ export default function AttendanceSuggested({
   disabled,
   suggested,
   action,
-  end,
   edit,
   loadAnimation,
 }: AttendanceSuggested) {
@@ -37,7 +35,6 @@ export default function AttendanceSuggested({
               draggable: true,
               dragType: "ADD",
               action,
-              end,
               edit,
             }}
             refreshDependency={suggested}

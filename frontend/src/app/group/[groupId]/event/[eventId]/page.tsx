@@ -32,7 +32,7 @@ export default function Event({
   const [searchInput, setSearchInput] = useState<string>("");
   const event = useContext(EventContext);
   const members = useContext(MembersContext);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [membersNotSignedIn, setMembersNotSignedIn] = useState<MemberModel[]>(
     []
   );
@@ -41,8 +41,6 @@ export default function Event({
   const [loadAnimation, setLoadAnimation] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
-  const [memberUpdateCounter, setMemberUpdateCounter] = useState(0);
-  const [eventUpdateCounter, setEventUpdateCounter] = useState(0);
   const [selectedMember, setSelectedMember] = useState<MemberModel>(
     InitMember("Jane Doe")
   );
@@ -67,7 +65,6 @@ export default function Event({
       await addMemberToEvent(params.groupId, params.eventId, newMember.id);
     } else {
       await updateMember(params.groupId, selectedMember);
-      setMemberUpdateCounter((prev) => ++prev);
     }
     setUpdating(false);
     closeModal();
@@ -80,6 +77,7 @@ export default function Event({
           (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)
         ) ?? [];
       if (searchInput.length > 0) {
+        setLoadAnimation(true);
         const { suggested, notSuggested } = searchForMemberByName(
           membersNotSignedIn,
           searchInput
@@ -89,23 +87,19 @@ export default function Event({
       } else {
         setMembersNotSignedIn(membersNotSignedIn);
       }
-      setMemberUpdateCounter((prev) => ++prev);
-    }
-    // eslint-disable-next-line
-  }, [members, eventUpdateCounter]);
-
-  useEffect(() => {
-    if (event && members !== null) {
       let membersSignedIn =
         event.members
           ?.map((m) => members?.find((member) => member.id === m.id))
-          .filter((m) => m !== undefined) ?? [];
+          .filter((m): m is MemberModel => m !== undefined) ?? [];
       setMembersSignedIn(membersSignedIn ?? []);
+
+      if (loading) {
+        setLoading(false);
+        setToggleEdit(happeningNow);
+      }
     }
     // eslint-disable-next-line
-  }, [event, memberUpdateCounter]);
-
-  useEffect(() => {}, [membersSignedIn]);
+  }, [members, event]);
 
   useEffect(() => {
     let prevSearchActive = searchActive;
@@ -195,17 +189,7 @@ export default function Event({
               suggested={membersNotSignedIn.slice(0, index)}
               loadAnimation={loadAnimation}
               action={(member: MemberModel) => {
-                addMemberToEvent(groupId, eventId, member.id).then(() =>
-                  setEventUpdateCounter((prev) => ++prev)
-                );
-              }}
-              end={(member: MemberModel) => {
-                setMembersNotSignedIn((prevMembers) =>
-                  prevMembers.filter((m) => m.id !== member.id)
-                );
-                if (searchInput.length > 0) {
-                  setIndex((prevIndex) => prevIndex - 1);
-                }
+                addMemberToEvent(groupId, eventId, member.id);
               }}
               edit={(member: MemberModel) => {
                 setSelectedMember(member);
@@ -218,11 +202,6 @@ export default function Event({
               disabled={!toggleEdit}
               signedIn={membersSignedIn}
               action={(member: MemberModel) => {
-                setMembersNotSignedIn((prevMembers) =>
-                  prevMembers.concat(member)
-                );
-              }}
-              end={(member: MemberModel) => {
                 removeMemberFromEvent(groupId, eventId, member.id);
               }}
               edit={(member: MemberModel) => {

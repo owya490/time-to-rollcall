@@ -35,7 +35,6 @@ export interface DragConfig {
   draggable: boolean;
   dragType: DragType;
   action: (member: MemberModel) => void;
-  end: (member: MemberModel) => void;
   edit: (member: MemberModel) => void;
 }
 
@@ -64,11 +63,8 @@ function MemberSignInCard({
   const frontId = "front-" + id;
   const remove = () => {
     const timeline = gsap.timeline({
-      onStart: () => {
-        dragConfig?.action(member);
-      },
       onComplete: () => {
-        dragConfig?.end(member);
+        dragConfig?.action(member);
       },
     });
     timeline.to(

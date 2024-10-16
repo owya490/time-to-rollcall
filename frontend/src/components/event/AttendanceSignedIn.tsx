@@ -5,7 +5,6 @@ interface AttendanceSignedInProps {
   disabled: boolean;
   signedIn?: MemberModel[];
   action: (member: MemberModel) => void;
-  end: (member: MemberModel) => void;
   edit: (member: MemberModel) => void;
 }
 
@@ -13,7 +12,6 @@ export default function AttendanceSignedIn({
   disabled,
   signedIn,
   action,
-  end,
   edit,
 }: AttendanceSignedInProps) {
   return (
@@ -38,7 +36,6 @@ export default function AttendanceSignedIn({
               draggable: true,
               dragType: "DELETE",
               action,
-              end,
               edit,
             }}
             refreshDependency={signedIn}
