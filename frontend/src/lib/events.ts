@@ -20,6 +20,7 @@ import { EventId, EventModel } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import { convertTagIdToReference } from "./tags";
 import { MemberId } from "@/models/Member";
+import { convertMemberIdToReference } from "./members";
 
 export async function getEvents(groupId: GroupId) {
   const events = await getDocs(
@@ -75,10 +76,11 @@ export async function deleteEvent(groupId: GroupId, eventId: EventId) {
 }
 
 function convertEventToDocument(groupId: GroupId, event: EventModel) {
-  const { id, tags, ...eventWithoutId } = event;
+  const { id, tags, members, ...eventWithoutId } = event;
   return {
     ...eventWithoutId,
     tags: tags.map((t) => convertTagIdToReference(groupId, t.id)),
+    members: members?.map((m) => convertMemberIdToReference(groupId, m.id)),
   };
 }
 

@@ -4,14 +4,12 @@ interface AttendanceSearchBarProps {
   disabled: boolean;
   searchInput: string;
   setSearchInput: (input: string) => void;
-  blurHandler: () => void;
 }
 
 export default function AttendanceSearchBar({
   disabled,
   searchInput,
   setSearchInput,
-  blurHandler,
 }: AttendanceSearchBarProps) {
   return (
     <div className="flex w-full border-y-[1px] py-2 border-gray-300 items-center">
@@ -28,7 +26,6 @@ export default function AttendanceSearchBar({
         onChange={(e) => {
           setSearchInput(e.target.value);
         }}
-        onBlur={blurHandler}
       />
       <div className="cursor-pointer p-0.5">
         <XCircleIcon

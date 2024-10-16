@@ -1,6 +1,6 @@
 import { convertCollectionToJavascript, firestore } from "@/lib/firebase";
 import { GroupId } from "@/models/Group";
-import { MemberModel } from "@/models/Member";
+import { MemberId, MemberModel } from "@/models/Member";
 import { addDoc, collection, doc, getDocs, setDoc } from "firebase/firestore";
 
 export async function getMembers(groupId: GroupId) {
@@ -28,4 +28,11 @@ export async function updateMember(groupId: GroupId, member: MemberModel) {
 function convertMemberToDocument(member: MemberModel) {
   const { id, ...memberWithoutId } = member;
   return memberWithoutId;
+}
+
+export function convertMemberIdToReference(
+  groupId: GroupId,
+  memberId: MemberId
+) {
+  return doc(firestore, "groups", groupId, "members", memberId);
 }

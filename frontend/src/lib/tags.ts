@@ -13,6 +13,7 @@ import {
   convertToJavascript,
   firestore,
 } from "./firebase";
+import { MemberId } from "@/models/Member";
 
 export async function addTag(groupId: GroupId, tag: TagModel) {
   const addedDoc = await addDoc(

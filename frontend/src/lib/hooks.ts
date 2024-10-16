@@ -126,7 +126,7 @@ export function useEventData(
     }
   );
 
-  return event; // Return the fetched event data
+  return event;
 }
 const useFirestoreCol = <T>(
   db: Firestore,

@@ -93,7 +93,6 @@ export default function GroupMember({
               disabled={false}
               searchInput={searchInput}
               setSearchInput={setSearchInput}
-              blurHandler={() => {}}
             />
           </div>
         </div>
