@@ -98,11 +98,21 @@ export default function EditGroup({
                   tags !== undefined &&
                   setTags && (
                     <div className="my-4">
-                      <p className="text-sm text-gray-900">Tags</p>
-                      <div className="flex flex-wrap">
+                      <div className="flex justify-between items-center">
+                        <p className="text-sm text-gray-900">Tags</p>
+                        <button
+                          type="button"
+                          className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-xs font-light text-blue-900"
+                          onClick={() => setTags([...tags, InitTag])}
+                        >
+                          Create Tag
+                        </button>
+                      </div>
+                      <div className="flex flex-wrap h-20 overflow-auto">
                         {tags.map((t, i) => (
                           <div className="flex w-full justify-between" key={i}>
                             <input
+                              autoFocus={t.name === ""}
                               id={i.toString()}
                               type="text"
                               className="w-full rounded-none resize-none border-t-0 bg-transparent font-sans text-lg font-semibold text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
@@ -186,17 +196,14 @@ export default function EditGroup({
                           </div>
                         ))}
                       </div>
-                      <div className="flex justify-center mt-4">
-                        <button
-                          type="button"
-                          className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-md font-medium text-blue-900"
-                          onClick={() => setTags([...tags, InitTag])}
-                        >
-                          Create Tag
-                        </button>
-                      </div>
                     </div>
                   )}
+                {/* <div className="my-4">
+                  <p className="text-sm text-gray-900">TODO: Metadata</p>
+                  <p className="text-sm text-gray-900">TODO: Remove Tag</p>
+                  <p className="text-sm text-gray-900">TODO: Scroll load</p>
+                  <p className="text-sm text-gray-900">TODO: Sticky</p>
+                </div> */}
                 {updating ? (
                   <div className="flex justify-center items-center">
                     <Loader show />

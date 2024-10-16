@@ -24,8 +24,9 @@ import {
   QueryFieldFilterConstraint,
   where,
 } from "firebase/firestore";
+import { MetadataModel } from "@/models/Metadata";
 
-export function useUserData() {
+export function useUserListener() {
   const [userAuth, loadingAuth] = useAuthState(auth); // Use auth state hook to get userAuth
 
   const id = userAuth?.uid || "placeholder";
@@ -39,7 +40,10 @@ export function useUserData() {
   return userData ? ({ ...userAuth, ...userData, id } as User) : userData;
 }
 
-export function useGroupData(user: User | null | undefined, groupId: string) {
+export function useGroupListener(
+  user: User | null | undefined,
+  groupId: string
+) {
   const router = useRouter();
   const onBeforeFetch = async () => {
     if (user && !user.groups?.includes(groupId)) {
@@ -67,7 +71,7 @@ export function useGroupData(user: User | null | undefined, groupId: string) {
   return group;
 }
 
-export function useGroupsData(user: User | null | undefined) {
+export function useGroupsListener(user: User | null | undefined) {
   const query = user
     ? where(documentId(), "in", user.groups ?? ["placeholder"])
     : where(documentId(), "==", null);
@@ -81,7 +85,7 @@ export function useGroupsData(user: User | null | undefined) {
   return groups;
 }
 
-export function useMembersData(
+export function useMembersListener(
   user: User | null | undefined,
   groupId?: string
 ) {
@@ -93,7 +97,22 @@ export function useMembersData(
   return members;
 }
 
-export function useTagsData(user: User | null | undefined, groupId?: string) {
+export function useMetadataListener(
+  user: User | null | undefined,
+  groupId?: string
+) {
+  const { data: metadata } = useFirestoreCol<MetadataModel>(
+    firestore,
+    `groups/${groupId}/metadata`,
+    user !== null && user?.groups?.includes(groupId ?? "") ? true : false
+  );
+  return metadata;
+}
+
+export function useTagsListener(
+  user: User | null | undefined,
+  groupId?: string
+) {
   const { data: tags } = useFirestoreCol<MemberModel>(
     firestore,
     `groups/${groupId}/tags`,
@@ -102,7 +121,7 @@ export function useTagsData(user: User | null | undefined, groupId?: string) {
   return tags;
 }
 
-export function useEventData(
+export function useEventListener(
   user: User | null | undefined,
   groupId: string,
   eventId: string

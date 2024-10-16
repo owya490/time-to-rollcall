@@ -9,9 +9,10 @@ import {
 import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
 import Image from "next/image";
-import { FC, memo, useEffect, useRef } from "react";
+import { FC, memo, useContext, useEffect, useRef } from "react";
 import WOMAN_FACE_PNG from "../../../public/face-woman-profile.png";
 import GroupBadge from "./GroupBadge";
+import { MetadataContext } from "@/lib/context";
 
 export const MemberSignIn: FC<MemberSignInCardProps> = memo(
   ({ ...props }) => {
@@ -21,10 +22,8 @@ export const MemberSignIn: FC<MemberSignInCardProps> = memo(
     return (
       prevProps.disabled === nextProps.disabled &&
       prevProps.member.id === nextProps.member.id &&
-      prevProps.member.campus === nextProps.member.campus &&
       prevProps.member.name === nextProps.member.name &&
-      prevProps.member.role === nextProps.member.role &&
-      prevProps.member.year === nextProps.member.year
+      prevProps.member.metadata === nextProps.member.metadata
     );
   }
 );
@@ -55,6 +54,10 @@ function MemberSignInCard({
   refreshDependency,
   triggerAddAnimation,
 }: MemberSignInCardProps) {
+  const metadata = useContext(MetadataContext);
+  const role = metadata?.find((m) => m.key === "role");
+  const year = metadata?.find((m) => m.key === "year");
+  const campus = metadata?.find((m) => m.key === "campus");
   const selectedRef = useRef(false);
   const editRef = useRef(false);
   const id = member.id;
@@ -236,11 +239,24 @@ function MemberSignInCard({
             <div>
               <h3 className="font-light mb-2">{member.name}</h3>
               <p className="text-xs text-gray-500 font-extralight">
-                {getYearString(member.year)} • {member.role}
+                {year &&
+                  member.metadata?.[year.id] &&
+                  getYearString(year.values[member.metadata?.[year.id]])}{" "}
+                •{" "}
+                {role &&
+                  member.metadata?.[role.id] &&
+                  role.values[member.metadata?.[role.id]]}
               </p>
             </div>
             <div className="ml-auto">
-              <GroupBadge campus={member.campus} className="w-14 text-sm" />
+              <GroupBadge
+                campus={
+                  campus &&
+                  member.metadata?.[campus.id] &&
+                  campus.values[member.metadata?.[campus.id]]
+                }
+                className="w-14 text-sm"
+              />
             </div>
           </div>
           <div

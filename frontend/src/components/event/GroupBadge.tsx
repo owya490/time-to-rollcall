@@ -8,7 +8,7 @@ export default function GroupBadge({
   campus,
   className,
 }: {
-  campus: University;
+  campus?: string;
   className?: string;
 }) {
   const universityKey = getUniversityKey(campus);
@@ -16,7 +16,7 @@ export default function GroupBadge({
     universityKey && (
       <p
         className={`rounded-full py-1 px-1 bg-black text-white font-light text-center ${className}`}
-        style={{ backgroundColor: universityColours[campus] }}
+        style={{ backgroundColor: universityColours[campus ?? University.UTS] }}
       >
         {getUniversityKey(campus)}
       </p>

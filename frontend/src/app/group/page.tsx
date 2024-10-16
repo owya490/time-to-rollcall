@@ -5,7 +5,7 @@ import EditGroup from "@/components/group/EditGroup";
 import { Path } from "@/helper/Path";
 import { UserContext } from "@/lib/context";
 import { createGroup } from "@/lib/groups";
-import { useGroupsData } from "@/lib/hooks";
+import { useGroupsListener } from "@/lib/hooks";
 import { GroupModel, InitGroup } from "@/models/Group";
 import { getUniversityKey, University } from "@/models/University";
 import Link from "next/link";
@@ -14,7 +14,7 @@ import { useContext, useState } from "react";
 
 export default function Groups() {
   const user = useContext(UserContext);
-  const groups = useGroupsData(user);
+  const groups = useGroupsListener(user);
   const [group, setGroup] = useState<GroupModel>(InitGroup);
 
   const [isOpen, setIsOpen] = useState(false);

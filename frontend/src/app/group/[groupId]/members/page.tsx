@@ -8,7 +8,6 @@ import { InitMember, MemberModel } from "@/models/Member";
 import { useContext, useEffect, useState } from "react";
 import { searchForMemberByName } from "services/attendanceService";
 import EditMember from "@/components/members/EditMember";
-import { University } from "@/models/University";
 import { createMember, updateMember } from "@/lib/members";
 import { GroupId } from "@/models/Group";
 import Topbar from "@/components/Topbar";
@@ -23,7 +22,7 @@ export default function GroupMember({
   const members = useContext(MembersContext);
   const group = useContext(GroupContext);
   const [selectedMember, setSelectedMember] = useState<MemberModel>(
-    InitMember("Jane Doe", University.UTS)
+    InitMember("Jane Doe")
   );
   const [membersShown, setMembersShown] = useState<MemberModel[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -111,12 +110,7 @@ export default function GroupMember({
           type="button"
           className="text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
           onClick={() => {
-            setSelectedMember(
-              InitMember(
-                searchInput,
-                (group?.name as University) ?? University.UTS
-              )
-            );
+            setSelectedMember(InitMember(searchInput));
             openModal();
           }}
         >

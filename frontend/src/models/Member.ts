@@ -1,44 +1,62 @@
-import { Role } from "./Role";
-import { University } from "./University";
+import { MetadataModelId, MetadataModelValueId } from "./Metadata";
+
+export interface MemberMetadataModel {
+  [key: MetadataModelId]: MetadataModelValueId;
+}
 
 export type MemberId = string;
 
 export interface MemberModel {
   id: MemberId;
   name: string;
-  year: number;
-  role: Role;
-  campus: University;
+  metadata?: MemberMetadataModel;
 }
 
-export interface SubmitMemberModel {
-  name: string;
-  year: number;
-  role: Role;
-  campus: University;
-}
-
-export const InitMember = (name: string, campus: University): MemberModel => ({
+export const InitMember = (name: string): MemberModel => ({
   id: "placeholder",
   name,
-  year: 1,
-  role: Role.Member,
-  campus,
 });
 
-export const getYearString = (year?: number) => {
+export const getYearString = (year?: string) => {
   switch (year) {
-    case 1:
+    case "1":
       return "1st Year";
-    case 2:
+    case "2":
       return "2nd Year";
-    case 3:
+    case "3":
       return "3rd Year";
-    case 4:
+    case "4":
       return "4th Year";
-    case 5:
+    case "5":
       return "5th Year";
     default:
       return year ? year.toString() + "th Year+" : "Student";
   }
 };
+
+export function compareMetadata(
+  obj1?: { [key: MetadataModelId]: MetadataModelValueId },
+  obj2?: { [key: MetadataModelId]: MetadataModelValueId }
+): boolean {
+  if (obj1 === undefined && obj2 === undefined) return true;
+  if (obj1 === undefined || obj2 === undefined) return false;
+  // Get the keys of both objects
+  const obj1Keys = Object.keys(obj1);
+  const obj2Keys = Object.keys(obj2);
+
+  // Check if the number of keys is different
+  if (obj1Keys.length !== obj2Keys.length) {
+    return false;
+  }
+
+  // Check if keys and values are equal
+  for (let key of obj1Keys) {
+    // Check if the key exists in the second object and the values are equal
+    if (obj1[key] !== obj2[key]) {
+      return false;
+    }
+  }
+
+  // If all keys and values are the same, return true
+  return true;
+}

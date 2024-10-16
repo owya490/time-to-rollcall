@@ -6,13 +6,12 @@ import AttendanceSignedIn from "@/components/event/AttendanceSignedIn";
 import AttendanceSuggested from "@/components/event/AttendanceSuggested";
 import Loader from "@/components/Loader";
 import EditMember from "@/components/members/EditMember";
-import { EventContext, GroupContext, MembersContext } from "@/lib/context";
+import { EventContext, MembersContext } from "@/lib/context";
 import { addMemberToEvent, removeMemberFromEvent } from "@/lib/events";
 import { createMember, updateMember } from "@/lib/members";
 import { EventId } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import { InitMember, MemberModel } from "@/models/Member";
-import { University } from "@/models/University";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
@@ -32,18 +31,20 @@ export default function Event({
   const [searchActive, setSearchActive] = useState(false);
   const [searchInput, setSearchInput] = useState<string>("");
   const event = useContext(EventContext);
-  const group = useContext(GroupContext);
   const members = useContext(MembersContext);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [membersNotSignedIn, setMembersNotSignedIn] = useState<MemberModel[]>(
     []
   );
+  const [membersSignedIn, setMembersSignedIn] = useState<MemberModel[]>([]);
   const [index, setIndex] = useState<number>(0);
   const [loadAnimation, setLoadAnimation] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
+  const [memberUpdateCounter, setMemberUpdateCounter] = useState(0);
+  const [eventUpdateCounter, setEventUpdateCounter] = useState(0);
   const [selectedMember, setSelectedMember] = useState<MemberModel>(
-    InitMember("Jane Doe", University.UTS)
+    InitMember("Jane Doe")
   );
   const [toggleEdit, setToggleEdit] = useState(true);
   const now = new Date();
@@ -66,23 +67,45 @@ export default function Event({
       await addMemberToEvent(params.groupId, params.eventId, newMember.id);
     } else {
       await updateMember(params.groupId, selectedMember);
+      setMemberUpdateCounter((prev) => ++prev);
     }
     setUpdating(false);
     closeModal();
-    setSearchInput("");
   }
 
   useEffect(() => {
-    if (event && members !== null && loading) {
-      let membersNotSignedIn = members?.filter(
-        (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)
-      );
-      setMembersNotSignedIn(membersNotSignedIn ?? []);
-      setToggleEdit(happeningNow);
-      setLoading(false);
+    if (event && members !== null) {
+      let membersNotSignedIn =
+        members?.filter(
+          (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)
+        ) ?? [];
+      if (searchInput.length > 0) {
+        const { suggested, notSuggested } = searchForMemberByName(
+          membersNotSignedIn,
+          searchInput
+        );
+        setMembersNotSignedIn(suggested.concat(notSuggested));
+        setIndex(suggested.length);
+      } else {
+        setMembersNotSignedIn(membersNotSignedIn);
+      }
+      setMemberUpdateCounter((prev) => ++prev);
     }
     // eslint-disable-next-line
-  }, [event, members]);
+  }, [members, eventUpdateCounter]);
+
+  useEffect(() => {
+    if (event && members !== null) {
+      let membersSignedIn =
+        event.members
+          ?.map((m) => members?.find((member) => member.id === m.id))
+          .filter((m) => m !== undefined) ?? [];
+      setMembersSignedIn(membersSignedIn ?? []);
+    }
+    // eslint-disable-next-line
+  }, [event, memberUpdateCounter]);
+
+  useEffect(() => {}, [membersSignedIn]);
 
   useEffect(() => {
     let prevSearchActive = searchActive;
@@ -151,12 +174,7 @@ export default function Event({
                   type="button"
                   className="text-sm py-1.5 px-1.5 rounded-lg bg-green-100 font-light"
                   onClick={() => {
-                    setSelectedMember(
-                      InitMember(
-                        searchInput,
-                        (group?.name as University) ?? University.UTS
-                      )
-                    );
+                    setSelectedMember(InitMember(searchInput));
                     openModal();
                   }}
                 >
@@ -177,7 +195,9 @@ export default function Event({
               suggested={membersNotSignedIn.slice(0, index)}
               loadAnimation={loadAnimation}
               action={(member: MemberModel) => {
-                addMemberToEvent(groupId, eventId, member.id);
+                addMemberToEvent(groupId, eventId, member.id).then(() =>
+                  setEventUpdateCounter((prev) => ++prev)
+                );
               }}
               end={(member: MemberModel) => {
                 setMembersNotSignedIn((prevMembers) =>
@@ -196,7 +216,7 @@ export default function Event({
           <div className="z-30 w-full">
             <AttendanceSignedIn
               disabled={!toggleEdit}
-              signedIn={event.members}
+              signedIn={membersSignedIn}
               action={(member: MemberModel) => {
                 setMembersNotSignedIn((prevMembers) =>
                   prevMembers.concat(member)
@@ -219,12 +239,7 @@ export default function Event({
               type="button"
               className="text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
               onClick={() => {
-                setSelectedMember(
-                  InitMember(
-                    searchInput,
-                    (group?.name as University) ?? University.UTS
-                  )
-                );
+                setSelectedMember(InitMember(searchInput));
                 openModal();
               }}
             >

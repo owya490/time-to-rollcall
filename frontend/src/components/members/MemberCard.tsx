@@ -2,16 +2,21 @@
 import { getYearString, MemberModel } from "@/models/Member";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import { FC, memo } from "react";
+import { FC, memo, useContext } from "react";
 import WOMAN_FACE_PNG from "../../../public/face-woman-profile.png";
 import GroupBadge from "../event/GroupBadge";
+import { MetadataContext } from "@/lib/context";
 
 export const MemberCardMemo: FC<MemberCardProps> = memo(
   ({ ...props }) => {
     return <MemberCard {...props} />;
   },
   (prevProps, nextProps) => {
-    return prevProps.member === nextProps.member;
+    return (
+      prevProps.member.id === nextProps.member.id &&
+      prevProps.member.name === nextProps.member.name &&
+      prevProps.member.metadata === nextProps.member.metadata
+    );
   }
 );
 MemberCardMemo.displayName = "MemberCardMemo";
@@ -22,6 +27,10 @@ export interface MemberCardProps {
 }
 
 function MemberCard({ member, action }: MemberCardProps) {
+  const metadata = useContext(MetadataContext);
+  const role = metadata?.find((m) => m.key === "role");
+  const year = metadata?.find((m) => m.key === "year");
+  const campus = metadata?.find((m) => m.key === "campus");
   return (
     <div className="relative overflow-hidden cursor-pointer">
       <div className="relative z-30">
@@ -40,11 +49,24 @@ function MemberCard({ member, action }: MemberCardProps) {
             <div>
               <h3 className="font-light mb-2">{member.name}</h3>
               <p className="text-xs text-gray-500 font-extralight">
-                {getYearString(member.year)} • {member.role}
+                {year &&
+                  member.metadata?.[year.id] &&
+                  getYearString(year.values[member.metadata?.[year.id]])}{" "}
+                •{" "}
+                {role &&
+                  member.metadata?.[role.id] &&
+                  role.values[member.metadata?.[role.id]]}
               </p>
             </div>
             <div className="ml-auto">
-              <GroupBadge campus={member.campus} className="w-14 text-sm" />
+              <GroupBadge
+                campus={
+                  campus &&
+                  member.metadata?.[campus.id] &&
+                  campus.values[member.metadata?.[campus.id]]
+                }
+                className="w-14 text-sm"
+              />
             </div>
           </div>
         </div>

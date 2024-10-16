@@ -1,6 +1,6 @@
 "use client";
 import { UserContext } from "@/lib/context";
-import { useUserData } from "@/lib/hooks";
+import { useUserListener } from "@/lib/hooks";
 import React from "react";
 
 export default function PrivateLayout({
@@ -8,6 +8,6 @@ export default function PrivateLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = useUserData();
+  const user = useUserListener();
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 }

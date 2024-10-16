@@ -7,10 +7,10 @@ import {
   UserContext,
 } from "@/lib/context";
 import {
-  useEventData,
-  useGroupData,
-  useMembersData,
-  useTagsData,
+  useEventListener,
+  useGroupListener,
+  useMembersListener,
+  useTagsListener,
 } from "@/lib/hooks";
 import { EventId } from "@/models/Event";
 import { GroupId } from "@/models/Group";
@@ -24,10 +24,10 @@ export default function PrivateLayoutEvent({
   params: { groupId: GroupId; eventId: EventId };
 }) {
   const user = useContext(UserContext);
-  const group = useGroupData(user, params.groupId);
-  const members = useMembersData(user, group?.id);
-  const tags = useTagsData(user, group?.id);
-  const event = useEventData(user, params.groupId, params.eventId);
+  const group = useGroupListener(user, params.groupId);
+  const members = useMembersListener(user, group?.id);
+  const tags = useTagsListener(user, group?.id);
+  const event = useEventListener(user, params.groupId, params.eventId);
 
   return (
     <GroupContext.Provider value={group}>
