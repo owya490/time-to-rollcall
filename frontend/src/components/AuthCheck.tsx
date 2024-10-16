@@ -17,10 +17,14 @@ export default function AuthCheck(props: { children: React.ReactNode }) {
   return user ? (
     props.children
   ) : (
-    <div>
-      <div className="flex justify-center w-full my-6">
-        <SignInButton />
-      </div>
+    <div className="mt-80 flex flex-col justify-center gap-5 text-center items-center">
+      <h1 className="text-xl mx-24 text-gray-600">
+        Join using your SOW account
+      </h1>
+      <SignInButton />
+      <p className="text-gray-400 text-xs mt-4">
+        You will be re-directed to Microsoft Teams login.
+      </p>
     </div>
   );
 }

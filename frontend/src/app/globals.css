@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behaviour: smooth;
+}
+
 @layer base {
   * {
     -webkit-tap-highlight-color: transparent;

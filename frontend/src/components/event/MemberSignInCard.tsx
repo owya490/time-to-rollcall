@@ -19,6 +19,7 @@ export const MemberSignIn: FC<MemberSignInCardProps> = memo(
   },
   (prevProps, nextProps) => {
     return (
+      prevProps.disabled === nextProps.disabled &&
       prevProps.member.id === nextProps.member.id &&
       prevProps.member.campus === nextProps.member.campus &&
       prevProps.member.name === nextProps.member.name &&
@@ -40,6 +41,7 @@ export interface DragConfig {
 }
 
 export interface MemberSignInCardProps {
+  disabled: boolean;
   member: MemberModel;
   dragConfig?: DragConfig;
   refreshDependency?: MemberModel[];
@@ -47,6 +49,7 @@ export interface MemberSignInCardProps {
 }
 
 function MemberSignInCard({
+  disabled,
   member,
   dragConfig,
   refreshDependency,
@@ -98,6 +101,7 @@ function MemberSignInCard({
   };
 
   const frontRef = useRef(null);
+  const draggableRef = useRef<Draggable[] | null>(null);
   const positionX = useRef<number>(0);
   const timeStamp = useRef<number>(0);
   const dragEnabled = dragConfig !== undefined && dragConfig.draggable === true;
@@ -160,17 +164,28 @@ function MemberSignInCard({
       }
     };
 
-    Draggable.create(`#${frontId}`, {
-      type: "x",
-      onDragStart: function (e) {
-        positionX.current = e.pageX;
-        timeStamp.current = e.timeStamp;
-      },
-      onDragEnd: function (e) {
-        handleDragEnd(e);
-      },
-    });
-  }, [refreshDependency]);
+    if (!disabled) {
+      // Create the draggable instance and store it in the ref
+      draggableRef.current = Draggable.create(frontRef.current, {
+        type: "x",
+        onDragStart: function (e) {
+          positionX.current = e.pageX;
+          timeStamp.current = e.timeStamp;
+        },
+        onDragEnd: function (e) {
+          handleDragEnd(e);
+        },
+      });
+    }
+
+    // Clean up function to kill draggable on unmount or when disabled
+    return () => {
+      if (draggableRef.current) {
+        draggableRef.current.forEach((instance) => instance.kill());
+        draggableRef.current = null; // Clear the reference
+      }
+    };
+  }, [refreshDependency, disabled]);
 
   return (
     <div className="overflow-hidden" id={id} key={id}>
@@ -179,7 +194,7 @@ function MemberSignInCard({
           <div
             className="absolute top-0 -left-[calc(200vw)]"
             onClick={() => {
-              if (editRef.current) edit();
+              if (editRef.current && !disabled) edit();
             }}
           >
             <div className="bg-gray-600 h-20 flex w-[calc(200vw)] justify-end items-center">
@@ -192,6 +207,7 @@ function MemberSignInCard({
               (dragConfig?.dragType === "DELETE" ? " bg-gray-100" : "")
             }
             onClick={(e) => {
+              if (disabled) return;
               if (selectedRef.current || editRef.current) {
                 selectedRef.current = false;
                 editRef.current = false;
@@ -230,7 +246,7 @@ function MemberSignInCard({
           <div
             className="w-[84px] top-0"
             onClick={() => {
-              if (selectedRef.current) remove();
+              if (selectedRef.current && !disabled) remove();
             }}
           >
             {dragEnabled ? (

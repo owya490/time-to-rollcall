@@ -9,6 +9,7 @@ import { useGroupsData } from "@/lib/hooks";
 import { GroupModel, InitGroup } from "@/models/Group";
 import { getUniversityKey, University } from "@/models/University";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 
 export default function Groups() {
@@ -18,13 +19,14 @@ export default function Groups() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
+  const router = useRouter();
 
   async function createGroupIn() {
     setUpdating(true);
-    if (user && group) {
-      await createGroup(user, group, []);
+    if (group) {
+      const id = await createGroup(group);
+      router.push(Path.Group + "/" + id);
     }
-    setUpdating(false);
     closeModal();
   }
 

@@ -11,6 +11,7 @@ import EditMember from "@/components/members/EditMember";
 import { University } from "@/models/University";
 import { createMember, updateMember } from "@/lib/members";
 import { GroupId } from "@/models/Group";
+import Topbar from "@/components/Topbar";
 
 export default function GroupMember({
   params,
@@ -75,6 +76,7 @@ export default function GroupMember({
   }
   return (
     <AuthCheck>
+      <Topbar />
       <EditMember
         isOpen={isOpen}
         closeModal={closeModal}
@@ -88,6 +90,7 @@ export default function GroupMember({
         <div className="mx-6">
           <div className="mb-6">
             <AttendanceSearchBar
+              disabled={false}
               searchInput={searchInput}
               setSearchInput={setSearchInput}
             />

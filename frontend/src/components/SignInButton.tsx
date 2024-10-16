@@ -9,10 +9,10 @@ export default function SignInButton() {
   return (
     <button
       type="button"
-      className="text-gray-900 bg-transparent border hover:bg-gray-200 border-black font-semibold text-xs px-3 py-1.5"
+      className="rounded-full text-gray-600 bg-transparent border hover:bg-gray-200 border-gray-600 font-medium text-xs px-3 py-2"
       onClick={signInWithMicrosoft}
     >
-      Sign in with your SOW account
+      Sign-in
     </button>
   );
 }

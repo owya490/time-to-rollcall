@@ -5,9 +5,5 @@ export default function PagesLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <PrivateLayout>
-      <div className="my-24">{children}</div>
-    </PrivateLayout>
-  );
+  return <PrivateLayout>{children}</PrivateLayout>;
 }

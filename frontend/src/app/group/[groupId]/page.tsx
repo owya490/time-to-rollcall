@@ -13,6 +13,7 @@ import { TagId } from "@/models/Tag";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { GroupPath, Path } from "@/helper/Path";
+import Topbar from "@/components/Topbar";
 
 export default function Group({ params }: { params: { groupId: GroupId } }) {
   const group = useContext(GroupContext);
@@ -73,6 +74,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
 
   return (
     <AuthCheck>
+      <Topbar />
       {loading ? (
         <div className="flex justify-center items-center">
           <Loader show />

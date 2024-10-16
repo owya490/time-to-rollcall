@@ -18,6 +18,8 @@ import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
 import { useContext, useEffect, useState } from "react";
 import { searchForMemberByName } from "services/attendanceService";
+import Topbar from "@/components/Topbar";
+import { inBetween } from "@/helper/Time";
 
 gsap.registerPlugin(Draggable, useGSAP);
 
@@ -43,6 +45,11 @@ export default function Event({
   const [selectedMember, setSelectedMember] = useState<MemberModel>(
     InitMember("Jane Doe", University.UTS)
   );
+  const [toggleEdit, setToggleEdit] = useState(true);
+  const now = new Date();
+  const happeningNow = event
+    ? inBetween(event.dateStart, now, event.dateEnd)
+    : false;
 
   function closeModal() {
     setIsOpen(false);
@@ -71,6 +78,7 @@ export default function Event({
         (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)
       );
       setMembersNotSignedIn(membersNotSignedIn ?? []);
+      setToggleEdit(happeningNow);
       setLoading(false);
     }
     // eslint-disable-next-line
@@ -102,6 +110,10 @@ export default function Event({
 
   return (
     <AuthCheck>
+      <Topbar
+        setToggleEdit={!happeningNow ? setToggleEdit : undefined}
+        toggleEdit={toggleEdit}
+      />
       {loading ? (
         <div className="flex justify-center items-center">
           <Loader show />
@@ -121,6 +133,7 @@ export default function Event({
               <EventComponent event={event} groupId={groupId} />
             </div>
             <AttendanceSearchBar
+              disabled={!toggleEdit}
               searchInput={searchInput}
               setSearchInput={setSearchInput}
             />
@@ -160,6 +173,7 @@ export default function Event({
             )}
           <div className="w-full z-30">
             <AttendanceSuggested
+              disabled={!toggleEdit}
               suggested={membersNotSignedIn.slice(0, index)}
               loadAnimation={loadAnimation}
               action={(member: MemberModel) => {
@@ -181,6 +195,7 @@ export default function Event({
           </div>
           <div className="z-30 w-full">
             <AttendanceSignedIn
+              disabled={!toggleEdit}
               signedIn={event.members}
               action={(member: MemberModel) => {
                 setMembersNotSignedIn((prevMembers) =>

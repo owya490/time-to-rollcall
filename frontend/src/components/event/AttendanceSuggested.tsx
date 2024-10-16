@@ -2,6 +2,7 @@ import { MemberModel } from "@/models/Member";
 import { MemberSignIn } from "./MemberSignInCard";
 
 interface AttendanceSuggested {
+  disabled: boolean;
   suggested: MemberModel[];
   action: (member: MemberModel) => void;
   end: (member: MemberModel) => void;
@@ -10,6 +11,7 @@ interface AttendanceSuggested {
 }
 
 export default function AttendanceSuggested({
+  disabled,
   suggested,
   action,
   end,
@@ -28,6 +30,7 @@ export default function AttendanceSuggested({
       {suggested.map((member) => {
         return (
           <MemberSignIn
+            disabled={disabled}
             key={member.id}
             member={member}
             dragConfig={{

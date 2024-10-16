@@ -2,6 +2,7 @@ import { MemberModel } from "@/models/Member";
 import { MemberSignIn } from "./MemberSignInCard";
 
 interface AttendanceSignedInProps {
+  disabled: boolean;
   signedIn?: MemberModel[];
   action: (member: MemberModel) => void;
   end: (member: MemberModel) => void;
@@ -9,6 +10,7 @@ interface AttendanceSignedInProps {
 }
 
 export default function AttendanceSignedIn({
+  disabled,
   signedIn,
   action,
   end,
@@ -29,6 +31,7 @@ export default function AttendanceSignedIn({
       {signedIn?.map((member) => {
         return (
           <MemberSignIn
+            disabled={disabled}
             key={member.id}
             member={member}
             dragConfig={{
