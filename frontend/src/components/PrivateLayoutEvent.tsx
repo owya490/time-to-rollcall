@@ -7,9 +7,9 @@ import {
 } from "@/lib/context";
 import { useEventData, useGroupData, useMembersData } from "@/lib/hooks";
 import { GroupId, InitGroup } from "@/models/Group";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Topbar from "./Topbar";
-import { EventId } from "@/models/Event";
+import { EventId, InitEvent } from "@/models/Event";
 import EditEvent from "./event/EditEvent";
 import { TagModel } from "@/models/Tag";
 import { deleteEvent, updateEvent } from "@/lib/events";
@@ -29,6 +29,7 @@ export default function PrivateLayoutEvent({
   const groupData = useGroupData(user, setUser, params.groupId);
   const membersData = useMembersData(user, groupData[0]);
   const eventData = useEventData(user, params.groupId, params.eventId);
+  const [submitEventForm, setSubmitEventForm] = useState(InitEvent);
   const [updating, setUpdating] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -36,8 +37,8 @@ export default function PrivateLayoutEvent({
   async function editEvent() {
     setUpdating(true);
     if (groupData[0] && eventData[0]) {
-      await updateEvent(groupData[0].id, eventData[0]);
-      eventData[1](eventData[0]);
+      await updateEvent(groupData[0].id, submitEventForm);
+      eventData[1](submitEventForm);
     }
     setUpdating(false);
     closeModal();
@@ -45,6 +46,7 @@ export default function PrivateLayoutEvent({
 
   function closeModal() {
     setIsOpen(false);
+    if (eventData[0]) setSubmitEventForm(eventData[0]);
   }
 
   function openModal() {
@@ -57,7 +59,6 @@ export default function PrivateLayoutEvent({
       await deleteEvent(groupData[0].id, eventData[0].id);
       router.push(Path.Group + "/" + groupData[0].id);
     }
-    setUpdatingDelete(false);
     closeModal();
   }
 
@@ -72,6 +73,11 @@ export default function PrivateLayoutEvent({
   function openDeleteConfirmationModal() {
     setDeleteConfirmationIsOpen(true);
   }
+
+  useEffect(() => {
+    if (eventData[0]) setSubmitEventForm(eventData[0]);
+    // eslint-disable-next-line
+  }, [eventData[0]]);
 
   return (
     <GroupContext.Provider value={groupData}>
@@ -89,8 +95,8 @@ export default function PrivateLayoutEvent({
               deleteConfirmationIsOpen={deleteConfirmationIsOpen}
               openDeleteConfirmationModal={openDeleteConfirmationModal}
               closeDeleteConfirmationModal={closeDeleteConfirmationModal}
-              submitEventForm={eventData[0]}
-              setSubmitEventForm={eventData[1]}
+              submitEventForm={submitEventForm}
+              setSubmitEventForm={setSubmitEventForm}
               createEvent={editEvent}
               deleteEvent={deleteEventIn}
               updatingDelete={updatingDelete}

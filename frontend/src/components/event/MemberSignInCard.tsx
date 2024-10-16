@@ -187,7 +187,10 @@ function MemberSignInCard({
             </div>
           </div>
           <div
-            className="flex w-[calc(200vw)] px-6 bg-white items-center"
+            className={
+              "flex w-[calc(200vw)] px-6 items-center" +
+              (dragConfig?.dragType === "DELETE" ? " bg-gray-100" : "")
+            }
             onClick={(e) => {
               if (selectedRef.current || editRef.current) {
                 selectedRef.current = false;

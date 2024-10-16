@@ -20,7 +20,6 @@ export default function Topbar({ openModal }: { openModal?: () => void }) {
   const router = useRouter();
   const [user] = useContext(UserContext);
   const [group] = useContext(GroupContext);
-  console.log(pathname);
   const [event] = useContext(EventContext);
 
   return (
@@ -81,7 +80,7 @@ export default function Topbar({ openModal }: { openModal?: () => void }) {
               onClick={openModal}
             />
           </div>
-        ) : user ? (
+        ) : user && pathname === Path.Group ? (
           <div className="flex items-center justify-end gap-4">
             <ArrowLeftEndOnRectangleIcon
               className="cursor-pointer w-7 h-7 text-gray-500"

@@ -11,7 +11,11 @@ import {
 } from "@headlessui/react";
 import { Fragment } from "react";
 import { MemberModel } from "@/models/Member";
-import { CheckIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
+import {
+  CheckIcon,
+  ChevronUpIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { universities } from "@/models/University";
 import { roles } from "@/models/Role";
 import Loader from "../Loader";
@@ -61,32 +65,11 @@ export default function EditMember({
               leaveTo="transform translate-y-full"
             >
               <DialogPanel className="rounded-t-3xl bg-white p-6 shadow-xl">
-                <div className="absolute right-6 top-6">
-                  <svg
-                    className="hover:cursor-pointer"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 15 15"
-                    width="15"
-                    height="15"
-                    onClick={closeModal}
-                  >
-                    <line
-                      x1="2"
-                      y1="2"
-                      x2="14"
-                      y2="14"
-                      stroke="black"
-                      strokeWidth="2"
-                    />
-                    <line
-                      x1="14"
-                      y1="2"
-                      x2="2"
-                      y2="14"
-                      stroke="black"
-                      strokeWidth="2"
-                    />
-                  </svg>
+                <div
+                  className="absolute right-4 top-4 p-2"
+                  onClick={closeModal}
+                >
+                  <XMarkIcon className="w-6 h-6 text-black" />
                 </div>
                 <DialogTitle
                   as="h3"

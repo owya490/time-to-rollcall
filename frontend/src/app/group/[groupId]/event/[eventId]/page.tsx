@@ -133,28 +133,44 @@ export default function Event({
             <div className="mb-3">
               <EventComponent event={event} groupId={groupId} />
             </div>
-            <div className="flex justify-center w-full mb-4">
-              <button
-                type="button"
-                className="text-[10px] py-1.5 px-1.5 rounded-lg bg-blue-100 font-light"
-                onClick={() => {
-                  setSelectedMember(
-                    InitMember(
-                      searchInput,
-                      (group?.name as University) ?? University.UTS
-                    )
-                  );
-                  openModal();
-                }}
-              >
-                Create New Member
-              </button>
-            </div>
             <AttendanceSearchBar
               searchInput={searchInput}
               setSearchInput={setSearchInput}
             />
           </div>
+          {searchInput.length > 0 && index === 0 && (
+            <>
+              <div className="flex items-center h-fit mx-6 mb-2 mt-8">
+                <p className="text-gray-500 text-[10px] font-light align-middle">
+                  SEARCH RESULTS
+                </p>
+              </div>
+              <div className="flex flex-col items-center gap-2 text-center w-full my-4 text-gray-700">
+                <p>That member doesn't exist</p>
+                <button
+                  type="button"
+                  className="text-sm py-1.5 px-1.5 rounded-lg bg-green-100 font-light"
+                  onClick={() => {
+                    setSelectedMember(
+                      InitMember(
+                        searchInput,
+                        (group?.name as University) ?? University.UTS
+                      )
+                    );
+                    openModal();
+                  }}
+                >
+                  Create New Member
+                </button>
+              </div>
+            </>
+          )}
+          {searchInput.length === 0 &&
+            (!event || !event.members || event.members.length === 0) && (
+              <div className="text-center mt-8 text-gray-500">
+                Start searching members to add them!
+              </div>
+            )}
           <div className="w-full z-30">
             <AttendanceSuggested
               suggested={membersNotSignedIn.slice(0, index)}
@@ -201,6 +217,23 @@ export default function Event({
                 openModal();
               }}
             />
+          </div>
+          <div className="fixed z-40 flex justify-center bottom-0 text-center w-full text-gray-700">
+            <button
+              type="button"
+              className="text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
+              onClick={() => {
+                setSelectedMember(
+                  InitMember(
+                    searchInput,
+                    (group?.name as University) ?? University.UTS
+                  )
+                );
+                openModal();
+              }}
+            >
+              Create New Member
+            </button>
           </div>
         </>
       ) : (

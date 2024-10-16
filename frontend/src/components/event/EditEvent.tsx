@@ -19,7 +19,7 @@ import Tag from "./Tag";
 import { EventModel } from "@/models/Event";
 import Loader from "../Loader";
 import DeleteEvent from "./DeleteEvent";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function EditEvent({
   groupId,
@@ -103,39 +103,20 @@ export default function EditEvent({
                 leaveTo="transform translate-y-full"
               >
                 <DialogPanel className="rounded-t-3xl bg-white p-6 text-center shadow-xl">
-                  <div className="absolute right-6 top-6">
-                    <svg
-                      className="hover:cursor-pointer"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 15 15"
-                      width="15"
-                      height="15"
-                      onClick={closeModal}
-                    >
-                      <line
-                        x1="2"
-                        y1="2"
-                        x2="14"
-                        y2="14"
-                        stroke="black"
-                        strokeWidth="2"
-                      />
-                      <line
-                        x1="14"
-                        y1="2"
-                        x2="2"
-                        y2="14"
-                        stroke="black"
-                        strokeWidth="2"
-                      />
-                    </svg>
+                  <div
+                    className="absolute right-4 top-4 p-2"
+                    onClick={closeModal}
+                  >
+                    <XMarkIcon className="w-6 h-6 text-black" />
                   </div>
-                  <div className="absolute left-6 top-6">
-                    <TrashIcon
-                      className="w-6 h-6 text-red-600"
+                  {!newEvent && (
+                    <div
+                      className="absolute left-4 top-4 p-2"
                       onClick={openDeleteConfirmationModal}
-                    />
-                  </div>
+                    >
+                      <TrashIcon className="w-6 h-6 text-red-600" />
+                    </div>
+                  )}
                   <TabGroup
                     selectedIndex={selectedIndex}
                     onChange={setSelectedIndex}
@@ -144,24 +125,25 @@ export default function EditEvent({
                       <Tab
                         className={({ selected }) =>
                           selected || selectedIndex >= 1
-                            ? "w-12 h-0.5 rounded-xl bg-blue-500"
-                            : "w-12 h-0.5 rounded-xl bg-blue-100"
+                            ? "w-12 h-1 border-white border-1.5 rounded-xl bg-blue-500"
+                            : "w-12 h-1 border-white border-1.5 rounded-xl bg-blue-100"
                         }
                       />
                       <Tab
                         className={({ selected }) =>
                           selected || selectedIndex >= 2
-                            ? "w-12 h-0.5 rounded-xl bg-blue-500"
-                            : "w-12 h-0.5 rounded-xl bg-blue-100"
+                            ? "w-12 h-1 border-white border-1.5 rounded-xl bg-blue-500"
+                            : "w-12 h-1 border-white border-1.5 rounded-xl bg-blue-100"
                         }
                         disabled={!submitEventForm.name}
                       />
                       <Tab
                         className={({ selected }) =>
                           selected || selectedIndex >= 3
-                            ? "w-12 h-0.5 rounded-xl bg-blue-500"
-                            : "w-12 h-0.5 rounded-xl bg-blue-100"
+                            ? "w-12 h-1 border-white border-1.5 rounded-xl bg-blue-500"
+                            : "w-12 h-1 border-white border-1.5 rounded-xl bg-blue-100"
                         }
+                        disabled={!submitEventForm.name}
                       />
                     </TabList>
                     <TabPanels className="mt-3">
@@ -246,11 +228,17 @@ export default function EditEvent({
                                 }
                               />
                             ))}
+                          </div>
+                          <div className="flex justify-center">
                             {editTag?.id === "placeholder" ? (
                               <input
                                 type="text"
-                                placeholder="Weekly Meeting"
-                                className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mx-1 my-1 text-xs font-medium w-32 text-black"
+                                placeholder="Roadtrip"
+                                style={{
+                                  width: `${editTag.name.length + 3}ch`,
+                                  minWidth: "112px",
+                                }}
+                                className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mx-1 my-1 text-md font-medium text-black"
                                 value={editTag.name}
                                 onChange={(e) =>
                                   setEditTag({
@@ -259,7 +247,20 @@ export default function EditEvent({
                                   })
                                 }
                                 autoFocus
-                                onBlur={() => setEditTag(null)}
+                                onBlur={() => {
+                                  editTag.name.length > 0
+                                    ? addTag(groupId, editTag).then((tag) => {
+                                        setTags((tags ?? []).concat(tag));
+                                        setSubmitEventForm({
+                                          ...submitEventForm,
+                                          tags: submitEventForm.tags.concat(
+                                            tag
+                                          ),
+                                        });
+                                        setEditTag(null);
+                                      })
+                                    : setEditTag(null);
+                                }}
                                 onKeyDown={(event) =>
                                   event.key === "Enter" &&
                                   addTag(groupId, editTag).then((tag) => {
@@ -275,10 +276,10 @@ export default function EditEvent({
                             ) : (
                               <button
                                 type="button"
-                                className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-xs font-medium text-blue-900"
+                                className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-md font-medium text-blue-900"
                                 onClick={() => setEditTag(InitTag)}
                               >
-                                Create New Tag +
+                                Create Tag
                               </button>
                             )}
                           </div>
@@ -347,12 +348,18 @@ export default function EditEvent({
                         }
                         className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={
-                          selectedIndex === 2 ? createEvent : incrementStep
+                          !newEvent
+                            ? createEvent
+                            : selectedIndex === 2
+                            ? createEvent
+                            : incrementStep
                         }
                       >
-                        {selectedIndex === 2
-                          ? (newEvent ? "Create" : "Update") + " event"
-                          : "Next"}
+                        {newEvent
+                          ? selectedIndex === 2
+                            ? "Create event"
+                            : "Next"
+                          : "Save"}
                       </button>
                     )}
                   </TabGroup>

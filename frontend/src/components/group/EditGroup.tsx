@@ -4,13 +4,17 @@ import {
   TransitionChild,
   DialogPanel,
   DialogTitle,
+  Listbox,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
 } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { GroupModel } from "@/models/Group";
 import Loader from "../Loader";
-import Tag from "../event/Tag";
-import { InitTag, TagModel } from "@/models/Tag";
-import { addTag, updateTag } from "@/lib/tags";
+import { InitTag } from "@/models/Tag";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { colourClasses, getColourClasses } from "../event/Tag";
 
 export default function EditGroup({
   isOpen,
@@ -28,7 +32,6 @@ export default function EditGroup({
   updating: boolean;
 }) {
   const newGroup = group.id === "placeholder";
-  const [editTag, setEditTag] = useState<TagModel | null>(null);
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
@@ -58,32 +61,11 @@ export default function EditGroup({
               leaveTo="transform translate-y-full"
             >
               <DialogPanel className="rounded-t-3xl bg-white p-6 shadow-xl">
-                <div className="absolute right-6 top-6">
-                  <svg
-                    className="hover:cursor-pointer"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 15 15"
-                    width="15"
-                    height="15"
-                    onClick={closeModal}
-                  >
-                    <line
-                      x1="2"
-                      y1="2"
-                      x2="14"
-                      y2="14"
-                      stroke="black"
-                      strokeWidth="2"
-                    />
-                    <line
-                      x1="14"
-                      y1="2"
-                      x2="2"
-                      y2="14"
-                      stroke="black"
-                      strokeWidth="2"
-                    />
-                  </svg>
+                <div
+                  className="absolute right-4 top-4 p-2"
+                  onClick={closeModal}
+                >
+                  <XMarkIcon className="w-6 h-6 text-black" />
                 </div>
                 <DialogTitle
                   as="h3"
@@ -110,42 +92,16 @@ export default function EditGroup({
                 {!newGroup && (
                   <div className="my-4">
                     <p className="text-sm text-gray-900">Tags</p>
-                    <div className="flex flex-wrap justify-center">
-                      {group.tags?.map((t, i) =>
-                        editTag?.id === t.id ? (
-                          <input
-                            key={i}
-                            type="text"
-                            style={{
-                              width: `${editTag.name.length + 3}ch`,
-                            }}
-                            className="rounded-3xl w-auto border-transparent text-center border-2 px-2 py-1 mr-2 my-1 text-xs font-medium bg-white text-black"
-                            value={editTag.name}
-                            onChange={(e) =>
-                              setEditTag({ ...editTag, name: e.target.value })
-                            }
-                            autoFocus
-                            onBlur={async () => {
-                              await updateTag(group.id, editTag);
-                              setGroup({
-                                ...group,
-                                tags: [
-                                  ...group.tags.slice(
-                                    0,
-                                    group.tags.map((t) => t.id).indexOf(t.id)
-                                  ),
-                                  editTag,
-                                  ...group.tags.slice(
-                                    group.tags.map((t) => t.id).indexOf(t.id) +
-                                      1
-                                  ),
-                                ],
-                              });
-                              setEditTag(null);
-                            }}
-                            onKeyDown={async (event) => {
-                              if (event.key === "Enter") {
-                                await updateTag(group.id, editTag);
+                    <div className="flex flex-wrap">
+                      {group.tags &&
+                        group.tags?.map((t, i) => (
+                          <div className="flex w-full justify-between" key={i}>
+                            <input
+                              type="text"
+                              className="w-full rounded-none resize-none border-t-0 bg-transparent font-sans text-lg font-semibold text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
+                              placeholder="Roadtrip"
+                              value={t.name}
+                              onChange={(e) =>
                                 setGroup({
                                   ...group,
                                   tags: [
@@ -153,61 +109,114 @@ export default function EditGroup({
                                       0,
                                       group.tags.map((t) => t.id).indexOf(t.id)
                                     ),
-                                    editTag,
+                                    { ...t, name: e.target.value },
                                     ...group.tags.slice(
                                       group.tags
                                         .map((t) => t.id)
                                         .indexOf(t.id) + 1
                                     ),
                                   ],
-                                });
-                                setEditTag(null);
+                                })
                               }
-                            }}
-                          />
-                        ) : (
-                          <Tag
-                            key={i}
-                            tag={t}
-                            selected={group.tags.includes(t)}
-                            onClick={() => setEditTag(t)}
-                          />
-                        )
-                      )}
-                      {editTag?.id === "placeholder" ? (
-                        <input
-                          placeholder="Roadtrip"
-                          style={{
-                            width: `${editTag.name.length + 3}ch`,
-                            minWidth: "101px",
-                          }}
-                          className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mx-1 my-1 text-xs font-medium text-black"
-                          value={editTag.name}
-                          onChange={(e) =>
-                            setEditTag({ ...editTag, name: e.target.value })
-                          }
-                          autoFocus
-                          onBlur={() => setEditTag(null)}
-                          onKeyDown={async (event) => {
-                            if (event.key === "Enter") {
-                              const addedTag = await addTag(group.id, editTag);
-                              setGroup({
-                                ...group,
-                                tags: group.tags.concat(addedTag),
-                              });
-                              setEditTag(null);
-                            }
-                          }}
-                        />
-                      ) : (
-                        <button
-                          type="button"
-                          className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-xs font-medium text-blue-900"
-                          onClick={() => setEditTag(InitTag)}
-                        >
-                          Create Tag +
-                        </button>
-                      )}
+                            />
+                            <Listbox
+                              value={t.colour ?? "blue"}
+                              onChange={(colour) =>
+                                setGroup({
+                                  ...group,
+                                  tags: [
+                                    ...group.tags.slice(
+                                      0,
+                                      group.tags.map((t) => t.id).indexOf(t.id)
+                                    ),
+                                    { ...t, colour },
+                                    ...group.tags.slice(
+                                      group.tags
+                                        .map((t) => t.id)
+                                        .indexOf(t.id) + 1
+                                    ),
+                                  ],
+                                })
+                              }
+                            >
+                              <ListboxButton>
+                                <svg
+                                  height="40"
+                                  width="40"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <circle
+                                    r="15"
+                                    cx="20"
+                                    cy="20"
+                                    className={getColourClasses(t.colour).fill}
+                                  />
+                                </svg>
+                              </ListboxButton>
+                              <ListboxOptions
+                                anchor="top"
+                                transition
+                                className="h-52 rounded-xl border border-white/5 bg-white p-1 focus:outline-none transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
+                              >
+                                {Object.entries(colourClasses).map(
+                                  ([colour, clz], i) => (
+                                    <ListboxOption
+                                      key={i}
+                                      value={colour}
+                                      onClick={() =>
+                                        setGroup({
+                                          ...group,
+                                          tags: [
+                                            ...group.tags.slice(
+                                              0,
+                                              group.tags
+                                                .map((t) => t.id)
+                                                .indexOf(t.id)
+                                            ),
+                                            { ...t, colour },
+                                            ...group.tags.slice(
+                                              group.tags
+                                                .map((t) => t.id)
+                                                .indexOf(t.id) + 1
+                                            ),
+                                          ],
+                                        })
+                                      }
+                                      className="group flex justify-between cursor-default items-center rounded-lg px-2 select-none data-[focus]:bg-white/10"
+                                    >
+                                      <svg
+                                        height="40"
+                                        width="40"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <circle
+                                          r="15"
+                                          cx="20"
+                                          cy="20"
+                                          className={clz.fill}
+                                        />
+                                      </svg>
+                                    </ListboxOption>
+                                  )
+                                )}
+                              </ListboxOptions>
+                            </Listbox>
+                          </div>
+                        ))}
+                    </div>
+                    <div className="flex justify-center mt-4">
+                      <button
+                        type="button"
+                        className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-md font-medium text-blue-900"
+                        onClick={() =>
+                          setGroup({
+                            ...group,
+                            tags: group.tags.concat(InitTag),
+                          })
+                        }
+                      >
+                        Create Tag
+                      </button>
                     </div>
                   </div>
                 )}
@@ -218,7 +227,7 @@ export default function EditGroup({
                 ) : (
                   <button
                     type="button"
-                    disabled={!group.name}
+                    disabled={!group.name || group.tags.some((t) => !t.name)}
                     className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={submit}
                   >

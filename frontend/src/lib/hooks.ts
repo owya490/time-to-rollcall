@@ -17,16 +17,18 @@ import { useRouter } from "next/navigation";
 import { Path } from "@/helper/Path";
 
 export function useUserData() {
-  const [userAuth] = useAuthState(auth);
-  const userState = useState<User | null | undefined>(undefined);
+  const [userAuth, loading] = useAuthState(auth);
+  const userState = useState<User | null | undefined>(null);
 
   useEffect(() => {
-    if (userAuth) {
-      getUser(userAuth.uid).then((user) =>
-        userState[1]({ ...userAuth, ...user })
-      );
-    } else {
-      userState[1](undefined);
+    if (!loading) {
+      if (userAuth) {
+        getUser(userAuth.uid).then((user) =>
+          userState[1]({ ...userAuth, ...user })
+        );
+      } else {
+        userState[1](undefined);
+      }
     }
   }, [userAuth]);
 

@@ -11,6 +11,8 @@ import { useContext, useEffect, useState } from "react";
 import { GroupId } from "@/models/Group";
 import { TagId, TagModel } from "@/models/Tag";
 import Loader from "@/components/Loader";
+import { useRouter } from "next/navigation";
+import { GroupPath, Path } from "@/helper/Path";
 
 export default function Group({ params }: { params: { groupId: GroupId } }) {
   const [group, setGroup] = useContext(GroupContext);
@@ -35,6 +37,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   function openModal() {
     setIsOpen(true);
   }
+  const router = useRouter();
 
   async function createEvent() {
     setUpdating(true);
@@ -45,9 +48,16 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
       setShowedEvents(filter.sort(newEvents, filteredTags));
       setSelectedIndex(0);
       setSubmitEventForm(InitEvent);
+      closeModal();
+      router.push(
+        Path.Group +
+          "/" +
+          params.groupId +
+          GroupPath.Event +
+          "/" +
+          submittedEvent.id
+      );
     }
-    setUpdating(false);
-    closeModal();
   }
 
   useEffect(() => {

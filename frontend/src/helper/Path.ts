@@ -7,4 +7,5 @@ export enum Path {
 
 export enum GroupPath {
   Members = "/members",
+  Event = "/event",
 }

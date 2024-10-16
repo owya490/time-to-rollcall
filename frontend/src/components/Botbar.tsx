@@ -25,8 +25,8 @@ export default function Botbar({
   setTagsOpen: (to: boolean) => void;
 }) {
   return (
-    <nav className="flex justify-center h-full border-gray-700">
-      <div className="fixed z-10 h-12 w-full max-w-max px-3 bottom-3">
+    <nav className="flex justify-center h-full">
+      <div className="fixed z-10 h-12 w-full max-w-max px-3 bottom-2">
         <div className="h-full flex items-center">
           <div className="bg-gray-200 bg-opacity-70 backdrop-blur-lg rounded-full grid w-full grid-cols-4 px-2">
             {filters.map((f, i) => (
@@ -34,7 +34,7 @@ export default function Botbar({
                 key={i}
                 className={
                   "inline-flex flex-col items-center justify-center px-3 py-3 my-1 h-8 rounded-full " +
-                  (filter.name === f.name ? "bg-white" : "hover:bg-white")
+                  (filter.name === f.name ? "bg-white" : "")
                 }
                 onClick={() =>
                   filterEvents(filter.name === f.name ? newestFilter : f)
@@ -46,9 +46,7 @@ export default function Botbar({
             <button
               className={
                 "inline-flex flex-col items-center justify-center px-3 py-3 my-1 h-8 rounded-full " +
-                (tagsOpen || filteredTags.length > 0
-                  ? "bg-white"
-                  : "hover:bg-white")
+                (tagsOpen || filteredTags.length > 0 ? "bg-white" : "")
               }
               onClick={() => {
                 setTagsOpen(!tagsOpen);
