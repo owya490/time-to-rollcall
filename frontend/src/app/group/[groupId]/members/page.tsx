@@ -97,23 +97,6 @@ export default function GroupMember({
         updating={updating}
       />
       <h1 className="mx-6 text-2xl mb-6">Members</h1>
-      <div className="flex justify-center w-full mb-4">
-        <button
-          type="button"
-          className="text-[10px] py-1.5 px-1.5 rounded-lg bg-blue-100 font-light"
-          onClick={() => {
-            setSelectedMember(
-              InitMember(
-                searchInput,
-                (group?.name as University) ?? University.UTS
-              )
-            );
-            openModal();
-          }}
-        >
-          Create New Member
-        </button>
-      </div>
       <div className="relative">
         <div className="mx-6">
           <div className="mb-6">
@@ -132,6 +115,23 @@ export default function GroupMember({
             }}
           />
         </div>
+      </div>
+      <div className="fixed z-40 flex justify-center bottom-0 text-center w-full text-gray-700">
+        <button
+          type="button"
+          className="text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
+          onClick={() => {
+            setSelectedMember(
+              InitMember(
+                searchInput,
+                (group?.name as University) ?? University.UTS
+              )
+            );
+            openModal();
+          }}
+        >
+          Create New Member
+        </button>
       </div>
     </AuthCheck>
   );

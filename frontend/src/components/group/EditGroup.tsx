@@ -97,27 +97,24 @@ export default function EditGroup({
                         group.tags?.map((t, i) => (
                           <div className="flex w-full justify-between" key={i}>
                             <input
+                              id={i.toString()}
                               type="text"
                               className="w-full rounded-none resize-none border-t-0 bg-transparent font-sans text-lg font-semibold text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
                               placeholder="Roadtrip"
                               value={t.name}
-                              onChange={(e) =>
+                              onChange={(e) => {
+                                console.log(t);
+                                console.log(e.target.value);
+                                console.log(i);
                                 setGroup({
                                   ...group,
                                   tags: [
-                                    ...group.tags.slice(
-                                      0,
-                                      group.tags.map((t) => t.id).indexOf(t.id)
-                                    ),
+                                    ...group.tags.slice(0, i),
                                     { ...t, name: e.target.value },
-                                    ...group.tags.slice(
-                                      group.tags
-                                        .map((t) => t.id)
-                                        .indexOf(t.id) + 1
-                                    ),
+                                    ...group.tags.slice(i + 1),
                                   ],
-                                })
-                              }
+                                });
+                              }}
                             />
                             <Listbox
                               value={t.colour ?? "blue"}
@@ -125,16 +122,9 @@ export default function EditGroup({
                                 setGroup({
                                   ...group,
                                   tags: [
-                                    ...group.tags.slice(
-                                      0,
-                                      group.tags.map((t) => t.id).indexOf(t.id)
-                                    ),
+                                    ...group.tags.slice(0, i),
                                     { ...t, colour },
-                                    ...group.tags.slice(
-                                      group.tags
-                                        .map((t) => t.id)
-                                        .indexOf(t.id) + 1
-                                    ),
+                                    ...group.tags.slice(i + 1),
                                   ],
                                 })
                               }
@@ -211,7 +201,7 @@ export default function EditGroup({
                         onClick={() =>
                           setGroup({
                             ...group,
-                            tags: group.tags.concat(InitTag),
+                            tags: [...group.tags, InitTag],
                           })
                         }
                       >
