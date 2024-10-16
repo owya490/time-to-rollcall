@@ -33,9 +33,7 @@ export default function PrivateLayoutGroup({
   const group = useGroupData(user, params.groupId);
   const members = useMembersData(user, group?.id);
   const tags = useTagsData(user, group?.id);
-  const [submitTagsForm, setSubmitTagsForm] = useState<
-    TagModel[] | null | undefined
-  >(null);
+  const [submitTagsForm, setSubmitTagsForm] = useState<TagModel[] | null>(null);
 
   async function editGroup() {
     setUpdating(true);
@@ -56,7 +54,7 @@ export default function PrivateLayoutGroup({
   }
 
   useEffect(() => {
-    if (group !== null && tags !== null) {
+    if (group !== null) {
       setSubmitGroupForm(group);
       setSubmitTagsForm(tags);
       setLoading(false);
@@ -76,20 +74,18 @@ export default function PrivateLayoutGroup({
     <GroupContext.Provider value={group}>
       <MembersContext.Provider value={members}>
         <TagsContext.Provider value={tags}>
-          {submitGroupForm &&
-            submitTagsForm !== null &&
-            submitTagsForm !== undefined && (
-              <EditGroup
-                isOpen={isOpen}
-                closeModal={closeModal}
-                group={submitGroupForm}
-                setGroup={setSubmitGroupForm}
-                tags={submitTagsForm}
-                setTags={setSubmitTagsForm}
-                submit={editGroup}
-                updating={updating}
-              />
-            )}
+          {submitGroupForm && submitTagsForm !== null && (
+            <EditGroup
+              isOpen={isOpen}
+              closeModal={closeModal}
+              group={submitGroupForm}
+              setGroup={setSubmitGroupForm}
+              tags={submitTagsForm}
+              setTags={setSubmitTagsForm}
+              submit={editGroup}
+              updating={updating}
+            />
+          )}
           <Topbar openModal={openModal} />
           {children}
         </TagsContext.Provider>

@@ -87,7 +87,7 @@ export default function PrivateLayoutEvent({
     <GroupContext.Provider value={group}>
       <MembersContext.Provider value={members}>
         <EventContext.Provider value={event}>
-          {event && group && tags !== null && tags !== undefined && (
+          {event && group && tags !== null && (
             <EditEvent
               groupId={group.id}
               tags={tags}

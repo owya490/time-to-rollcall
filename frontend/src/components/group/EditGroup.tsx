@@ -29,7 +29,7 @@ export default function EditGroup({
   isOpen: boolean;
   closeModal: () => void;
   group: GroupModel;
-  tags?: TagModel[];
+  tags?: TagModel[] | null;
   setTags?: (tags: TagModel[]) => void;
   setGroup: (group: GroupModel) => void;
   submit: () => void;
@@ -94,8 +94,8 @@ export default function EditGroup({
                   />
                 </div>
                 {!newGroup &&
-                  tags !== undefined &&
                   tags !== null &&
+                  tags !== undefined &&
                   setTags && (
                     <div className="my-4">
                       <p className="text-sm text-gray-900">Tags</p>

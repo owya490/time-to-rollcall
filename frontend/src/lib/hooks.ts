@@ -134,9 +134,9 @@ const useFirestoreCol = <T>(
   trigger: boolean,
   constraint?: QueryFieldFilterConstraint,
   onBeforeFetch?: () => Promise<void>,
-  onAfterFetch?: (data: T[] | null | undefined) => void
+  onAfterFetch?: (data: T[] | null) => void
 ) => {
-  const [data, setData] = useState<T[] | null | undefined>(null);
+  const [data, setData] = useState<T[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<FirestoreError | null>(null);
 
@@ -156,10 +156,10 @@ const useFirestoreCol = <T>(
             document.docs
           )) as T[];
           if (colData.length === 0) {
-            setData(undefined);
+            setData([]);
             setLoading(false);
             if (onAfterFetch) {
-              onAfterFetch(undefined);
+              onAfterFetch([]);
             }
           } else {
             setData(colData);
@@ -171,7 +171,7 @@ const useFirestoreCol = <T>(
         },
         (error) => {
           setError(error);
-          setData(undefined);
+          setData([]);
           setLoading(false);
         }
       );

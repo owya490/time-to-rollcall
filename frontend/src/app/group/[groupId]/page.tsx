@@ -79,7 +79,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
         </div>
       ) : (
         <>
-          {group && tags !== null && tags !== undefined && (
+          {group && tags !== null && (
             <EditEvent
               groupId={group.id}
               tags={tags}
