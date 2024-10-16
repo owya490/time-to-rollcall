@@ -200,13 +200,6 @@ function MemberSignInCard({
                   y: 0,
                   duration: 0.2,
                 });
-              } else if (e.pageX < window.innerWidth / 2) {
-                editRef.current = true;
-                gsap.to(frontRef.current, {
-                  x: 84,
-                  y: 0,
-                  duration: 0.2,
-                });
               } else {
                 selectedRef.current = true;
                 gsap.to(frontRef.current, {
