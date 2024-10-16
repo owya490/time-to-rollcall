@@ -107,29 +107,6 @@ export default function Event({
     }
     // eslint-disable-next-line
   }, [membersNotSignedIn]);
-  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.visualViewport) {
-        setViewportHeight(window.visualViewport.height);
-      }
-    };
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", handleResize);
-
-      // Initial height setting
-      setViewportHeight(window.visualViewport.height);
-    }
-
-    // Cleanup the event listener on component unmount
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener("resize", handleResize);
-      }
-    };
-  }, []);
   return (
     <AuthCheck>
       <Topbar
@@ -233,31 +210,24 @@ export default function Event({
               }}
             />
           </div>
-          <div
-            className="fixed z-40 flex justify-center bottom-0 text-center w-full text-gray-700"
-            style={{
-              transform: `translateY(${
-                window.visualViewport?.height ?? 0 < window.innerHeight
-                  ? "-100%"
-                  : "0"
-              })`,
-            }}
-          >
-            <button
-              type="button"
-              className="text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
-              onClick={() => {
-                setSelectedMember(
-                  InitMember(
-                    searchInput,
-                    (group?.name as University) ?? University.UTS
-                  )
-                );
-                openModal();
-              }}
-            >
-              Create and Add New Member
-            </button>
+          <div className="min-h-screen flex items-end">
+            <div className="fixed z-40 flex justify-center bottom-0 text-center w-full text-gray-700">
+              <button
+                type="button"
+                className="text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
+                onClick={() => {
+                  setSelectedMember(
+                    InitMember(
+                      searchInput,
+                      (group?.name as University) ?? University.UTS
+                    )
+                  );
+                  openModal();
+                }}
+              >
+                Create and Add New Member
+              </button>
+            </div>
           </div>
         </>
       ) : (

@@ -127,7 +127,7 @@ export default function Topbar({
     // eslint-disable-next-line
   }, [group, tags]);
   return (
-    <nav className="bg-white flex items-center sticky justify-between px-6 py-6 w-full z-40 top-0 start-0">
+    <nav className="bg-white flex items-center sticky justify-between px-6 py-6 w-full z-40 top-0 start-0 mb-4">
       {event && group && tags !== null && (
         <EditEvent
           groupId={group.id}
