@@ -97,6 +97,18 @@ export function useMembersListener(
   return members;
 }
 
+export function useEventsListener(
+  user: User | null | undefined,
+  groupId?: string
+) {
+  const { data: events } = useFirestoreCol<EventModel>(
+    firestore,
+    `groups/${groupId}/events`,
+    user !== null && user?.groups?.includes(groupId ?? "") ? true : false
+  );
+  return events;
+}
+
 export function useMetadataListener(
   user: User | null | undefined,
   groupId?: string

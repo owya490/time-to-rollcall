@@ -140,7 +140,7 @@ export default function Topbar({
           closeDeleteConfirmationModal={closeDeleteConfirmationModal}
           submitEventForm={submitEventForm}
           setSubmitEventForm={setSubmitEventForm}
-          createEvent={editEvent}
+          submitEvent={editEvent}
           deleteEvent={deleteEventIn}
           updatingDelete={updatingDelete}
           selectedIndex={selectedIndex}

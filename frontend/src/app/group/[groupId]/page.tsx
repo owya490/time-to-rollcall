@@ -4,8 +4,8 @@ import Botbar from "@/components/Botbar";
 import EventComponent from "@/components/event/Event";
 import EditEvent from "@/components/event/EditEvent";
 import { Filter, InitFilter } from "@/helper/Filter";
-import { GroupContext, TagsContext } from "@/lib/context";
-import { getEvents, submitEvent } from "@/lib/events";
+import { GroupContext, TagsContext, UserContext } from "@/lib/context";
+import { submitEvent, updateEvent } from "@/lib/events";
 import { EventModel, InitEvent } from "@/models/Event";
 import { useContext, useEffect, useState } from "react";
 import { GroupId } from "@/models/Group";
@@ -14,11 +14,13 @@ import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { GroupPath, Path } from "@/helper/Path";
 import Topbar from "@/components/Topbar";
+import { useEventsListener } from "@/lib/hooks";
 
 export default function Group({ params }: { params: { groupId: GroupId } }) {
+  const user = useContext(UserContext);
   const group = useContext(GroupContext);
   const tags = useContext(TagsContext);
-  const [events, setEvents] = useState<EventModel[]>([]);
+  const events = useEventsListener(user, params.groupId);
   const [showedEvents, setShowedEvents] = useState<EventModel[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -41,16 +43,10 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   }
   const router = useRouter();
 
-  async function createEvent() {
+  async function editEvent() {
     setUpdating(true);
-    if (group) {
-      const submittedEvent = await submitEvent(group.id, submitEventForm);
-      let newEvents = [submittedEvent].concat(events);
-      setEvents(newEvents);
-      setShowedEvents(filter.sort(newEvents, filteredTags));
-      setSelectedIndex(0);
-      setSubmitEventForm(InitEvent);
-      closeModal();
+    if (submitEventForm.id === "placeholder") {
+      const submittedEvent = await submitEvent(params.groupId, submitEventForm);
       router.push(
         Path.Group +
           "/" +
@@ -59,18 +55,21 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
           "/" +
           submittedEvent.id
       );
+    } else {
+      await updateEvent(params.groupId, submitEventForm);
+      setSelectedIndex(0);
+      setSubmitEventForm(InitEvent);
+      setUpdating(false);
+      closeModal();
     }
   }
 
   useEffect(() => {
-    if (group) {
-      getEvents(params.groupId).then((events: EventModel[]) => {
-        setEvents(events);
-        setShowedEvents(events);
-        setLoading(false);
-      });
+    if (group && events) {
+      setShowedEvents(events);
+      setLoading(false);
     }
-  }, [group, params.groupId]);
+  }, [group, events, params.groupId]);
 
   return (
     <AuthCheck>
@@ -89,7 +88,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
               closeModal={closeModal}
               submitEventForm={submitEventForm}
               setSubmitEventForm={setSubmitEventForm}
-              createEvent={createEvent}
+              submitEvent={editEvent}
               selectedIndex={selectedIndex}
               setSelectedIndex={setSelectedIndex}
               updating={updating}
@@ -98,8 +97,14 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
           <h1 className="mx-6 text-2xl mb-16">Events</h1>
           {showedEvents.map((event, i) => (
             <div key={i}>
-              <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />
-              <div className="mx-6 my-4">
+              <hr className="h-[1px] border-t-0 bg-neutral-300" />
+              <div
+                className="px-6 py-6"
+                onClick={() => {
+                  setSubmitEventForm(event);
+                  openModal();
+                }}
+              >
                 <EventComponent
                   event={event}
                   groupId={params.groupId}
@@ -109,28 +114,32 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
             </div>
           ))}
           {showedEvents.length > 0 && (
-            <hr className="my-4 h-[1px] border-t-0 bg-neutral-300" />
+            <hr className="h-[1px] border-t-0 bg-neutral-300" />
           )}
+          <div className="py-16" />
           <Botbar
             filter={filter}
             filterEvents={(f) => {
-              setShowedEvents(f.sort(events, filteredTags));
+              setShowedEvents(f.sort(events ?? [], filteredTags));
               setFilter(f);
             }}
             filteredTags={filteredTags}
             filterEventsByTags={(tagIds: TagId[]) => {
               setShowedEvents(
                 tagIds.length > 0
-                  ? events.filter((e) =>
+                  ? events?.filter((e) =>
                       tagIds.every((tagId) =>
                         e.tags.map((t) => t.id).includes(tagId)
                       )
-                    )
-                  : events
+                    ) ?? []
+                  : events ?? []
               );
               setFilteredTags(tagIds);
             }}
-            openModal={openModal}
+            openModal={() => {
+              setSubmitEventForm(InitEvent);
+              openModal();
+            }}
             tags={tags ?? []}
             tagsOpen={tagsOpen}
             setTagsOpen={setTagsOpen}

@@ -31,7 +31,7 @@ export default function EditEvent({
   closeDeleteConfirmationModal,
   submitEventForm,
   setSubmitEventForm,
-  createEvent,
+  submitEvent,
   deleteEvent,
   updatingDelete,
   selectedIndex,
@@ -47,7 +47,7 @@ export default function EditEvent({
   closeDeleteConfirmationModal?: () => void;
   submitEventForm: EventModel;
   setSubmitEventForm: (event: EventModel) => void;
-  createEvent: () => void;
+  submitEvent: () => void;
   deleteEvent?: () => void;
   updatingDelete?: boolean;
   selectedIndex: number;
@@ -346,9 +346,9 @@ export default function EditEvent({
                         className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={
                           !newEvent
-                            ? createEvent
+                            ? submitEvent
                             : selectedIndex === 2
-                            ? createEvent
+                            ? submitEvent
                             : incrementStep
                         }
                       >

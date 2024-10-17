@@ -49,6 +49,8 @@ export default function Event({
   const happeningNow = event
     ? inBetween(event.dateStart, now, event.dateEnd)
     : false;
+  const before = event ? now < event.dateStart : false;
+  const after = event ? now > event.dateEnd : false;
 
   function closeModal() {
     setIsOpen(false);
@@ -95,7 +97,7 @@ export default function Event({
 
       if (loading) {
         setLoading(false);
-        setToggleEdit(happeningNow);
+        setToggleEdit(happeningNow || before);
       }
     }
     // eslint-disable-next-line

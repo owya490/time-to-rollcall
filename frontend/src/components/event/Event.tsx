@@ -16,6 +16,8 @@ export default function EventComponent({
 }) {
   const now = new Date();
   const happeningNow = inBetween(event.dateStart, now, event.dateEnd);
+  const before = now < event.dateStart;
+  const after = now > event.dateEnd;
   return (
     <>
       <div className="flex items-center w-full h-min">
@@ -26,13 +28,11 @@ export default function EventComponent({
             : " - " + toddMMYYYY(event.dateEnd)}
         </p>
         <div className="flex ml-auto">
-          {happeningNow ? (
-            <LiveBadge />
-          ) : (
-            <p className="text-xs font-medium text-gray-500">
-              {now < event.dateStart ? "NOT YET" : "ENDED"}
-            </p>
+          {happeningNow && <LiveBadge />}
+          {before && (
+            <p className="text-xs font-medium text-gray-500">NOT YET</p>
           )}
+          {after && <p className="text-xs font-medium text-gray-500">ENDED</p>}
         </div>
       </div>
       <div className="pt-3 pb-6">
@@ -71,11 +71,13 @@ export default function EventComponent({
             className={
               "rounded-3xl text-sm p-1 px-3 " +
               (happeningNow
-                ? "bg-green-50 text-green-500 border border-green-500 hover:bg-green-200"
-                : "bg-white border border-black hover:bg-gray-300")
+                ? "bg-green-50 text-green-500 border-2 border-green-500 hover:bg-green-200"
+                : "bg-white border-2 border-black hover:bg-gray-300")
             }
           >
-            {happeningNow ? "Check-in" : "Edit"}
+            {happeningNow && "Check-in"}
+            {before && "Early Check-in"}
+            {after && "View Attendance"}
           </Link>
         </div>
       )}
