@@ -190,7 +190,7 @@ export default function EditEvent({
                           <p className="my-2 text-xs font-light text-gray-400">
                             Add Tags
                           </p>
-                          <div className="flex flex-wrap justify-center h-32 overflow-auto">
+                          <div className="flex flex-wrap justify-center max-h-32 overflow-auto">
                             {tags?.map((t, i) => (
                               <Tag
                                 key={i}
@@ -233,7 +233,7 @@ export default function EditEvent({
                                   width: `${editTag.name.length + 3}ch`,
                                   minWidth: "112px",
                                 }}
-                                className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mt-3 text-md font-medium text-black"
+                                className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mt-2 text-md font-medium text-black"
                                 value={editTag.name}
                                 onChange={(e) =>
                                   setEditTag({

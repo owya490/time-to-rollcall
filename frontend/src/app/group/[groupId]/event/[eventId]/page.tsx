@@ -50,7 +50,6 @@ export default function Event({
     ? inBetween(event.dateStart, now, event.dateEnd)
     : false;
   const before = event ? now < event.dateStart : false;
-  const after = event ? now > event.dateEnd : false;
 
   function closeModal() {
     setIsOpen(false);
@@ -137,7 +136,7 @@ export default function Event({
         toggleEdit={toggleEdit}
       />
       {loading ? (
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center my-24">
           <Loader show />
         </div>
       ) : event ? (

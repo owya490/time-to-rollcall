@@ -68,7 +68,7 @@ export default function GroupMember({
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center my-24">
         <Loader show />
       </div>
     );

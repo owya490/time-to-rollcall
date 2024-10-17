@@ -9,7 +9,7 @@ export default function AuthCheck(props: { children: React.ReactNode }) {
   const user = useContext(UserContext);
   if (user === null) {
     return (
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center my-24">
         <Loader show />
       </div>
     );

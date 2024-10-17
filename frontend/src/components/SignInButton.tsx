@@ -3,7 +3,13 @@ import { auth, microsoftProvider } from "@/lib/firebase";
 
 export default function SignInButton() {
   const signInWithMicrosoft = async () => {
-    await signInWithPopup(auth, microsoftProvider);
+    try {
+      await signInWithPopup(auth, microsoftProvider);
+
+      window.location.reload();
+    } catch (error) {
+      console.error("Error during sign-in:", error);
+    }
   };
 
   return (

@@ -5,7 +5,7 @@ import EventComponent from "@/components/event/Event";
 import EditEvent from "@/components/event/EditEvent";
 import { Filter, InitFilter } from "@/helper/Filter";
 import { GroupContext, TagsContext, UserContext } from "@/lib/context";
-import { submitEvent, updateEvent } from "@/lib/events";
+import { deleteEvent, submitEvent, updateEvent } from "@/lib/events";
 import { EventModel, InitEvent } from "@/models/Event";
 import { useContext, useEffect, useState } from "react";
 import { GroupId } from "@/models/Group";
@@ -15,6 +15,8 @@ import { useRouter } from "next/navigation";
 import { GroupPath, Path } from "@/helper/Path";
 import Topbar from "@/components/Topbar";
 import { useEventsListener } from "@/lib/hooks";
+import { promiseToast } from "@/helper/Toast";
+import { inBetween } from "@/helper/Time";
 
 export default function Group({ params }: { params: { groupId: GroupId } }) {
   const user = useContext(UserContext);
@@ -39,13 +41,65 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   }
 
   function openModal() {
+    setSelectedIndex(0);
+    setUpdating(false);
     setIsOpen(true);
   }
+
+  async function deleteEventIn() {
+    setUpdatingDelete(true);
+    if (group && submitEventForm) {
+      await deleteEvent(group.id, submitEventForm.id);
+      setSubmitEventForm(InitEvent);
+    }
+    closeModal();
+    closeDeleteConfirmationModal();
+  }
+
+  const [updatingDelete, setUpdatingDelete] = useState(false);
+  const [deleteConfirmationIsOpen, setDeleteConfirmationIsOpen] =
+    useState(false);
+
+  function closeDeleteConfirmationModal() {
+    setDeleteConfirmationIsOpen(false);
+  }
+
+  function openDeleteConfirmationModal() {
+    setUpdatingDelete(false);
+    setDeleteConfirmationIsOpen(true);
+  }
+
   const router = useRouter();
 
   async function editEvent() {
     setUpdating(true);
     if (submitEventForm.id === "placeholder") {
+      promiseToast<void>(
+        submitEvent(params.groupId, submitEventForm).then(() => {
+          const happeningNow = submitEventForm
+            ? inBetween(
+                submitEventForm.dateStart,
+                new Date(),
+                submitEventForm.dateEnd
+              )
+            : false;
+          if (happeningNow) {
+            router.push(
+              Path.Group +
+                "/" +
+                params.groupId +
+                GroupPath.Event +
+                "/" +
+                submittedEvent.id
+            );
+          } else {
+            closeModal();
+          }
+        }),
+        "Updating event...",
+        "Event Updated!",
+        "Could not update event."
+      );
       const submittedEvent = await submitEvent(params.groupId, submitEventForm);
       router.push(
         Path.Group +
@@ -56,11 +110,14 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
           submittedEvent.id
       );
     } else {
-      await updateEvent(params.groupId, submitEventForm);
-      setSelectedIndex(0);
-      setSubmitEventForm(InitEvent);
-      setUpdating(false);
-      closeModal();
+      promiseToast<void>(
+        updateEvent(params.groupId, submitEventForm).then(() => {
+          closeModal();
+        }),
+        "Updating event...",
+        "Event Updated!",
+        "Could not update event."
+      );
     }
   }
 
@@ -75,7 +132,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
     <AuthCheck>
       <Topbar />
       {loading ? (
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center my-24">
           <Loader show />
         </div>
       ) : (
@@ -88,6 +145,11 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
               closeModal={closeModal}
               submitEventForm={submitEventForm}
               setSubmitEventForm={setSubmitEventForm}
+              deleteConfirmationIsOpen={deleteConfirmationIsOpen}
+              openDeleteConfirmationModal={openDeleteConfirmationModal}
+              closeDeleteConfirmationModal={closeDeleteConfirmationModal}
+              deleteEvent={deleteEventIn}
+              updatingDelete={updatingDelete}
               submitEvent={editEvent}
               selectedIndex={selectedIndex}
               setSelectedIndex={setSelectedIndex}
@@ -99,7 +161,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
             <div key={i}>
               <hr className="h-[1px] border-t-0 bg-neutral-300" />
               <div
-                className="px-6 py-6"
+                className="cursor-pointer px-6 py-6 hover:bg-gray-100"
                 onClick={() => {
                   setSubmitEventForm(event);
                   openModal();

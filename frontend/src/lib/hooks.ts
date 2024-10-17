@@ -20,8 +20,10 @@ import {
   Firestore,
   FirestoreError,
   onSnapshot,
+  orderBy,
   query,
   QueryFieldFilterConstraint,
+  QueryOrderByConstraint,
   where,
 } from "firebase/firestore";
 import { MetadataModel } from "@/models/Metadata";
@@ -104,7 +106,9 @@ export function useEventsListener(
   const { data: events } = useFirestoreCol<EventModel>(
     firestore,
     `groups/${groupId}/events`,
-    user !== null && user?.groups?.includes(groupId ?? "") ? true : false
+    user !== null && user?.groups?.includes(groupId ?? "") ? true : false,
+    undefined,
+    orderBy("dateEnd", "desc")
   );
   return events;
 }
@@ -164,6 +168,7 @@ const useFirestoreCol = <T>(
   col: string,
   trigger: boolean,
   constraint?: QueryFieldFilterConstraint,
+  orderBy?: QueryOrderByConstraint,
   onBeforeFetch?: () => Promise<void>,
   onAfterFetch?: (data: T[] | null) => void
 ) => {
@@ -176,9 +181,14 @@ const useFirestoreCol = <T>(
       if (onBeforeFetch) {
         await onBeforeFetch();
       }
-      const docRef = constraint
-        ? query(collection(db, col), constraint)
-        : collection(db, col);
+      const docRef =
+        constraint && orderBy
+          ? query(collection(db, col), constraint, orderBy)
+          : constraint
+          ? query(collection(db, col), constraint)
+          : orderBy
+          ? query(collection(db, col), orderBy)
+          : collection(db, col);
 
       const unsubscribe = onSnapshot(
         docRef,

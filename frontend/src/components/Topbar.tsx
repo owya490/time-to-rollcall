@@ -29,6 +29,7 @@ import { GroupModel } from "@/models/Group";
 import { TagModel } from "@/models/Tag";
 import { updateGroup } from "@/lib/groups";
 import EditGroup from "./group/EditGroup";
+import { promiseToast } from "@/helper/Toast";
 
 export default function Topbar({
   toggleEdit,
@@ -51,18 +52,22 @@ export default function Topbar({
   async function editEvent() {
     setUpdating(true);
     if (group && event) {
-      await updateEvent(group.id, submitEventForm);
+      promiseToast<void>(
+        updateEvent(group.id, submitEventForm).then(() => closeModal()),
+        "Updating event...",
+        "Event Updated!",
+        "Could not update event."
+      );
     }
-    setUpdating(false);
-    closeModal();
   }
 
   function closeModal() {
     setIsOpen(false);
-    if (event) setSubmitEventForm(event);
   }
 
   function openModal() {
+    if (event) setSubmitEventForm(event);
+    setUpdating(false);
     setIsOpen(true);
   }
 
@@ -135,12 +140,12 @@ export default function Topbar({
           tags={tags}
           isOpen={isOpen}
           closeModal={closeModal}
-          deleteConfirmationIsOpen={deleteConfirmationIsOpen}
-          openDeleteConfirmationModal={openDeleteConfirmationModal}
-          closeDeleteConfirmationModal={closeDeleteConfirmationModal}
           submitEventForm={submitEventForm}
           setSubmitEventForm={setSubmitEventForm}
           submitEvent={editEvent}
+          deleteConfirmationIsOpen={deleteConfirmationIsOpen}
+          openDeleteConfirmationModal={openDeleteConfirmationModal}
+          closeDeleteConfirmationModal={closeDeleteConfirmationModal}
           deleteEvent={deleteEventIn}
           updatingDelete={updatingDelete}
           selectedIndex={selectedIndex}

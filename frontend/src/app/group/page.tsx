@@ -2,6 +2,7 @@
 import AuthCheck from "@/components/AuthCheck";
 import GroupBadge from "@/components/event/GroupBadge";
 import EditGroup from "@/components/group/EditGroup";
+import Topbar from "@/components/Topbar";
 import { Path } from "@/helper/Path";
 import { UserContext } from "@/lib/context";
 import { createGroup } from "@/lib/groups";
@@ -40,6 +41,7 @@ export default function Groups() {
 
   return (
     <AuthCheck>
+      <Topbar />
       <div className="mx-6">
         <h1 className="text-2xl mt-6 mb-3">Your Groups</h1>
         <div className="flex flex-wrap gap-2 my-4">
