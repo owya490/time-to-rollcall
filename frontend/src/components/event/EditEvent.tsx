@@ -14,7 +14,7 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import Tag from "./Tag";
 import { EventModel } from "@/models/Event";
 import Loader from "../Loader";
@@ -51,14 +51,14 @@ export default function EditEvent({
   deleteEvent?: () => void;
   updatingDelete?: boolean;
   selectedIndex: number;
-  setSelectedIndex: (i: number) => void;
+  setSelectedIndex: Dispatch<SetStateAction<number>>;
   updating: boolean;
 }) {
   const newEvent = submitEventForm.id === "placeholder";
   const [editTag, setEditTag] = useState<TagModel | null>(null);
 
   function incrementStep() {
-    setSelectedIndex(selectedIndex + 1);
+    setSelectedIndex((prevIndex) => prevIndex + 1);
   }
   return (
     <>
@@ -145,7 +145,7 @@ export default function EditEvent({
                         disabled={!submitEventForm.name}
                       />
                     </TabList>
-                    <TabPanels className="mt-3">
+                    <TabPanels className="mt-3 h-56">
                       <TabPanel>
                         <ul>
                           <DialogTitle
@@ -154,7 +154,7 @@ export default function EditEvent({
                           >
                             {newEvent ? "Create" : "Edit"} Your event.
                           </DialogTitle>
-                          <p className="mt-2 px-12 text-sm text-gray-500">
+                          <p className="mt-3 px-12 text-sm text-gray-500">
                             Start by naming your event. This will be the name
                             displayed for everyone but it can always be changed
                             later.
@@ -162,7 +162,7 @@ export default function EditEvent({
                           <input
                             type="text"
                             autoFocus
-                            className="my-11 w-full rounded-none resize-none text-center border-b border-blue-gray-200 border-t-0 bg-transparent pt-4 font-sans text-md font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
+                            className="mt-11 mb-12 w-full rounded-none resize-none text-center border-b border-blue-gray-200 border-t-0 bg-transparent pt-4 font-sans text-md font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
                             placeholder="Awesome Event"
                             value={submitEventForm.name}
                             onChange={(event) =>
@@ -187,14 +187,10 @@ export default function EditEvent({
                           >
                             Categorise your event.
                           </DialogTitle>
-                          <p className="mt-2 px-8 text-sm text-gray-500">
-                            Attach relevant tags make it easier to organise your
-                            events into categories.
-                          </p>
-                          <p className="mt-7 mb-1 text-xs font-light text-gray-400">
+                          <p className="my-2 text-xs font-light text-gray-400">
                             Add Tags
                           </p>
-                          <div className="flex flex-wrap justify-center">
+                          <div className="flex flex-wrap justify-center h-32 overflow-auto">
                             {tags?.map((t, i) => (
                               <Tag
                                 key={i}
@@ -237,7 +233,7 @@ export default function EditEvent({
                                   width: `${editTag.name.length + 3}ch`,
                                   minWidth: "112px",
                                 }}
-                                className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mx-1 my-1 text-md font-medium text-black"
+                                className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mt-3 text-md font-medium text-black"
                                 value={editTag.name}
                                 onChange={(e) =>
                                   setEditTag({
@@ -247,36 +243,35 @@ export default function EditEvent({
                                 }
                                 autoFocus
                                 onBlur={() => {
-                                  editTag.name.length > 0
-                                    ? addTag(groupId, editTag).then((tag) => {
-                                        setSubmitEventForm({
-                                          ...submitEventForm,
-                                          tags: submitEventForm.tags.concat(
-                                            tag
-                                          ),
-                                        });
-                                        setEditTag(null);
-                                      })
-                                    : setEditTag(null);
-                                }}
-                                onKeyDown={(event) =>
-                                  event.key === "Enter" &&
-                                  addTag(groupId, editTag).then((tag) => {
-                                    setSubmitEventForm({
-                                      ...submitEventForm,
-                                      tags: submitEventForm.tags.concat(tag),
+                                  setEditTag(null);
+                                  if (editTag.name.length > 0) {
+                                    addTag(groupId, editTag).then((tag) => {
+                                      setSubmitEventForm({
+                                        ...submitEventForm,
+                                        tags: submitEventForm.tags.concat(tag),
+                                      });
                                     });
+                                  }
+                                }}
+                                onKeyDown={async (event) => {
+                                  if (event.key === "Enter") {
                                     setEditTag(null);
-                                  })
-                                }
+                                    addTag(groupId, editTag).then((tag) => {
+                                      setSubmitEventForm({
+                                        ...submitEventForm,
+                                        tags: submitEventForm.tags.concat(tag),
+                                      });
+                                    });
+                                  }
+                                }}
                               />
                             ) : (
                               <button
                                 type="button"
-                                className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-md font-medium text-blue-900"
+                                className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mt-2 text-md text-center font-medium text-blue-900"
                                 onClick={() => setEditTag(InitTag)}
                               >
-                                Create Tag
+                                New Tag
                               </button>
                             )}
                           </div>
@@ -290,7 +285,7 @@ export default function EditEvent({
                           >
                             Set the day and time.
                           </DialogTitle>
-                          <div className="flex flex-wrap mt-16 mb-4 justify-between items-center">
+                          <div className="flex flex-wrap mt-16 mb-6 justify-between items-center">
                             <p className="text-xs">Start Time</p>
                             <input
                               type="datetime-local"

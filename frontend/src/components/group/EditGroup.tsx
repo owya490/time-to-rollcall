@@ -108,7 +108,7 @@ export default function EditGroup({
                           Create Tag
                         </button>
                       </div>
-                      <div className="flex flex-wrap h-20 overflow-auto">
+                      <div className="flex flex-wrap h-18 overflow-auto">
                         {tags.map((t, i) => (
                           <div className="flex w-full justify-between" key={i}>
                             <input
