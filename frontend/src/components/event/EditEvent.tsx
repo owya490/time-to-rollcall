@@ -67,9 +67,10 @@ export default function EditEvent({
         deleteEvent &&
         updatingDelete !== undefined && (
           <DeleteEvent
+            name={submitEventForm.name}
             isOpen={deleteConfirmationIsOpen}
             closeModal={closeDeleteConfirmationModal}
-            deleteEvent={deleteEvent}
+            confirm={deleteEvent}
             updating={updatingDelete}
           />
         )}
@@ -102,14 +103,14 @@ export default function EditEvent({
               >
                 <DialogPanel className="rounded-t-3xl bg-white p-6 text-center shadow-xl">
                   <div
-                    className="absolute right-4 top-4 p-2"
+                    className="absolute right-4 top-4 p-2 cursor-pointer"
                     onClick={closeModal}
                   >
                     <XMarkIcon className="w-6 h-6 text-black" />
                   </div>
                   {!newEvent && (
                     <div
-                      className="absolute left-4 top-4 p-2"
+                      className="absolute left-4 top-4 p-2 cursor-pointer"
                       onClick={openDeleteConfirmationModal}
                     >
                       <TrashIcon className="w-6 h-6 text-red-600" />
@@ -122,24 +123,24 @@ export default function EditEvent({
                     <TabList className="flex justify-center space-x-2 rounded-xl p-1.5">
                       <Tab
                         className={({ selected }) =>
-                          selected || selectedIndex >= 1
-                            ? "w-12 h-1 border-white border-1.5 rounded-xl bg-blue-500"
-                            : "w-12 h-1 border-white border-1.5 rounded-xl bg-blue-100"
+                          selected
+                            ? "h-1 w-12 rounded-xl bg-blue-500"
+                            : "h-1 w-12 rounded-xl bg-blue-100"
                         }
                       />
                       <Tab
                         className={({ selected }) =>
-                          selected || selectedIndex >= 2
-                            ? "w-12 h-1 border-white border-1.5 rounded-xl bg-blue-500"
-                            : "w-12 h-1 border-white border-1.5 rounded-xl bg-blue-100"
+                          selected
+                            ? "h-1 w-12 rounded-xl bg-blue-500"
+                            : "h-1 w-12 rounded-xl bg-blue-100"
                         }
                         disabled={!submitEventForm.name}
                       />
                       <Tab
                         className={({ selected }) =>
-                          selected || selectedIndex >= 3
-                            ? "w-12 h-1 border-white border-1.5 rounded-xl bg-blue-500"
-                            : "w-12 h-1 border-white border-1.5 rounded-xl bg-blue-100"
+                          selected
+                            ? "h-1 w-12 rounded-xl bg-blue-500"
+                            : "h-1 w-12 rounded-xl bg-blue-100"
                         }
                         disabled={!submitEventForm.name}
                       />

@@ -127,6 +127,9 @@ export default function Event({
 
   return (
     <AuthCheck>
+      {!toggleEdit && (
+        <div className="fixed top-0 bottom-0 right-0 left-0 opacity-10 bg-gray-400 z-40" />
+      )}
       <Topbar
         setToggleEdit={!happeningNow ? setToggleEdit : undefined}
         toggleEdit={toggleEdit}
@@ -210,19 +213,23 @@ export default function Event({
               }}
             />
           </div>
-          <div
-            id="button"
-            className="fixed z-40 flex justify-center bottom-0 text-center w-full text-gray-700"
-          >
+          <div className="fixed z-40 flex justify-center bottom-0 text-center w-full text-gray-700">
             <button
               type="button"
-              className="text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
+              className={
+                "text-sm py-4 px-1.5 w-full rounded-lg font-light " +
+                (toggleEdit ? "bg-green-200" : "bg-gray-300")
+              }
               onClick={() => {
-                setSelectedMember(InitMember(searchInput));
-                openModal();
+                if (toggleEdit) {
+                  setSelectedMember(InitMember(searchInput));
+                  openModal();
+                } else {
+                  setToggleEdit(true);
+                }
               }}
             >
-              Create and Add New Member
+              {toggleEdit ? "Create and Add New Member" : "Enable Editing"}
             </button>
           </div>
         </>

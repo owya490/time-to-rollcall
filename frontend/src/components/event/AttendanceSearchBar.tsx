@@ -20,16 +20,16 @@ export default function AttendanceSearchBar({
         placeholder={
           !disabled
             ? "Search members"
-            : "Click the pencil icon to enable editing!"
+            : "Click the pencil or the bottom banner to edit!"
         }
         className="w-full placeholder:text-sm placeholder:font-thin placeholder:align-middle outline-none"
         onChange={(e) => {
           setSearchInput(e.target.value);
         }}
       />
-      <div className="cursor-pointer p-0.5">
+      <div className={"p-0.5 " + (disabled ?? "cursor-pointer")}>
         <XCircleIcon
-          className=" w-7 h-7 mr-2 text-gray-500"
+          className="w-7 h-7 mr-2 text-gray-500"
           onClick={() => !disabled && setSearchInput("")}
         />
       </div>

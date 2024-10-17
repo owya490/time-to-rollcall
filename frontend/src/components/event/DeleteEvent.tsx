@@ -10,14 +10,16 @@ import Loader from "../Loader";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function DeleteEvent({
+  name,
   isOpen,
   closeModal,
-  deleteEvent,
+  confirm,
   updating,
 }: {
+  name: string;
   isOpen: boolean;
   closeModal: () => void;
-  deleteEvent: () => void;
+  confirm: () => void;
   updating: boolean;
 }) {
   return (
@@ -62,7 +64,7 @@ export default function DeleteEvent({
                   Are you sure?
                 </DialogTitle>
                 <p className="mt-2 px-12 text-sm text-center text-gray-500">
-                  This event will be gone forever
+                  {name} will be gone forever
                 </p>
                 {updating ? (
                   <div className="flex justify-center items-center">
@@ -80,7 +82,7 @@ export default function DeleteEvent({
                     <button
                       type="button"
                       className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                      onClick={deleteEvent}
+                      onClick={confirm}
                     >
                       Delete
                     </button>
