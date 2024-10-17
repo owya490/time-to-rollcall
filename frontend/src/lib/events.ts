@@ -80,7 +80,8 @@ function convertEventToDocument(groupId: GroupId, event: EventModel) {
   return {
     ...eventWithoutId,
     tags: tags.map((t) => convertTagIdToReference(groupId, t.id)),
-    members: members?.map((m) => convertMemberIdToReference(groupId, m.id)),
+    members:
+      members?.map((m) => convertMemberIdToReference(groupId, m.id)) ?? [],
   };
 }
 

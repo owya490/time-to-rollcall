@@ -45,12 +45,20 @@ export default function Event({
     InitMember("Jane Doe")
   );
   const [toggleEdit, setToggleEdit] = useState(true);
-  const now = new Date();
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    // Update the time every minute
+    const intervalId = setInterval(() => {
+      setTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(intervalId);
+  }, []);
   const happeningNow = event
-    ? inBetween(event.dateStart, now, event.dateEnd)
+    ? inBetween(event.dateStart, time, event.dateEnd)
     : false;
-  const before = event ? now < event.dateStart : false;
-  const after = event ? now > event.dateEnd : false;
+  const before = event ? time < event.dateStart : false;
 
   function closeModal() {
     setIsOpen(false);
