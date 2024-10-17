@@ -199,10 +199,10 @@ export default function EditGroup({
                     </div>
                   )}
                 {/* <div className="my-4">
-                  <p className="text-sm text-gray-900">TODO: Metadata</p>
+                  <p className="text-sm text-gray-900">TODO: Metadata Edit in Group</p>
                   <p className="text-sm text-gray-900">TODO: Remove Tag</p>
-                  <p className="text-sm text-gray-900">TODO: Scroll load</p>
-                  <p className="text-sm text-gray-900">TODO: Sticky</p>
+                  <p className="text-sm text-gray-900">TODO: Scroll load for many members</p>
+                  <p className="text-sm text-gray-900">TODO: Sticky warning</p>
                 </div> */}
                 {updating ? (
                   <div className="flex justify-center items-center">
