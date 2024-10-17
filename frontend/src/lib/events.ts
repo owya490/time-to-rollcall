@@ -77,17 +77,12 @@ export async function deleteEvent(groupId: GroupId, eventId: EventId) {
 
 function convertEventToDocument(groupId: GroupId, event: EventModel) {
   const { id, tags, members, ...eventWithoutId } = event;
-
-  return members
-    ? {
-        ...eventWithoutId,
-        tags: tags.map((t) => convertTagIdToReference(groupId, t.id)),
-        members: members.map((m) => convertMemberIdToReference(groupId, m.id)),
-      }
-    : {
-        ...eventWithoutId,
-        tags: tags.map((t) => convertTagIdToReference(groupId, t.id)),
-      };
+  return {
+    ...eventWithoutId,
+    tags: tags.map((t) => convertTagIdToReference(groupId, t.id)),
+    members:
+      members?.map((m) => convertMemberIdToReference(groupId, m.id)) ?? [],
+  };
 }
 
 export async function addMemberToEvent(

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Path } from "@/helper/Path";
 import LiveBadge from "./LiveBadge";
 import Tag from "./Tag";
+import { useState, useEffect } from "react";
 
 export default function EventComponent({
   event,
@@ -14,10 +15,21 @@ export default function EventComponent({
   groupId: string;
   showButton?: boolean;
 }) {
-  const now = new Date();
-  const happeningNow = inBetween(event.dateStart, now, event.dateEnd);
-  const before = now < event.dateStart;
-  const after = now > event.dateEnd;
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    // Update the time every minute
+    const intervalId = setInterval(() => {
+      setTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+  const happeningNow = event
+    ? inBetween(event.dateStart, time, event.dateEnd)
+    : false;
+  const before = event ? time < event.dateStart : false;
+  const after = time > event.dateEnd;
   return (
     <>
       <div className="flex items-center w-full h-min">

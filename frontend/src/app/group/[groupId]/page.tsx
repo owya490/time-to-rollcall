@@ -31,7 +31,6 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   const [tagsOpen, setTagsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
-
   const [submitEventForm, setSubmitEventForm] = useState<EventModel>(InitEvent);
 
   const [isOpen, setIsOpen] = useState(false);
