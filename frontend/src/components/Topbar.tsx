@@ -127,11 +127,11 @@ export default function Topbar({
 
   function closeGroupModal() {
     setIsOpenGroup(false);
-    if (group) setSubmitGroupForm(group);
-    if (tags) setSubmitTagsForm(tags);
   }
 
   function openGroupModal() {
+    if (group) setSubmitGroupForm(group);
+    if (tags) setSubmitTagsForm(tags);
     setIsOpenGroup(true);
   }
 

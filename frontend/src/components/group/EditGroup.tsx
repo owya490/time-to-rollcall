@@ -66,7 +66,7 @@ export default function EditGroup({
             >
               <DialogPanel className="rounded-t-3xl bg-white p-6 shadow-xl">
                 <div
-                  className="absolute right-4 top-4 p-2"
+                  className="absolute right-4 top-4 p-2 cursor-pointer"
                   onClick={closeModal}
                 >
                   <XMarkIcon className="w-6 h-6 text-black" />
@@ -202,7 +202,6 @@ export default function EditGroup({
                   <p className="text-sm text-gray-900">TODO: Metadata Edit in Group</p>
                   <p className="text-sm text-gray-900">TODO: Remove Tag</p>
                   <p className="text-sm text-gray-900">TODO: Scroll load for many members</p>
-                  <p className="text-sm text-gray-900">TODO: Sticky warning</p>
                 </div> */}
                 {updating ? (
                   <div className="flex justify-center items-center">

@@ -29,8 +29,10 @@ export const getYearString = (year?: string) => {
       return "4th Year";
     case "5":
       return "5th Year";
+    case "6+":
+      return "6th Year+";
     default:
-      return year ? year.toString() + "th Year+" : "Student";
+      return "Member";
   }
 };
 
