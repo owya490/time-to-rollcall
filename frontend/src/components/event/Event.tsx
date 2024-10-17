@@ -18,10 +18,9 @@ export default function EventComponent({
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
-    // Update the time every minute
     const intervalId = setInterval(() => {
       setTime(new Date());
-    }, 60000);
+    }, 1000);
 
     return () => clearInterval(intervalId);
   }, []);

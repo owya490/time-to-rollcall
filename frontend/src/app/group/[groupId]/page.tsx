@@ -48,11 +48,17 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   async function deleteEventIn() {
     setUpdatingDelete(true);
     if (group && submitEventForm) {
-      await deleteEvent(group.id, submitEventForm.id);
-      setSubmitEventForm(InitEvent);
+      promiseToast<void>(
+        deleteEvent(group.id, submitEventForm.id).then(() => {
+          setSubmitEventForm(InitEvent);
+          closeModal();
+          closeDeleteConfirmationModal();
+        }),
+        "Deleting event...",
+        "Event Deleted!",
+        "Could not delete event."
+      );
     }
-    closeModal();
-    closeDeleteConfirmationModal();
   }
 
   const [updatingDelete, setUpdatingDelete] = useState(false);
@@ -74,7 +80,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
     setUpdating(true);
     if (submitEventForm.id === "placeholder") {
       promiseToast<void>(
-        submitEvent(params.groupId, submitEventForm).then(() => {
+        submitEvent(params.groupId, submitEventForm).then((submittedEvent) => {
           const happeningNow = submitEventForm
             ? inBetween(
                 submitEventForm.dateStart,
@@ -95,18 +101,9 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
             closeModal();
           }
         }),
-        "Updating event...",
-        "Event Updated!",
-        "Could not update event."
-      );
-      const submittedEvent = await submitEvent(params.groupId, submitEventForm);
-      router.push(
-        Path.Group +
-          "/" +
-          params.groupId +
-          GroupPath.Event +
-          "/" +
-          submittedEvent.id
+        "Creating event...",
+        "Event Created!",
+        "Could not create event."
       );
     } else {
       promiseToast<void>(

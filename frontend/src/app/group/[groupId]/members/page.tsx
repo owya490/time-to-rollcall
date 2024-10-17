@@ -11,6 +11,7 @@ import EditMember from "@/components/members/EditMember";
 import { createMember, updateMember } from "@/lib/members";
 import { GroupId } from "@/models/Group";
 import Topbar from "@/components/Topbar";
+import { promiseToast } from "@/helper/Toast";
 
 export default function GroupMember({
   params,
@@ -57,9 +58,19 @@ export default function GroupMember({
   async function editMember() {
     setUpdating(true);
     if (selectedMember.id === "placeholder") {
-      await createMember(params.groupId, selectedMember);
+      await promiseToast<MemberModel>(
+        createMember(params.groupId, selectedMember),
+        "Creating Member...",
+        "Member Created!",
+        "Could not create member."
+      );
     } else {
-      await updateMember(params.groupId, selectedMember);
+      await promiseToast<void>(
+        updateMember(params.groupId, selectedMember),
+        "Updating Member...",
+        "Member Updated!",
+        "Could not create member."
+      );
     }
     setUpdating(false);
     closeModal();

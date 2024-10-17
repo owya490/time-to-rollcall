@@ -5,6 +5,7 @@ export function successToast(text: string) {
     duration: 2000,
     position: "top-center",
     style: {
+      marginTop: "70px",
       width: "100%", // This is fine if you want the toast to take up 50% width
       opacity: 0.9, // Slight transparency, if needed
       backdropFilter: "blur(8px)", // Blurred background effect
@@ -21,9 +22,23 @@ export function promiseToast<T>(
   success: string,
   error: string
 ) {
-  return toast.promise<T>(func, {
-    loading,
-    success,
-    error,
-  });
+  return toast.promise<T>(
+    func,
+    {
+      loading,
+      success,
+      error,
+    },
+    {
+      style: {
+        marginTop: "70px",
+        width: "100%", // This is fine if you want the toast to take up 50% width
+        opacity: 0.9, // Slight transparency, if needed
+        backdropFilter: "blur(8px)", // Blurred background effect
+        padding: "8px", // Adds padding for a better layout
+        borderRadius: "10px", // Optional: Rounds the corners
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+      },
+    }
+  );
 }

@@ -19,6 +19,7 @@ import { useContext, useEffect, useState } from "react";
 import { searchForMemberByName } from "services/attendanceService";
 import Topbar from "@/components/Topbar";
 import { inBetween } from "@/helper/Time";
+import { promiseToast } from "@/helper/Toast";
 
 gsap.registerPlugin(Draggable, useGSAP);
 
@@ -46,19 +47,16 @@ export default function Event({
   );
   const [toggleEdit, setToggleEdit] = useState(true);
   const [time, setTime] = useState(new Date());
+  const [happeningNow, setHappeningNow] = useState(false);
 
   useEffect(() => {
     // Update the time every minute
     const intervalId = setInterval(() => {
       setTime(new Date());
-    }, 60000);
+    }, 1000);
 
     return () => clearInterval(intervalId);
   }, []);
-  const happeningNow = event
-    ? inBetween(event.dateStart, time, event.dateEnd)
-    : false;
-  const before = event ? time < event.dateStart : false;
 
   function closeModal() {
     setIsOpen(false);
@@ -71,14 +69,34 @@ export default function Event({
   async function editMember() {
     setUpdating(true);
     if (selectedMember.id === "placeholder") {
-      let newMember = await createMember(params.groupId, selectedMember);
-      await addMemberToEvent(params.groupId, params.eventId, newMember.id);
+      const newMember = await createMember(params.groupId, selectedMember);
+      await promiseToast<void>(
+        addMemberToEvent(params.groupId, params.eventId, newMember.id),
+        "Creating and Adding Member...",
+        "Member Created and Added!",
+        "Could not create and added member."
+      );
     } else {
-      await updateMember(params.groupId, selectedMember);
+      await promiseToast<void>(
+        updateMember(params.groupId, selectedMember),
+        "Updating Member...",
+        "Member Updated!",
+        "Could not update member."
+      );
     }
     setUpdating(false);
     closeModal();
   }
+
+  useEffect(() => {
+    if (event) {
+      const happeningNow = event
+        ? inBetween(event.dateStart, time, event.dateEnd)
+        : false;
+      setHappeningNow(happeningNow);
+      // setToggleEdit(happeningNow || time < event.dateStart);
+    }
+  }, [time, event]);
 
   useEffect(() => {
     if (event && members !== null) {
@@ -105,7 +123,6 @@ export default function Event({
 
       if (loading) {
         setLoading(false);
-        setToggleEdit(happeningNow || before);
       }
     }
     // eslint-disable-next-line
@@ -141,7 +158,11 @@ export default function Event({
         <div className="fixed top-0 bottom-0 right-0 left-0 opacity-10 bg-gray-400 z-40" />
       )}
       <Topbar
-        setToggleEdit={!happeningNow ? setToggleEdit : undefined}
+        setToggleEdit={
+          event && !happeningNow && time > event.dateEnd
+            ? setToggleEdit
+            : undefined
+        }
         toggleEdit={toggleEdit}
       />
       {loading ? (

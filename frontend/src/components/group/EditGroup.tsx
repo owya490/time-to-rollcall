@@ -108,7 +108,7 @@ export default function EditGroup({
                           Create Tag
                         </button>
                       </div>
-                      <div className="flex flex-wrap h-18 overflow-auto">
+                      <div className="flex flex-wrap h-32 border-t-gray-200 border-b-gray-200 border-2 border-l-0 border-r-0 overflow-auto">
                         {tags.map((t, i) => (
                           <div className="flex w-full justify-between" key={i}>
                             <input
@@ -153,7 +153,7 @@ export default function EditGroup({
                               <ListboxOptions
                                 anchor="top"
                                 transition
-                                className="h-52 rounded-xl border border-white/5 bg-gray-200 p-1 focus:outline-none transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
+                                className="h-52 rounded-xl border border-white/5 bg-gray-100 p-1 focus:outline-none transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
                               >
                                 {Object.entries(colourClasses).map(
                                   ([colour, clz], i) => (

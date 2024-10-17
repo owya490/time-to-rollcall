@@ -109,7 +109,12 @@ export default function Topbar({
   async function editGroup() {
     setUpdatingGroup(true);
     if (submitGroupForm && submitTagsForm) {
-      await updateGroup(submitGroupForm, submitTagsForm);
+      await promiseToast<void>(
+        updateGroup(submitGroupForm, submitTagsForm),
+        "Updating Group...",
+        "Group Updated!",
+        "Could not update group."
+      );
     }
     setUpdatingGroup(false);
     closeGroupModal();
