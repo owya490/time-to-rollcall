@@ -3,8 +3,8 @@ import { getYearString, MemberModel } from "@/models/Member";
 import { useGSAP } from "@gsap/react";
 import {
   ArrowRightIcon,
+  ArrowUturnLeftIcon,
   PencilIcon,
-  TrashIcon,
 } from "@heroicons/react/24/outline";
 import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
@@ -268,7 +268,7 @@ function MemberSignInCard({
                 </div>
               ) : (
                 <div className="bg-red-600 h-20 flex w-screen justify-start items-center">
-                  <TrashIcon className="h-5 w-5 ml-8 text-white" />
+                  <ArrowUturnLeftIcon className="h-5 w-5 ml-8 text-white" />
                 </div>
               )
             ) : null}

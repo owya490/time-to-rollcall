@@ -21,6 +21,7 @@ import { GroupId } from "@/models/Group";
 import { convertTagIdToReference } from "./tags";
 import { MemberId } from "@/models/Member";
 import { convertMemberIdToReference } from "./members";
+import { currentYearStr } from "@/helper/Time";
 
 export async function getEvents(groupId: GroupId) {
   const events = await getDocs(
@@ -91,7 +92,17 @@ export async function addMemberToEvent(
   memberId: MemberId
 ) {
   await updateDoc(doc(firestore, "groups", groupId, "events", eventId), {
-    members: arrayUnion(doc(firestore, "groups", groupId, "members", memberId)),
+    members: arrayUnion(
+      doc(
+        firestore,
+        "groups",
+        groupId,
+        "members",
+        currentYearStr,
+        "members",
+        memberId
+      )
+    ),
   });
 }
 
@@ -102,7 +113,15 @@ export async function removeMemberFromEvent(
 ) {
   await updateDoc(doc(firestore, "groups", groupId, "events", eventId), {
     members: arrayRemove(
-      doc(firestore, "groups", groupId, "members", memberId)
+      doc(
+        firestore,
+        "groups",
+        groupId,
+        "members",
+        currentYearStr,
+        "members",
+        memberId
+      )
     ),
   });
 }

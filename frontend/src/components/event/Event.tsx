@@ -78,6 +78,7 @@ export default function EventComponent({
           )}
           <Link
             type="button"
+            onClick={(e) => e.stopPropagation()}
             href={`${Path.Group}/${groupId}/event/${event.id}`}
             className={
               "rounded-3xl text-sm p-1 px-3 " +

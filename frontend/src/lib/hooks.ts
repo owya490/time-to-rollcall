@@ -27,9 +27,10 @@ import {
   where,
 } from "firebase/firestore";
 import { MetadataModel } from "@/models/Metadata";
+import { currentYearStr } from "@/helper/Time";
 
 export function useUserListener() {
-  const [userAuth, loadingAuth] = useAuthState(auth); // Use auth state hook to get userAuth
+  const [userAuth, loadingAuth] = useAuthState(auth);
 
   const id = userAuth?.uid || "placeholder";
   const { data: userData } = useFirestoreDoc<User>(
@@ -93,7 +94,7 @@ export function useMembersListener(
 ) {
   const { data: members } = useFirestoreCol<MemberModel>(
     firestore,
-    `groups/${groupId}/members`,
+    `groups/${groupId}/members/${currentYearStr}/members`,
     user !== null && user?.groups?.includes(groupId ?? "") ? true : false
   );
   return members;
@@ -142,8 +143,6 @@ export function useEventListener(
   groupId: string,
   eventId: string
 ) {
-  const router = useRouter();
-
   const { data: event } = useFirestoreDoc<EventModel>(
     firestore,
     `groups/${groupId}/events`,
@@ -153,16 +152,12 @@ export function useEventListener(
       if (user && !user.groups?.includes(groupId)) {
         await addGroupToUserGroups(groupId, user?.id);
       }
-    },
-    (data) => {
-      if (data === undefined && user) {
-        router.push(Path.Group);
-      }
     }
   );
 
   return event;
 }
+
 const useFirestoreCol = <T>(
   db: Firestore,
   col: string,

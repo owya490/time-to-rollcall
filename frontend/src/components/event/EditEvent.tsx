@@ -18,7 +18,7 @@ import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import Tag from "./Tag";
 import { EventModel } from "@/models/Event";
 import Loader from "../Loader";
-import DeleteEvent from "./DeleteEvent";
+import DeleteConfirmation from "./DeleteEvent";
 import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function EditEvent({
@@ -66,7 +66,7 @@ export default function EditEvent({
         closeDeleteConfirmationModal &&
         deleteEvent &&
         updatingDelete !== undefined && (
-          <DeleteEvent
+          <DeleteConfirmation
             name={submitEventForm.name}
             isOpen={deleteConfirmationIsOpen}
             closeModal={closeDeleteConfirmationModal}

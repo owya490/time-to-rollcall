@@ -19,6 +19,9 @@ export const MembersContext = createContext<MemberModel[] | null | undefined>(
 export const MetadataContext = createContext<
   MetadataModel[] | null | undefined
 >(null);
+export const EventsContext = createContext<EventModel[] | null | undefined>(
+  null
+);
 
 // null = loading
 // undefined = not found

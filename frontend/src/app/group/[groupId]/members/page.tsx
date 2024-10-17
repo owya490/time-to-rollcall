@@ -8,7 +8,7 @@ import { InitMember, MemberModel } from "@/models/Member";
 import { useContext, useEffect, useState } from "react";
 import { searchForMemberByName } from "services/attendanceService";
 import EditMember from "@/components/members/EditMember";
-import { createMember, updateMember } from "@/lib/members";
+import { createMember, deleteMember, updateMember } from "@/lib/members";
 import { GroupId } from "@/models/Group";
 import Topbar from "@/components/Topbar";
 import { promiseToast } from "@/helper/Toast";
@@ -77,6 +77,35 @@ export default function GroupMember({
     setSearchInput("");
   }
 
+  async function deleteMemberIn() {
+    setUpdatingDelete(true);
+    if (group && selectedMember) {
+      await promiseToast<void>(
+        deleteMember(group.id, selectedMember.id),
+        "Deleting Member...",
+        "Member Deleted!",
+        "Could not delete member."
+      );
+    }
+    setIsOpen(false);
+    setDeleteConfirmationIsOpen(false);
+  }
+
+  const [updatingDelete, setUpdatingDelete] = useState(false);
+  const [deleteConfirmationIsOpen, setDeleteConfirmationIsOpen] =
+    useState(false);
+  function closeDeleteConfirmationModal() {
+    setUpdating(false);
+    openModal();
+    setDeleteConfirmationIsOpen(false);
+  }
+
+  function openDeleteConfirmationModal() {
+    setUpdatingDelete(false);
+    closeModal();
+    setDeleteConfirmationIsOpen(true);
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center my-24">
@@ -94,6 +123,11 @@ export default function GroupMember({
         setMember={setSelectedMember}
         submit={editMember}
         updating={updating}
+        deleteConfirmationIsOpen={deleteConfirmationIsOpen}
+        openDeleteConfirmationModal={openDeleteConfirmationModal}
+        closeDeleteConfirmationModal={closeDeleteConfirmationModal}
+        deleteMember={deleteMemberIn}
+        updatingDelete={updatingDelete}
       />
       <h1 className="mx-6 text-2xl mb-6">Members</h1>
       <div className="relative">
@@ -106,7 +140,7 @@ export default function GroupMember({
             />
           </div>
         </div>
-        <div className="absolute z-20 w-full">
+        <div className="z-20 w-full">
           <Members
             members={membersShown ?? []}
             action={(member: MemberModel) => {

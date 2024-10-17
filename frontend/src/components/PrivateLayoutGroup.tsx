@@ -1,5 +1,6 @@
 "use client";
 import {
+  EventsContext,
   GroupContext,
   MembersContext,
   MetadataContext,
@@ -7,6 +8,7 @@ import {
   UserContext,
 } from "@/lib/context";
 import {
+  useEventsListener,
   useGroupListener,
   useMembersListener,
   useMetadataListener,
@@ -26,12 +28,15 @@ export default function PrivateLayoutGroup({
   const group = useGroupListener(user, params.groupId);
   const members = useMembersListener(user, group?.id);
   const metadata = useMetadataListener(user, group?.id);
+  const events = useEventsListener(user, group?.id);
   const tags = useTagsListener(user, group?.id);
   return (
     <GroupContext.Provider value={group}>
       <MembersContext.Provider value={members}>
         <MetadataContext.Provider value={metadata}>
-          <TagsContext.Provider value={tags}>{children}</TagsContext.Provider>
+          <EventsContext.Provider value={events}>
+            <TagsContext.Provider value={tags}>{children}</TagsContext.Provider>
+          </EventsContext.Provider>
         </MetadataContext.Provider>
       </MembersContext.Provider>
     </GroupContext.Provider>

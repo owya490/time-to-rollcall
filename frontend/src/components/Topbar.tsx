@@ -52,12 +52,13 @@ export default function Topbar({
   async function editEvent() {
     setUpdating(true);
     if (group && event) {
-      promiseToast<void>(
-        updateEvent(group.id, submitEventForm).then(() => closeModal()),
+      await promiseToast<void>(
+        updateEvent(group.id, submitEventForm),
         "Updating event...",
         "Event Updated!",
         "Could not update event."
       );
+      closeModal();
     }
   }
 
@@ -77,7 +78,8 @@ export default function Topbar({
       await deleteEvent(group.id, event.id);
       router.push(Path.Group + "/" + group.id);
     }
-    closeModal();
+    setIsOpen(false);
+    setDeleteConfirmationIsOpen(false);
   }
 
   const [updatingDelete, setUpdatingDelete] = useState(false);
@@ -91,11 +93,14 @@ export default function Topbar({
   const [updatingGroup, setUpdatingGroup] = useState(false);
 
   function closeDeleteConfirmationModal() {
+    openModal();
     setDeleteConfirmationIsOpen(false);
   }
 
   function openDeleteConfirmationModal() {
+    closeModal();
     setDeleteConfirmationIsOpen(true);
+    setUpdatingDelete(false);
   }
 
   useEffect(() => {
@@ -138,7 +143,7 @@ export default function Topbar({
     // eslint-disable-next-line
   }, [group, tags]);
   return (
-    <nav className="bg-white flex items-center sticky justify-between px-6 py-6 w-full z-40 top-0 start-0 mb-4">
+    <nav className="bg-white flex items-center sticky justify-between px-6 py-6 w-full z-40 top-0">
       {event && group && tags !== null && (
         <EditEvent
           groupId={group.id}

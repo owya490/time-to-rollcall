@@ -4,7 +4,7 @@ import Botbar from "@/components/Botbar";
 import EventComponent from "@/components/event/Event";
 import EditEvent from "@/components/event/EditEvent";
 import { Filter, InitFilter } from "@/helper/Filter";
-import { GroupContext, TagsContext, UserContext } from "@/lib/context";
+import { EventsContext, GroupContext, TagsContext } from "@/lib/context";
 import { deleteEvent, submitEvent, updateEvent } from "@/lib/events";
 import { EventModel, InitEvent } from "@/models/Event";
 import { useContext, useEffect, useState } from "react";
@@ -14,15 +14,13 @@ import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { GroupPath, Path } from "@/helper/Path";
 import Topbar from "@/components/Topbar";
-import { useEventsListener } from "@/lib/hooks";
 import { promiseToast } from "@/helper/Toast";
 import { inBetween } from "@/helper/Time";
 
 export default function Group({ params }: { params: { groupId: GroupId } }) {
-  const user = useContext(UserContext);
   const group = useContext(GroupContext);
   const tags = useContext(TagsContext);
-  const events = useEventsListener(user, params.groupId);
+  const events = useContext(EventsContext);
   const [showedEvents, setShowedEvents] = useState<EventModel[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -48,17 +46,15 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   async function deleteEventIn() {
     setUpdatingDelete(true);
     if (group && submitEventForm) {
-      promiseToast<void>(
-        deleteEvent(group.id, submitEventForm.id).then(() => {
-          setSubmitEventForm(InitEvent);
-          closeModal();
-          closeDeleteConfirmationModal();
-        }),
-        "Deleting event...",
+      await promiseToast<void>(
+        deleteEvent(group.id, submitEventForm.id),
+        "Deleting Event...",
         "Event Deleted!",
         "Could not delete event."
       );
     }
+    setIsOpen(false);
+    setDeleteConfirmationIsOpen(false);
   }
 
   const [updatingDelete, setUpdatingDelete] = useState(false);
@@ -67,9 +63,11 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
 
   function closeDeleteConfirmationModal() {
     setDeleteConfirmationIsOpen(false);
+    openModal();
   }
 
   function openDeleteConfirmationModal() {
+    closeModal();
     setUpdatingDelete(false);
     setDeleteConfirmationIsOpen(true);
   }
@@ -79,41 +77,39 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   async function editEvent() {
     setUpdating(true);
     if (submitEventForm.id === "placeholder") {
-      promiseToast<void>(
-        submitEvent(params.groupId, submitEventForm).then((submittedEvent) => {
-          const happeningNow = submitEventForm
-            ? inBetween(
-                submitEventForm.dateStart,
-                new Date(),
-                submitEventForm.dateEnd
-              )
-            : false;
-          if (happeningNow) {
-            router.push(
-              Path.Group +
-                "/" +
-                params.groupId +
-                GroupPath.Event +
-                "/" +
-                submittedEvent.id
-            );
-          } else {
-            closeModal();
-          }
-        }),
+      const submittedEvent = await promiseToast<EventModel>(
+        submitEvent(params.groupId, submitEventForm),
         "Creating event...",
         "Event Created!",
         "Could not create event."
       );
+      const happeningNow = submitEventForm
+        ? inBetween(
+            submitEventForm.dateStart,
+            new Date(),
+            submitEventForm.dateEnd
+          )
+        : false;
+      if (happeningNow) {
+        router.push(
+          Path.Group +
+            "/" +
+            params.groupId +
+            GroupPath.Event +
+            "/" +
+            submittedEvent.id
+        );
+      } else {
+        closeModal();
+      }
     } else {
-      promiseToast<void>(
-        updateEvent(params.groupId, submitEventForm).then(() => {
-          closeModal();
-        }),
+      await promiseToast<void>(
+        updateEvent(params.groupId, submitEventForm),
         "Updating event...",
         "Event Updated!",
         "Could not update event."
       );
+      closeModal();
     }
   }
 

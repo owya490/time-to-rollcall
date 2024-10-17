@@ -50,3 +50,6 @@ export function convertToDateTimeLocalString(date: Date) {
 
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
+
+export const currentYear = new Date().getFullYear();
+export const currentYearStr = new Date().getFullYear().toString();

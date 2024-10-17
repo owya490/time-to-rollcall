@@ -1,6 +1,5 @@
 "use client";
 import { getYearString, MemberModel } from "@/models/Member";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { FC, memo, useContext } from "react";
 import WOMAN_FACE_PNG from "../../../public/face-woman-profile.png";
@@ -32,49 +31,38 @@ function MemberCard({ member, action }: MemberCardProps) {
   const year = metadata?.find((m) => m.key === "year");
   const campus = metadata?.find((m) => m.key === "campus");
   return (
-    <div className="relative overflow-hidden cursor-pointer">
-      <div className="relative z-30">
-        <div className={"flex h-20 w-full"}>
-          <div
-            className="flex w-screen px-6 bg-white items-center"
-            onClick={action}
-          >
-            <Image
-              src={WOMAN_FACE_PNG}
-              height={0}
-              width={0}
-              alt="woman-face"
-              className="h-7 w-7 mr-4"
-            />
-            <div>
-              <h3 className="font-light mb-2">{member.name}</h3>
-              <p className="text-xs text-gray-500 font-extralight">
-                {year &&
-                  member.metadata?.[year.id] &&
-                  getYearString(year.values[member.metadata?.[year.id]])}{" "}
-                •{" "}
-                {role &&
-                  member.metadata?.[role.id] &&
-                  role.values[member.metadata?.[role.id]]}
-              </p>
-            </div>
-            <div className="ml-auto">
-              <GroupBadge
-                campus={
-                  campus &&
-                  member.metadata?.[campus.id] &&
-                  campus.values[member.metadata?.[campus.id]]
-                }
-                className="w-14 text-sm"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+    <div
+      className="relative z-30 overflow-hidden cursor-pointer flex h-20 w-full px-6 bg-white items-center hover:bg-gray-100"
+      onClick={action}
+    >
+      <Image
+        src={WOMAN_FACE_PNG}
+        height={0}
+        width={0}
+        alt="woman-face"
+        className="h-7 w-7 mr-4"
+      />
       <div>
-        <div className="bg-red-600 h-20 top-0 w-full absolute flex justify-center items-center">
-          <ArrowRightIcon className="h-5 ml-auto mr-8 text-white" />
-        </div>
+        <h3 className="font-light mb-2">{member.name}</h3>
+        <p className="text-xs text-gray-500 font-extralight">
+          {year &&
+            member.metadata?.[year.id] &&
+            getYearString(year.values[member.metadata?.[year.id]])}{" "}
+          •{" "}
+          {role &&
+            member.metadata?.[role.id] &&
+            role.values[member.metadata?.[role.id]]}
+        </p>
+      </div>
+      <div className="ml-auto">
+        <GroupBadge
+          campus={
+            campus &&
+            member.metadata?.[campus.id] &&
+            campus.values[member.metadata?.[campus.id]]
+          }
+          className="w-14 text-sm"
+        />
       </div>
     </div>
   );

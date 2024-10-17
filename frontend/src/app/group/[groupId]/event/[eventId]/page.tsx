@@ -8,7 +8,7 @@ import Loader from "@/components/Loader";
 import EditMember from "@/components/members/EditMember";
 import { EventContext, MembersContext } from "@/lib/context";
 import { addMemberToEvent, removeMemberFromEvent } from "@/lib/events";
-import { createMember, updateMember } from "@/lib/members";
+import { createMember, deleteMember, updateMember } from "@/lib/members";
 import { EventId } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import { InitMember, MemberModel } from "@/models/Member";
@@ -18,7 +18,6 @@ import Draggable from "gsap/dist/Draggable";
 import { useContext, useEffect, useState } from "react";
 import { searchForMemberByName } from "services/attendanceService";
 import Topbar from "@/components/Topbar";
-import { inBetween } from "@/helper/Time";
 import { promiseToast } from "@/helper/Toast";
 
 gsap.registerPlugin(Draggable, useGSAP);
@@ -47,7 +46,6 @@ export default function Event({
   );
   const [toggleEdit, setToggleEdit] = useState(true);
   const [time, setTime] = useState(new Date());
-  const [happeningNow, setHappeningNow] = useState(false);
 
   useEffect(() => {
     // Update the time every minute
@@ -89,16 +87,6 @@ export default function Event({
   }
 
   useEffect(() => {
-    if (event) {
-      const happeningNow = event
-        ? inBetween(event.dateStart, time, event.dateEnd)
-        : false;
-      setHappeningNow(happeningNow);
-      // setToggleEdit(happeningNow || time < event.dateStart);
-    }
-  }, [time, event]);
-
-  useEffect(() => {
     if (event && members !== null) {
       let membersNotSignedIn =
         members?.filter(
@@ -123,6 +111,7 @@ export default function Event({
 
       if (loading) {
         setLoading(false);
+        setToggleEdit(time < event.dateEnd);
       }
     }
     // eslint-disable-next-line
@@ -152,6 +141,35 @@ export default function Event({
     // eslint-disable-next-line
   }, [membersNotSignedIn]);
 
+  async function deleteMemberIn() {
+    setUpdatingDelete(true);
+    if (params.groupId && selectedMember) {
+      await promiseToast<void>(
+        deleteMember(params.groupId, selectedMember.id),
+        "Deleting Member...",
+        "Member Deleted!",
+        "Could not delete member."
+      );
+    }
+    setIsOpen(false);
+    setDeleteConfirmationIsOpen(false);
+  }
+
+  const [updatingDelete, setUpdatingDelete] = useState(false);
+  const [deleteConfirmationIsOpen, setDeleteConfirmationIsOpen] =
+    useState(false);
+  function closeDeleteConfirmationModal() {
+    setUpdating(false);
+    openModal();
+    setDeleteConfirmationIsOpen(false);
+  }
+
+  function openDeleteConfirmationModal() {
+    setUpdatingDelete(false);
+    closeModal();
+    setDeleteConfirmationIsOpen(true);
+  }
+
   return (
     <AuthCheck>
       {!toggleEdit && (
@@ -159,9 +177,7 @@ export default function Event({
       )}
       <Topbar
         setToggleEdit={
-          event && !happeningNow && time > event.dateEnd
-            ? setToggleEdit
-            : undefined
+          event && time > event.dateEnd ? setToggleEdit : undefined
         }
         toggleEdit={toggleEdit}
       />
@@ -178,6 +194,11 @@ export default function Event({
             setMember={setSelectedMember}
             submit={editMember}
             updating={updating}
+            deleteConfirmationIsOpen={deleteConfirmationIsOpen}
+            openDeleteConfirmationModal={openDeleteConfirmationModal}
+            closeDeleteConfirmationModal={closeDeleteConfirmationModal}
+            deleteMember={deleteMemberIn}
+            updatingDelete={updatingDelete}
           />
           <div className="mx-4">
             <div className="mb-3">

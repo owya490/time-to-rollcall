@@ -9,7 +9,7 @@ import { Fragment } from "react";
 import Loader from "../Loader";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-export default function DeleteEvent({
+export default function DeleteConfirmation({
   name,
   isOpen,
   closeModal,
@@ -67,7 +67,7 @@ export default function DeleteEvent({
                   {name} will be gone forever
                 </p>
                 {updating ? (
-                  <div className="flex justify-center items-center">
+                  <div className="flex justify-center items-center mt-16">
                     <Loader show />
                   </div>
                 ) : (

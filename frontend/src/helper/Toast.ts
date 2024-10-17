@@ -5,12 +5,11 @@ export function successToast(text: string) {
     duration: 2000,
     position: "top-center",
     style: {
-      marginTop: "70px",
-      width: "100%", // This is fine if you want the toast to take up 50% width
-      opacity: 0.9, // Slight transparency, if needed
-      backdropFilter: "blur(8px)", // Blurred background effect
-      padding: "8px", // Adds padding for a better layout
-      borderRadius: "10px", // Optional: Rounds the corners
+      width: "100%",
+      opacity: 0.9,
+      backdropFilter: "blur(8px)",
+      padding: "8px",
+      borderRadius: "10px",
       backgroundColor: "rgba(255, 255, 255, 0.8)",
     },
   });
@@ -31,12 +30,11 @@ export function promiseToast<T>(
     },
     {
       style: {
-        marginTop: "70px",
-        width: "100%", // This is fine if you want the toast to take up 50% width
-        opacity: 0.9, // Slight transparency, if needed
-        backdropFilter: "blur(8px)", // Blurred background effect
-        padding: "8px", // Adds padding for a better layout
-        borderRadius: "10px", // Optional: Rounds the corners
+        width: "100%",
+        opacity: 0.9,
+        backdropFilter: "blur(8px)",
+        padding: "8px",
+        borderRadius: "10px",
         backgroundColor: "rgba(255, 255, 255, 0.8)",
       },
     }
