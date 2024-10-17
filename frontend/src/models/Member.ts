@@ -9,6 +9,7 @@ export type MemberId = string;
 export interface MemberModel {
   id: MemberId;
   name: string;
+  email?: string;
   metadata?: MemberMetadataModel;
 }
 
@@ -20,19 +21,19 @@ export const InitMember = (name: string): MemberModel => ({
 export const getYearString = (year?: string) => {
   switch (year) {
     case "1":
-      return "1st Year";
+      return "1st Year • ";
     case "2":
-      return "2nd Year";
+      return "2nd Year • ";
     case "3":
-      return "3rd Year";
+      return "3rd Year • ";
     case "4":
-      return "4th Year";
+      return "4th Year • ";
     case "5":
-      return "5th Year";
+      return "5th Year • ";
     case "6+":
-      return "6th Year+";
+      return "6th Year+ • ";
     default:
-      return "Member";
+      return "Member • ";
   }
 };
 

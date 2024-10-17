@@ -145,7 +145,8 @@ export default function EditMember({
                             <div className="flex justify-between items-center">
                               <ListboxButton className="block w-full appearance-none rounded-lg bg-white/5 text-left text-lg font-semibold focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25">
                                 {member.metadata?.[m.id]
-                                  ? m.values[member.metadata?.[m.id]]
+                                  ? m.values[member.metadata?.[m.id]] ??
+                                    member.metadata?.[m.id]
                                   : "Unselected"}
                               </ListboxButton>
                               <ChevronUpIcon
