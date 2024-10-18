@@ -149,24 +149,27 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
             />
           )}
           <h1 className="mx-6 text-2xl mb-16">Events</h1>
-          {showedEvents.map((event, i) => (
-            <div key={i}>
-              <hr className="h-[1px] border-t-0 bg-neutral-300" />
-              <div
-                className="cursor-pointer px-6 py-6 hover:bg-gray-100"
-                onClick={() => {
-                  setSubmitEventForm(event);
-                  openModal();
-                }}
-              >
-                <EventComponent
-                  event={event}
-                  groupId={params.groupId}
-                  showButton
-                />
+          {group &&
+            showedEvents.map((event, i) => (
+              <div key={i}>
+                <hr className="h-[1px] border-t-0 bg-neutral-300" />
+                <div
+                  className="cursor-pointer px-6 py-6 hover:bg-gray-100"
+                  onClick={() =>
+                    router.push(`${Path.Group}/${group.id}/event/${event.id}`)
+                  }
+                >
+                  <EventComponent
+                    event={event}
+                    showButton
+                    openModal={() => {
+                      setSubmitEventForm(event);
+                      openModal();
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
           {showedEvents.length > 0 && (
             <hr className="h-[1px] border-t-0 bg-neutral-300" />
           )}

@@ -1,18 +1,16 @@
 import { EventModel } from "@/models/Event";
 import { hoursAndMinutes, inBetween, sameDay, toddMMYYYY } from "@/helper/Time";
-import Link from "next/link";
-import { Path } from "@/helper/Path";
 import LiveBadge from "./LiveBadge";
 import Tag from "./Tag";
 import { useState, useEffect } from "react";
 
 export default function EventComponent({
   event,
-  groupId,
+  openModal,
   showButton,
 }: {
   event: EventModel;
-  groupId: string;
+  openModal?: () => void;
   showButton?: boolean;
 }) {
   const [time, setTime] = useState(new Date());
@@ -76,21 +74,16 @@ export default function EventComponent({
               ATTENDANCE: {event.members?.length ?? 0}
             </p>
           )}
-          <Link
+          <button
             type="button"
-            onClick={(e) => e.stopPropagation()}
-            href={`${Path.Group}/${groupId}/event/${event.id}`}
-            className={
-              "rounded-3xl text-sm p-1 px-3 " +
-              (happeningNow
-                ? "bg-green-50 text-green-500 border-2 border-green-500 hover:bg-green-200"
-                : "bg-white border-2 border-black hover:bg-gray-300")
-            }
+            onClick={(e) => {
+              e.stopPropagation();
+              openModal?.();
+            }}
+            className="rounded-3xl text-sm p-1 px-3 bg-white border-2 border-gray-600 text-gray-600 hover:bg-gray-300"
           >
-            {happeningNow && "Check-in"}
-            {before && "Early Check-in"}
-            {after && "View Attendance"}
-          </Link>
+            Edit
+          </button>
         </div>
       )}
     </>
