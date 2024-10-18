@@ -243,6 +243,7 @@ export default function EditGroup({
                   <p className="text-sm text-gray-900">TODO: members automate going onto new year</p>
                   <p className="text-sm text-gray-900">TODO: Non-select metadata fields</p>
                   <p className="text-sm text-gray-900">TODO: bottom fixed position not working in iphone</p>
+                  <p className="text-sm text-gray-900">TODO: Display Graph/Data? - Daniel Lee</p>
                 </div> */}
                   {updating ? (
                     <div className="flex justify-center items-center">

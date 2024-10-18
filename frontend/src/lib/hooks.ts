@@ -75,14 +75,11 @@ export function useGroupListener(
 }
 
 export function useGroupsListener(user: User | null | undefined) {
-  const query = user
-    ? where(documentId(), "in", user.groups ?? ["placeholder"])
-    : where(documentId(), "==", null);
   const { data: groups } = useFirestoreCol<GroupModel>(
     firestore,
     "groups",
     user !== null,
-    query
+    where(documentId(), "in", user?.groups ?? ["placeholder"])
   );
 
   return groups;
@@ -95,7 +92,7 @@ export function useMembersListener(
   const { data: members } = useFirestoreCol<MemberModel>(
     firestore,
     `groups/${groupId}/members/${currentYearStr}/members`,
-    user !== null && user?.groups?.includes(groupId ?? "") ? true : false
+    user !== null && groupId && user?.groups?.includes(groupId) ? true : false
   );
   return members;
 }
@@ -107,7 +104,7 @@ export function useEventsListener(
   const { data: events } = useFirestoreCol<EventModel>(
     firestore,
     `groups/${groupId}/events`,
-    user !== null && user?.groups?.includes(groupId ?? "") ? true : false,
+    user !== null && groupId && user?.groups?.includes(groupId) ? true : false,
     undefined,
     orderBy("dateEnd", "desc")
   );
@@ -121,7 +118,7 @@ export function useMetadataListener(
   const { data: metadata } = useFirestoreCol<MetadataModel>(
     firestore,
     `groups/${groupId}/metadata`,
-    user !== null && user?.groups?.includes(groupId ?? "") ? true : false
+    user !== null && groupId && user?.groups?.includes(groupId) ? true : false
   );
   return metadata;
 }
@@ -133,7 +130,7 @@ export function useTagsListener(
   const { data: tags } = useFirestoreCol<MemberModel>(
     firestore,
     `groups/${groupId}/tags`,
-    user !== null && user?.groups?.includes(groupId ?? "") ? true : false
+    user !== null && groupId && user?.groups?.includes(groupId) ? true : false
   );
   return tags;
 }
