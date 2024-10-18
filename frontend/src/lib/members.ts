@@ -49,7 +49,10 @@ export async function deleteMember(groupId: GroupId, memberId: MemberId) {
 }
 
 function convertMemberToDocument(member: MemberModel) {
-  const { id, ...memberWithoutId } = member;
+  const { id, metadata, ...memberWithoutId } = member;
+  if (metadata) {
+    return { ...memberWithoutId, metadata };
+  }
   return memberWithoutId;
 }
 
