@@ -3,7 +3,7 @@ import AuthCheck from "@/components/AuthCheck";
 import AttendanceSearchBar from "@/components/event/AttendanceSearchBar";
 import Members from "@/components/members/Members";
 import Loader from "@/components/Loader";
-import { GroupContext, MembersContext } from "@/lib/context";
+import { GroupContext, MembersContext, MetadataContext } from "@/lib/context";
 import { InitMember, MemberModel } from "@/models/Member";
 import { useContext, useEffect, useState } from "react";
 import { searchForMemberByName } from "services/attendanceService";
@@ -12,6 +12,7 @@ import { createMember, deleteMember, updateMember } from "@/lib/members";
 import { GroupId } from "@/models/Group";
 import Topbar from "@/components/Topbar";
 import { promiseToast } from "@/helper/Toast";
+import { MetadataSelectModel } from "@/models/Metadata";
 
 export default function GroupMember({
   params,
@@ -22,8 +23,9 @@ export default function GroupMember({
   const [searchInput, setSearchInput] = useState<string>("");
   const members = useContext(MembersContext);
   const group = useContext(GroupContext);
+  const metadata = useContext(MetadataContext);
   const [selectedMember, setSelectedMember] = useState<MemberModel>(
-    InitMember("Jane Doe")
+    InitMember("")
   );
   const [membersShown, setMembersShown] = useState<MemberModel[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -57,20 +59,22 @@ export default function GroupMember({
 
   async function editMember() {
     setUpdating(true);
-    if (selectedMember.id === "placeholder") {
-      await promiseToast<MemberModel>(
-        createMember(params.groupId, selectedMember),
-        "Creating Member...",
-        "Member Created!",
-        "Could not create member."
-      );
-    } else {
-      await promiseToast<void>(
-        updateMember(params.groupId, selectedMember),
-        "Updating Member...",
-        "Member Updated!",
-        "Could not create member."
-      );
+    if (selectedMember) {
+      if (selectedMember.id === "placeholder") {
+        await promiseToast<MemberModel>(
+          createMember(params.groupId, selectedMember),
+          "Creating Member...",
+          "Member Created!",
+          "Could not create member."
+        );
+      } else {
+        await promiseToast<void>(
+          updateMember(params.groupId, selectedMember),
+          "Updating Member...",
+          "Member Updated!",
+          "Could not create member."
+        );
+      }
     }
     setUpdating(false);
     closeModal();
@@ -105,6 +109,14 @@ export default function GroupMember({
     closeModal();
     setDeleteConfirmationIsOpen(true);
   }
+
+  const campusValueId = Object.entries(
+    (
+      metadata?.find((m) => m.key === "campus" && m.type === "select") as
+        | MetadataSelectModel
+        | undefined
+    )?.values ?? {}
+  ).find(([_, v]) => v === group?.name)?.[0];
 
   if (loading) {
     return (
@@ -155,7 +167,14 @@ export default function GroupMember({
           type="button"
           className="text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
           onClick={() => {
-            setSelectedMember(InitMember(searchInput));
+            setSelectedMember(
+              InitMember(
+                searchInput,
+                metadata?.find((m) => m.key === "campus" && m.type === "select")
+                  ?.id,
+                campusValueId
+              )
+            );
             openModal();
           }}
         >

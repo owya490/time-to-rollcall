@@ -30,13 +30,13 @@ function MemberCard({ member, action }: MemberCardProps) {
   const metadata = useContext(MetadataContext);
   const role = metadata?.find(
     (m) => m.key === "role" && m.type === "select"
-  ) as MetadataSelectModel;
+  ) as MetadataSelectModel | undefined;
   const year = metadata?.find(
     (m) => m.key === "year" && m.type === "select"
-  ) as MetadataSelectModel;
+  ) as MetadataSelectModel | undefined;
   const campus = metadata?.find(
     (m) => m.key === "campus" && m.type === "select"
-  ) as MetadataSelectModel;
+  ) as MetadataSelectModel | undefined;
 
   return (
     <div

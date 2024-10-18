@@ -57,13 +57,13 @@ function MemberSignInCard({
   const metadata = useContext(MetadataContext);
   const role = metadata?.find(
     (m) => m.key === "role" && m.type === "select"
-  ) as MetadataSelectModel;
+  ) as MetadataSelectModel | undefined;
   const year = metadata?.find(
     (m) => m.key === "year" && m.type === "select"
-  ) as MetadataSelectModel;
+  ) as MetadataSelectModel | undefined;
   const campus = metadata?.find(
     (m) => m.key === "campus" && m.type === "select"
-  ) as MetadataSelectModel;
+  ) as MetadataSelectModel | undefined;
   const selectedRef = useRef(false);
   const editRef = useRef(false);
   const id = member.id;

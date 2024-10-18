@@ -138,7 +138,9 @@ export default function EditMember({
                             type="text"
                             autoFocus
                             className="w-full rounded-none resize-none border-t-0 bg-transparent font-sans text-lg font-semibold text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
-                            placeholder="z5312345"
+                            placeholder={
+                              m.key === "zID" ? "z5312345" : "Placeholder"
+                            }
                             value={member.metadata?.[m.id]}
                             onChange={(e) =>
                               setMember({

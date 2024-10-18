@@ -13,10 +13,20 @@ export interface MemberModel {
   metadata?: MemberMetadataModel;
 }
 
-export const InitMember = (name: string): MemberModel => ({
-  id: "placeholder",
-  name,
-});
+export const InitMember = (
+  name: string,
+  metadataKey?: MetadataModelId,
+  metadataValue?: MetadataValueId | string
+): MemberModel => {
+  return {
+    id: "placeholder",
+    name,
+    metadata:
+      metadataKey && metadataValue
+        ? { [metadataKey]: metadataValue }
+        : undefined,
+  };
+};
 
 export const getYearString = (year?: string) => {
   switch (year) {
