@@ -202,7 +202,7 @@ export default function Event({
           />
           <div className="mx-4">
             <div className="mb-3">
-              <EventComponent event={event} groupId={groupId} />
+              <EventComponent event={event} />
             </div>
             <AttendanceSearchBar
               disabled={!toggleEdit}
