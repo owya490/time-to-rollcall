@@ -19,9 +19,7 @@ export default function GroupAdmin() {
     // eslint-disable-next-line
   }, [user]);
 
-  const addMembers = async () => {
-    console.log("DONE");
-  };
+  const addMembers = async () => {};
 
   return (
     user && (

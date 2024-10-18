@@ -51,6 +51,7 @@ export default function EditGroup({
         closeModal={() => setDeleteConfirmationIsOpen(false)}
         confirm={() => {
           if (tags && setTags && deleteTag && setDeleteTags) {
+            setDeleteTags((prevTags) => prevTags.concat(deleteTag));
             setTags([...tags.filter((t) => t.id !== deleteTag.id)]);
             setDeleteConfirmationIsOpen(false);
           }

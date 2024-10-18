@@ -282,7 +282,9 @@ function MemberSignInCard({
             <div className="bg-blue-600 h-20 top-0 w-full absolute flex justify-center items-center"></div>
           </div>
         ) : (
-          <div className="bg-red-600 h-20 top-0 w-full absolute flex justify-center items-center"></div>
+          <div className="-z-10">
+            <div className="bg-red-600 h-20 top-0 w-full absolute flex justify-center items-center"></div>
+          </div>
         )
       ) : (
         <></>
