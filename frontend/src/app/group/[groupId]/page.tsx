@@ -115,6 +115,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
 
   useEffect(() => {
     if (group && events) {
+      setSubmitEventForm(InitEvent(group?.name));
       setShowedEvents(events);
       setLoading(false);
     }
@@ -194,7 +195,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
               setFilteredTags(tagIds);
             }}
             openModal={() => {
-              setSubmitEventForm(InitEvent);
+              setSubmitEventForm(InitEvent(group?.name));
               openModal();
             }}
             tags={tags ?? []}

@@ -237,14 +237,6 @@ export default function EditGroup({
                       </div>
                     </div>
                   )}
-                  {/* <div className="my-4">
-                  <p className="text-sm text-gray-900">TODO: Metadata Edit in Group</p>
-                  <p className="text-sm text-gray-900">TODO: Scroll load for many members</p>
-                  <p className="text-sm text-gray-900">TODO: members automate going onto new year</p>
-                  <p className="text-sm text-gray-900">TODO: Non-select metadata fields</p>
-                  <p className="text-sm text-gray-900">TODO: bottom fixed position not working in iphone</p>
-                  <p className="text-sm text-gray-900">TODO: Display Graph/Data? - Daniel Lee</p>
-                </div> */}
                   {updating ? (
                     <div className="flex justify-center items-center">
                       <Loader show />
