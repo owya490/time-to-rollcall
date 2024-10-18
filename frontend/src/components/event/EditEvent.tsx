@@ -67,7 +67,7 @@ export default function EditEvent({
         deleteEvent &&
         updatingDelete !== undefined && (
           <DeleteConfirmation
-            name={submitEventForm.name}
+            description={submitEventForm.name + " will be deleted forever"}
             isOpen={deleteConfirmationIsOpen}
             closeModal={closeDeleteConfirmationModal}
             confirm={deleteEvent}

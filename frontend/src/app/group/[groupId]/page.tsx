@@ -1,21 +1,20 @@
 "use client";
-import AuthCheck from "@/components/AuthCheck";
 import Botbar from "@/components/Botbar";
-import EventComponent from "@/components/event/Event";
+import Loader from "@/components/Loader";
+import Topbar from "@/components/Topbar";
 import EditEvent from "@/components/event/EditEvent";
+import EventComponent from "@/components/event/Event";
 import { Filter, InitFilter } from "@/helper/Filter";
+import { GroupPath, Path } from "@/helper/Path";
+import { inBetween } from "@/helper/Time";
+import { promiseToast } from "@/helper/Toast";
 import { EventsContext, GroupContext, TagsContext } from "@/lib/context";
 import { deleteEvent, submitEvent, updateEvent } from "@/lib/events";
 import { EventModel, InitEvent } from "@/models/Event";
-import { useContext, useEffect, useState } from "react";
 import { GroupId } from "@/models/Group";
 import { TagId } from "@/models/Tag";
-import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
-import { GroupPath, Path } from "@/helper/Path";
-import Topbar from "@/components/Topbar";
-import { promiseToast } from "@/helper/Toast";
-import { inBetween } from "@/helper/Time";
+import { useContext, useEffect, useState } from "react";
 
 export default function Group({ params }: { params: { groupId: GroupId } }) {
   const group = useContext(GroupContext);
@@ -122,7 +121,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   }, [group, events, params.groupId]);
 
   return (
-    <AuthCheck>
+    <>
       <Topbar />
       {loading ? (
         <div className="flex justify-center items-center my-24">
@@ -204,6 +203,6 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
           />
         </>
       )}
-    </AuthCheck>
+    </>
   );
 }

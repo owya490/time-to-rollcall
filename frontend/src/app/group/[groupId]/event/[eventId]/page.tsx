@@ -1,11 +1,12 @@
 "use client";
-import AuthCheck from "@/components/AuthCheck";
-import EventComponent from "@/components/event/Event";
+import Loader from "@/components/Loader";
+import Topbar from "@/components/Topbar";
 import AttendanceSearchBar from "@/components/event/AttendanceSearchBar";
 import AttendanceSignedIn from "@/components/event/AttendanceSignedIn";
 import AttendanceSuggested from "@/components/event/AttendanceSuggested";
-import Loader from "@/components/Loader";
+import EventComponent from "@/components/event/Event";
 import EditMember from "@/components/members/EditMember";
+import { promiseToast } from "@/helper/Toast";
 import {
   EventContext,
   GroupContext,
@@ -17,14 +18,12 @@ import { createMember, deleteMember, updateMember } from "@/lib/members";
 import { EventId } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import { InitMember, MemberModel } from "@/models/Member";
+import { MetadataSelectModel } from "@/models/Metadata";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
 import { useContext, useEffect, useState } from "react";
 import { searchForMemberByName } from "services/attendanceService";
-import Topbar from "@/components/Topbar";
-import { promiseToast } from "@/helper/Toast";
-import { MetadataSelectModel } from "@/models/Metadata";
 
 gsap.registerPlugin(Draggable, useGSAP);
 
@@ -190,7 +189,7 @@ export default function Event({
   }
 
   return (
-    <AuthCheck>
+    <>
       {!toggleEdit && (
         <div className="fixed top-0 bottom-0 right-0 left-0 opacity-10 bg-gray-400 z-40" />
       )}
@@ -335,6 +334,6 @@ export default function Event({
       ) : (
         <></>
       )}
-    </AuthCheck>
+    </>
   );
 }

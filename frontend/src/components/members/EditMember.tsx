@@ -56,7 +56,7 @@ export default function EditMember({
         deleteMember &&
         updatingDelete !== undefined && (
           <DeleteConfirmation
-            name={member.name}
+            description={member.name + " will be deleted forever"}
             isOpen={deleteConfirmationIsOpen}
             closeModal={closeDeleteConfirmationModal}
             confirm={deleteMember}

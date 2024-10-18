@@ -1,5 +1,4 @@
 "use client";
-import AuthCheck from "@/components/AuthCheck";
 import Topbar from "@/components/Topbar";
 import { Path } from "@/helper/Path";
 import { UserContext } from "@/lib/context";
@@ -23,7 +22,7 @@ export default function GroupAdmin() {
 
   return (
     user && (
-      <AuthCheck>
+      <>
         <Topbar />
         <div className="mx-6">
           <h1 className="text-2xl text-gray-700 mb-4">Admin Page</h1>
@@ -35,7 +34,7 @@ export default function GroupAdmin() {
             Add all leaders
           </button>
         </div>
-      </AuthCheck>
+      </>
     )
   );
 }

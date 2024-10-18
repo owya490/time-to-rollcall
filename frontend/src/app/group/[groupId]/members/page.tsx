@@ -1,18 +1,17 @@
 "use client";
-import AuthCheck from "@/components/AuthCheck";
-import AttendanceSearchBar from "@/components/event/AttendanceSearchBar";
-import Members from "@/components/members/Members";
 import Loader from "@/components/Loader";
-import { GroupContext, MembersContext, MetadataContext } from "@/lib/context";
-import { InitMember, MemberModel } from "@/models/Member";
-import { useContext, useEffect, useState } from "react";
-import { searchForMemberByName } from "services/attendanceService";
+import Topbar from "@/components/Topbar";
+import AttendanceSearchBar from "@/components/event/AttendanceSearchBar";
 import EditMember from "@/components/members/EditMember";
+import Members from "@/components/members/Members";
+import { promiseToast } from "@/helper/Toast";
+import { GroupContext, MembersContext, MetadataContext } from "@/lib/context";
 import { createMember, deleteMember, updateMember } from "@/lib/members";
 import { GroupId } from "@/models/Group";
-import Topbar from "@/components/Topbar";
-import { promiseToast } from "@/helper/Toast";
+import { InitMember, MemberModel } from "@/models/Member";
 import { MetadataSelectModel } from "@/models/Metadata";
+import { useContext, useEffect, useState } from "react";
+import { searchForMemberByName } from "services/attendanceService";
 
 export default function GroupMember({
   params,
@@ -118,7 +117,7 @@ export default function GroupMember({
     );
   }
   return (
-    <AuthCheck>
+    <>
       <Topbar />
       <EditMember
         isOpen={isOpen}
@@ -179,6 +178,6 @@ export default function GroupMember({
           Create New Member
         </button>
       </div>
-    </AuthCheck>
+    </>
   );
 }

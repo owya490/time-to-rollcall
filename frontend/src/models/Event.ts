@@ -41,11 +41,11 @@ export const InitEvent = (campus?: string): EventModel => {
 
   // Set the time for 5 PM (17:00)
   const dateStart = new Date(nextWeeklyMeetingDay);
-  dateStart.setHours(campus === University.MACQ ? 16 : 17, 0, 0, 0); // 17:00:00
+  dateStart.setHours(campus === University.UTS ? 16 : 17, 0, 0, 0); // 17:00:00
 
   // Set the time for 7 PM (19:00)
   const dateEnd = new Date(nextWeeklyMeetingDay);
-  dateEnd.setHours(campus === University.MACQ ? 18 : 19, 0, 0, 0); // 19:00:00
+  dateEnd.setHours(campus === University.UTS ? 18 : 19, 0, 0, 0); // 19:00:00
 
   return {
     id: "placeholder",

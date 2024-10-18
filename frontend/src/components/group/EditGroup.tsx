@@ -46,7 +46,7 @@ export default function EditGroup({
   return (
     <>
       <DeleteConfirmation
-        name={deleteTag?.name ?? "Tag"}
+        description={(deleteTag?.name ?? "Tag") + " will be deleted forever"}
         isOpen={deleteConfirmationIsOpen}
         closeModal={() => setDeleteConfirmationIsOpen(false)}
         confirm={() => {

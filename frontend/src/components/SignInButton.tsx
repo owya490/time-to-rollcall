@@ -5,8 +5,6 @@ export default function SignInButton() {
   const signInWithMicrosoft = async () => {
     try {
       await signInWithPopup(auth, microsoftProvider);
-
-      window.location.reload();
     } catch (error) {
       console.error("Error during sign-in:", error);
     }

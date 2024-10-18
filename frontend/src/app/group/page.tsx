@@ -1,5 +1,4 @@
 "use client";
-import AuthCheck from "@/components/AuthCheck";
 import GroupBadge from "@/components/event/GroupBadge";
 import EditGroup from "@/components/group/EditGroup";
 import Topbar from "@/components/Topbar";
@@ -40,7 +39,7 @@ export default function Groups() {
   }
 
   return (
-    <AuthCheck>
+    <>
       <Topbar />
       <div className="mx-6">
         <h1 className="text-2xl mt-6 mb-3">Your Groups</h1>
@@ -79,6 +78,6 @@ export default function Groups() {
           Create New Group +
         </button>
       </div>
-    </AuthCheck>
+    </>
   );
 }

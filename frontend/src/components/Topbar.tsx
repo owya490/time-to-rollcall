@@ -30,6 +30,7 @@ import { TagModel } from "@/models/Tag";
 import { updateGroup } from "@/lib/groups";
 import EditGroup from "./group/EditGroup";
 import { promiseToast } from "@/helper/Toast";
+import DeleteConfirmation from "./event/DeleteEvent";
 
 export default function Topbar({
   toggleEdit,
@@ -85,6 +86,8 @@ export default function Topbar({
 
   const [updatingDelete, setUpdatingDelete] = useState(false);
   const [deleteConfirmationIsOpen, setDeleteConfirmationIsOpen] =
+    useState(false);
+  const [logoutConfirmationIsOpen, setLogoutConfirmationIsOpen] =
     useState(false);
   const [submitGroupForm, setSubmitGroupForm] = useState<
     GroupModel | null | undefined
@@ -249,9 +252,17 @@ export default function Topbar({
         </div>
       ) : user && pathname === Path.Group ? (
         <div className="flex items-center justify-end gap-4">
+          <DeleteConfirmation
+            description="You will be logged out"
+            action="Log out"
+            isOpen={logoutConfirmationIsOpen}
+            closeModal={() => setLogoutConfirmationIsOpen(false)}
+            confirm={logOut}
+            updating={false}
+          />
           <ArrowLeftEndOnRectangleIcon
             className="cursor-pointer w-7 h-7 text-gray-500"
-            onClick={logOut}
+            onClick={() => setLogoutConfirmationIsOpen(true)}
           />
         </div>
       ) : (

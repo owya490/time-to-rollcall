@@ -1,3 +1,4 @@
+import AuthCheck from "@/components/AuthCheck";
 import PrivateLayout from "@/components/PrivateLayout";
 
 export default function PagesLayout({
@@ -5,5 +6,9 @@ export default function PagesLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <PrivateLayout>{children}</PrivateLayout>;
+  return (
+    <PrivateLayout>
+      <AuthCheck>{children}</AuthCheck>
+    </PrivateLayout>
+  );
 }
