@@ -1,7 +1,7 @@
 import { EventModel } from "@/models/Event";
 import { GroupModel } from "@/models/Group";
 import { MemberModel } from "@/models/Member";
-import { MetadataModel } from "@/models/Metadata";
+import { MetadataInputModel, MetadataSelectModel } from "@/models/Metadata";
 import { TagModel } from "@/models/Tag";
 import { User } from "@/models/User";
 import { createContext } from "react";
@@ -17,7 +17,7 @@ export const MembersContext = createContext<MemberModel[] | null | undefined>(
 );
 
 export const MetadataContext = createContext<
-  MetadataModel[] | null | undefined
+  (MetadataInputModel | MetadataSelectModel)[] | null | undefined
 >(null);
 export const EventsContext = createContext<EventModel[] | null | undefined>(
   null

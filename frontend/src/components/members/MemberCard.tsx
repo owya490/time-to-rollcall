@@ -5,6 +5,7 @@ import { FC, memo, useContext } from "react";
 import WOMAN_FACE_PNG from "../../../public/face-woman-profile.png";
 import GroupBadge from "../event/GroupBadge";
 import { MetadataContext } from "@/lib/context";
+import { MetadataSelectModel } from "@/models/Metadata";
 
 export const MemberCardMemo: FC<MemberCardProps> = memo(
   ({ ...props }) => {
@@ -27,9 +28,15 @@ export interface MemberCardProps {
 
 function MemberCard({ member, action }: MemberCardProps) {
   const metadata = useContext(MetadataContext);
-  const role = metadata?.find((m) => m.key === "role");
-  const year = metadata?.find((m) => m.key === "year");
-  const campus = metadata?.find((m) => m.key === "campus");
+  const role = metadata?.find(
+    (m) => m.key === "role" && m.type === "select"
+  ) as MetadataSelectModel;
+  const year = metadata?.find(
+    (m) => m.key === "year" && m.type === "select"
+  ) as MetadataSelectModel;
+  const campus = metadata?.find(
+    (m) => m.key === "campus" && m.type === "select"
+  ) as MetadataSelectModel;
 
   return (
     <div
@@ -47,11 +54,11 @@ function MemberCard({ member, action }: MemberCardProps) {
         <h3 className="font-light mb-2">{member.name}</h3>
         <p className="text-xs text-gray-500 font-extralight">
           {year && member.metadata?.[year.id]
-            ? getYearString(year.values[member.metadata?.[year.id]]) ??
+            ? getYearString(year.values?.[member.metadata?.[year.id]]) ??
               getYearString(member.metadata?.[year.id])
             : ""}
           {role && member.metadata?.[role.id]
-            ? role.values[member.metadata?.[role.id]] ??
+            ? role.values?.[member.metadata?.[role.id]] ??
               member.metadata?.[role.id]
             : "Member"}
         </p>
@@ -61,7 +68,7 @@ function MemberCard({ member, action }: MemberCardProps) {
           campus={
             campus &&
             member.metadata?.[campus.id] &&
-            campus.values[member.metadata?.[campus.id]]
+            campus.values?.[member.metadata?.[campus.id]]
           }
           className="w-14 text-sm"
         />

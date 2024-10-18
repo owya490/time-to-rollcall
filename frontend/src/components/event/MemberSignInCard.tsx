@@ -13,6 +13,7 @@ import { FC, memo, useContext, useEffect, useRef } from "react";
 import WOMAN_FACE_PNG from "../../../public/face-woman-profile.png";
 import GroupBadge from "./GroupBadge";
 import { MetadataContext } from "@/lib/context";
+import { MetadataSelectModel } from "@/models/Metadata";
 
 export const MemberSignIn: FC<MemberSignInCardProps> = memo(
   ({ ...props }) => {
@@ -54,9 +55,15 @@ function MemberSignInCard({
   triggerAddAnimation,
 }: MemberSignInCardProps) {
   const metadata = useContext(MetadataContext);
-  const role = metadata?.find((m) => m.key === "role");
-  const year = metadata?.find((m) => m.key === "year");
-  const campus = metadata?.find((m) => m.key === "campus");
+  const role = metadata?.find(
+    (m) => m.key === "role" && m.type === "select"
+  ) as MetadataSelectModel;
+  const year = metadata?.find(
+    (m) => m.key === "year" && m.type === "select"
+  ) as MetadataSelectModel;
+  const campus = metadata?.find(
+    (m) => m.key === "campus" && m.type === "select"
+  ) as MetadataSelectModel;
   const selectedRef = useRef(false);
   const editRef = useRef(false);
   const id = member.id;

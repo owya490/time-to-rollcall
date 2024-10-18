@@ -20,6 +20,7 @@ import {
 import Loader from "../Loader";
 import { MetadataContext } from "@/lib/context";
 import DeleteConfirmation from "../event/DeleteEvent";
+import { MetadataSelectModel } from "@/models/Metadata";
 
 export default function EditMember({
   isOpen,
@@ -116,7 +117,7 @@ export default function EditMember({
                       type="text"
                       autoFocus
                       className="w-full rounded-none resize-none border-t-0 bg-transparent font-sans text-lg font-semibold text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
-                      placeholder="Jane Doe"
+                      placeholder="Sijin Yang"
                       value={member.name}
                       onChange={(e) =>
                         setMember({
@@ -132,64 +133,91 @@ export default function EditMember({
                         <p className="text-sm text-gray-900">
                           {m.key.slice(0, 1).toUpperCase() + m.key.slice(1)}
                         </p>
-                        <div className="mx-auto w-full">
-                          <Listbox
+                        {m.type === "input" && (
+                          <input
+                            type="text"
+                            autoFocus
+                            className="w-full rounded-none resize-none border-t-0 bg-transparent font-sans text-lg font-semibold text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
+                            placeholder="z5312345"
                             value={member.metadata?.[m.id]}
-                            onChange={(value) =>
+                            onChange={(e) =>
                               setMember({
                                 ...member,
-                                metadata: { ...member.metadata, [m.id]: value },
+                                metadata: {
+                                  ...member.metadata,
+                                  [m.id]: e.target.value,
+                                },
                               })
                             }
-                          >
-                            <div className="flex justify-between items-center">
-                              <ListboxButton className="block w-full appearance-none rounded-lg bg-white/5 text-left text-lg font-semibold focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25">
-                                {member.metadata?.[m.id]
-                                  ? m.values[member.metadata?.[m.id]] ??
-                                    member.metadata?.[m.id]
-                                  : "Unselected"}
-                              </ListboxButton>
-                              <ChevronUpIcon
-                                className="pointer-events-none absolute right-6 w-6 h-6 text-black"
-                                aria-hidden="true"
-                              />
-                            </div>
-                            <ListboxOptions
-                              anchor="top"
-                              transition
-                              className="rounded-xl border w-full border-white/5 bg-gray-200 p-1 focus:outline-none transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
+                          />
+                        )}
+                        {m.type === "select" && (
+                          <div className="mx-auto w-full">
+                            <Listbox
+                              value={member.metadata?.[m.id]}
+                              onChange={(value) =>
+                                setMember({
+                                  ...member,
+                                  metadata: {
+                                    ...member.metadata,
+                                    [m.id]: value,
+                                  },
+                                })
+                              }
                             >
-                              {Object.entries(m.values)
-                                .sort(([a, b]) =>
-                                  Number(a[0]) < Number(b[0]) ? -1 : 1
-                                )
-                                .map(([vId, vValue], j) => (
-                                  <ListboxOption
-                                    key={j}
-                                    value={vId}
-                                    onClick={() =>
-                                      setMember({
-                                        ...member,
-                                        metadata: {
-                                          ...member.metadata,
-                                          [m.id]: vId,
-                                        },
-                                      })
-                                    }
-                                    className="group flex justify-between cursor-default items-center gap-2 rounded-lg py-1.5 px-5 select-none data-[focus]:bg-white/10"
-                                  >
-                                    <div className="text-lg font-semibold">
-                                      {vValue}
-                                    </div>
-                                    <CheckIcon
-                                      className="invisible size-4 fill-white group-data-[selected]:visible right-6 w-5 h-5 text-black"
-                                      aria-hidden="true"
-                                    />
-                                  </ListboxOption>
-                                ))}
-                            </ListboxOptions>
-                          </Listbox>
-                        </div>
+                              <div className="flex justify-between items-center">
+                                <ListboxButton className="block w-full appearance-none rounded-lg bg-white/5 text-left text-lg font-semibold focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25">
+                                  {member.metadata?.[m.id]
+                                    ? (m as MetadataSelectModel).values[
+                                        member.metadata?.[m.id]
+                                      ] ?? member.metadata?.[m.id]
+                                    : "Unselected"}
+                                </ListboxButton>
+                                <ChevronUpIcon
+                                  className="pointer-events-none absolute right-6 w-6 h-6 text-black"
+                                  aria-hidden="true"
+                                />
+                              </div>
+                              <ListboxOptions
+                                anchor="top"
+                                transition
+                                className="rounded-xl border w-full border-white/5 bg-gray-200 p-1 focus:outline-none transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
+                              >
+                                {(m as MetadataSelectModel).values &&
+                                  Object.entries(
+                                    (m as MetadataSelectModel).values
+                                  )
+                                    .sort(([a, b]) =>
+                                      Number(a[0]) < Number(b[0]) ? -1 : 1
+                                    )
+                                    .map(([vId, vValue], j) => (
+                                      <ListboxOption
+                                        key={j}
+                                        value={vId}
+                                        onClick={() =>
+                                          setMember({
+                                            ...member,
+                                            metadata: {
+                                              ...member.metadata,
+                                              [m.id]: vId,
+                                            },
+                                          })
+                                        }
+                                        className="group flex justify-between cursor-default items-center gap-2 rounded-lg py-1.5 px-5 select-none data-[focus]:bg-white/10"
+                                      >
+                                        <div className="text-lg font-semibold">
+                                          {vValue}
+                                        </div>
+                                        <CheckIcon
+                                          className="invisible size-4 fill-white group-data-[selected]:visible right-6 w-5 h-5 text-black"
+                                          aria-hidden="true"
+                                        />
+                                      </ListboxOption>
+                                    ))}
+                              </ListboxOptions>
+                            </Listbox>
+                          </div>
+                        )}
                       </div>
                     ))}
                   {updating ? (
