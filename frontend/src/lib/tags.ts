@@ -3,6 +3,7 @@ import { TagModel, TagId } from "@/models/Tag";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -13,7 +14,6 @@ import {
   convertToJavascript,
   firestore,
 } from "./firebase";
-import { MemberId } from "@/models/Member";
 
 export async function addTag(groupId: GroupId, tag: TagModel) {
   const addedDoc = await addDoc(
@@ -28,6 +28,10 @@ export async function updateTag(groupId: GroupId, tag: TagModel) {
     doc(firestore, "groups", groupId, "tags", tag.id),
     convertTagToDocument(tag)
   );
+}
+
+export async function deleteTag(groupId: GroupId, tagId: TagId) {
+  await deleteDoc(doc(firestore, "groups", groupId, "tags", tagId));
 }
 
 export async function getTags(groupId: GroupId) {

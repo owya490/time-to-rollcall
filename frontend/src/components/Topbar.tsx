@@ -44,6 +44,7 @@ export default function Topbar({
   const group = useContext(GroupContext);
   const tags = useContext(TagsContext);
   const event = useContext(EventContext);
+  const [deleteTags, setDeleteTags] = useState<TagModel[]>([]);
   const [submitEventForm, setSubmitEventForm] = useState(InitEvent);
   const [updating, setUpdating] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -113,9 +114,9 @@ export default function Topbar({
 
   async function editGroup() {
     setUpdatingGroup(true);
-    if (submitGroupForm && submitTagsForm) {
+    if (submitGroupForm) {
       await promiseToast<void>(
-        updateGroup(submitGroupForm, submitTagsForm),
+        updateGroup(submitGroupForm, submitTagsForm, deleteTags),
         "Updating Group...",
         "Group Updated!",
         "Could not update group."
@@ -171,6 +172,7 @@ export default function Topbar({
           setGroup={setSubmitGroupForm}
           tags={submitTagsForm}
           setTags={setSubmitTagsForm}
+          setDeleteTags={setDeleteTags}
           submit={editGroup}
           updating={updatingGroup}
         />

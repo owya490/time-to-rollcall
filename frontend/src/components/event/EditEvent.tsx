@@ -293,9 +293,14 @@ export default function EditEvent({
                                 submitEventForm.dateStart
                               )}
                               onChange={(event) => {
+                                let dateStart = new Date(event.target.value);
                                 setSubmitEventForm({
                                   ...submitEventForm,
-                                  dateStart: new Date(event.target.value),
+                                  dateStart,
+                                  dateEnd:
+                                    submitEventForm.dateEnd < dateStart
+                                      ? new Date(dateStart.getTime() + 7200000)
+                                      : submitEventForm.dateEnd,
                                 });
                               }}
                             />

@@ -30,6 +30,7 @@ function MemberCard({ member, action }: MemberCardProps) {
   const role = metadata?.find((m) => m.key === "role");
   const year = metadata?.find((m) => m.key === "year");
   const campus = metadata?.find((m) => m.key === "campus");
+
   return (
     <div
       className="relative z-30 overflow-hidden cursor-pointer flex h-20 w-full px-6 bg-white items-center hover:bg-gray-100"
