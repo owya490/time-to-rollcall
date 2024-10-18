@@ -183,7 +183,7 @@ export default function EditMember({
                               <ListboxOptions
                                 anchor="top"
                                 transition
-                                className="rounded-xl border w-full border-white/5 bg-gray-200 p-1 focus:outline-none transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
+                                className="rounded-xl border w-full border-white/5 bg-gray-100 p-1 focus:outline-none transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
                               >
                                 {(m as MetadataSelectModel).values &&
                                   Object.entries(
@@ -205,7 +205,7 @@ export default function EditMember({
                                             },
                                           })
                                         }
-                                        className="group flex justify-between cursor-default items-center gap-2 rounded-lg py-1.5 px-5 select-none data-[focus]:bg-white/10"
+                                        className="group flex justify-between cursor-pointer items-center gap-2 rounded-lg py-1.5 px-5 select-none data-[focus]:bg-white/10"
                                       >
                                         <div className="text-lg font-semibold">
                                           {vValue}

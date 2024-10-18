@@ -195,7 +195,7 @@ export default function EditGroup({
                                           ),
                                         ])
                                       }
-                                      className="group flex justify-between cursor-default items-center rounded-lg px-2 select-none data-[focus]:bg-white/10"
+                                      className="group flex justify-between cursor-pointer items-center rounded-lg px-2 select-none data-[focus]:bg-white/10"
                                     >
                                       <svg
                                         height="40"
