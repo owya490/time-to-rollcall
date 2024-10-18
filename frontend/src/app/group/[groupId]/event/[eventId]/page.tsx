@@ -46,6 +46,7 @@ export default function Event({
   );
   const [membersSignedIn, setMembersSignedIn] = useState<MemberModel[]>([]);
   const [index, setIndex] = useState<number>(0);
+  const [indexSignedIn, setIndexSignedIn] = useState<number>(0);
   const [loadAnimation, setLoadAnimation] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
@@ -100,6 +101,10 @@ export default function Event({
         members?.filter(
           (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)
         ) ?? [];
+      let membersSignedIn =
+        event.members
+          ?.map((m) => members?.find((member) => member.id === m.id))
+          .filter((m): m is MemberModel => m !== undefined) ?? [];
       if (searchInput.length > 0) {
         setLoadAnimation(true);
         const { suggested, notSuggested } = searchForMemberByName(
@@ -108,14 +113,15 @@ export default function Event({
         );
         setMembersNotSignedIn(suggested.concat(notSuggested));
         setIndex(suggested.length);
+        const { suggested: signedIn, notSuggested: signedInNotSuggested } =
+          searchForMemberByName(membersSignedIn, searchInput);
+        setMembersSignedIn(signedIn.concat(signedInNotSuggested));
+        setIndexSignedIn(signedIn.length);
       } else {
         setMembersNotSignedIn(membersNotSignedIn);
+        setMembersSignedIn(membersSignedIn);
+        setIndexSignedIn(membersSignedIn.length);
       }
-      let membersSignedIn =
-        event.members
-          ?.map((m) => members?.find((member) => member.id === m.id))
-          .filter((m): m is MemberModel => m !== undefined) ?? [];
-      setMembersSignedIn(membersSignedIn ?? []);
 
       if (loading) {
         setLoading(false);
@@ -136,8 +142,13 @@ export default function Event({
       );
       setMembersNotSignedIn(suggested.concat(notSuggested));
       setIndex(suggested.length);
+      const { suggested: signedIn, notSuggested: signedInNotSuggested } =
+        searchForMemberByName(membersSignedIn, searchInput);
+      setMembersSignedIn(signedIn.concat(signedInNotSuggested));
+      setIndexSignedIn(signedIn.length);
     } else if (prevSearchActive && searchInput.length === 0) {
       setIndex(0);
+      setIndexSignedIn(membersSignedIn.length);
     }
     // eslint-disable-next-line
   }, [searchInput]);
@@ -277,7 +288,7 @@ export default function Event({
           <div className="z-30 w-full">
             <AttendanceSignedIn
               disabled={!toggleEdit}
-              signedIn={membersSignedIn}
+              signedIn={membersSignedIn.slice(0, indexSignedIn)}
               action={(member: MemberModel) => {
                 removeMemberFromEvent(groupId, eventId, member.id);
               }}
