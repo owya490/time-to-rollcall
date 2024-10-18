@@ -6,7 +6,12 @@ import AttendanceSignedIn from "@/components/event/AttendanceSignedIn";
 import AttendanceSuggested from "@/components/event/AttendanceSuggested";
 import Loader from "@/components/Loader";
 import EditMember from "@/components/members/EditMember";
-import { EventContext, MembersContext } from "@/lib/context";
+import {
+  EventContext,
+  GroupContext,
+  MembersContext,
+  MetadataContext,
+} from "@/lib/context";
 import { addMemberToEvent, removeMemberFromEvent } from "@/lib/events";
 import { createMember, deleteMember, updateMember } from "@/lib/members";
 import { EventId } from "@/models/Event";
@@ -19,6 +24,7 @@ import { useContext, useEffect, useState } from "react";
 import { searchForMemberByName } from "services/attendanceService";
 import Topbar from "@/components/Topbar";
 import { promiseToast } from "@/helper/Toast";
+import { MetadataSelectModel } from "@/models/Metadata";
 
 gsap.registerPlugin(Draggable, useGSAP);
 
@@ -30,6 +36,8 @@ export default function Event({
   const { groupId, eventId } = params;
   const [searchActive, setSearchActive] = useState(false);
   const [searchInput, setSearchInput] = useState<string>("");
+  const metadata = useContext(MetadataContext);
+  const group = useContext(GroupContext);
   const event = useContext(EventContext);
   const members = useContext(MembersContext);
   const [loading, setLoading] = useState(true);
@@ -42,7 +50,7 @@ export default function Event({
   const [isOpen, setIsOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [selectedMember, setSelectedMember] = useState<MemberModel>(
-    InitMember("Jane Doe")
+    InitMember("")
   );
   const [toggleEdit, setToggleEdit] = useState(true);
   const [time, setTime] = useState(new Date());
@@ -223,7 +231,21 @@ export default function Event({
                   type="button"
                   className="text-sm py-1.5 px-1.5 rounded-lg bg-green-100 font-light"
                   onClick={() => {
-                    setSelectedMember(InitMember(searchInput));
+                    setSelectedMember(
+                      InitMember(
+                        searchInput,
+                        metadata?.find(
+                          (m) => m.key === "campus" && m.type === "select"
+                        )?.id,
+                        Object.entries(
+                          (
+                            metadata?.find(
+                              (m) => m.key === "campus" && m.type === "select"
+                            ) as MetadataSelectModel | undefined
+                          )?.values ?? {}
+                        ).find(([_, v]) => v === group?.name)?.[0]
+                      )
+                    );
                     openModal();
                   }}
                 >
@@ -274,7 +296,21 @@ export default function Event({
               }
               onClick={() => {
                 if (toggleEdit) {
-                  setSelectedMember(InitMember(searchInput));
+                  setSelectedMember(
+                    InitMember(
+                      searchInput,
+                      metadata?.find(
+                        (m) => m.key === "campus" && m.type === "select"
+                      )?.id,
+                      Object.entries(
+                        (
+                          metadata?.find(
+                            (m) => m.key === "campus" && m.type === "select"
+                          ) as MetadataSelectModel | undefined
+                        )?.values ?? {}
+                      ).find(([_, v]) => v === group?.name)?.[0]
+                    )
+                  );
                   openModal();
                 } else {
                   setToggleEdit(true);

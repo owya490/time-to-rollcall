@@ -110,14 +110,6 @@ export default function GroupMember({
     setDeleteConfirmationIsOpen(true);
   }
 
-  const campusValueId = Object.entries(
-    (
-      metadata?.find((m) => m.key === "campus" && m.type === "select") as
-        | MetadataSelectModel
-        | undefined
-    )?.values ?? {}
-  ).find(([_, v]) => v === group?.name)?.[0];
-
   if (loading) {
     return (
       <div className="flex justify-center items-center my-24">
@@ -172,7 +164,13 @@ export default function GroupMember({
                 searchInput,
                 metadata?.find((m) => m.key === "campus" && m.type === "select")
                   ?.id,
-                campusValueId
+                Object.entries(
+                  (
+                    metadata?.find(
+                      (m) => m.key === "campus" && m.type === "select"
+                    ) as MetadataSelectModel | undefined
+                  )?.values ?? {}
+                ).find(([_, v]) => v === group?.name)?.[0]
               )
             );
             openModal();
