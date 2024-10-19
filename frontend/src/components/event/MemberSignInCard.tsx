@@ -11,6 +11,7 @@ import Draggable from "gsap/dist/Draggable";
 import Image from "next/image";
 import { FC, memo, useContext, useEffect, useRef } from "react";
 import WOMAN_FACE_PNG from "../../../public/face-woman-profile.png";
+import MAN_SVG from "../../../public/man-profile.svg";
 import GroupBadge from "./GroupBadge";
 import { MetadataContext } from "@/lib/context";
 import { MetadataSelectModel } from "@/models/Metadata";
@@ -63,6 +64,9 @@ function MemberSignInCard({
   ) as MetadataSelectModel | undefined;
   const campus = metadata?.find(
     (m) => m.key === "Campus" && m.type === "select"
+  ) as MetadataSelectModel | undefined;
+  const gender = metadata?.find(
+    (m) => m.key === "Gender" && m.type === "select"
   ) as MetadataSelectModel | undefined;
   const selectedRef = useRef(false);
   const editRef = useRef(false);
@@ -233,10 +237,16 @@ function MemberSignInCard({
             }}
           >
             <Image
-              src={WOMAN_FACE_PNG}
+              src={
+                gender
+                  ? member.metadata?.[gender.id] === "Male"
+                    ? MAN_SVG
+                    : WOMAN_FACE_PNG
+                  : WOMAN_FACE_PNG
+              }
               height={0}
               width={0}
-              alt="woman-face"
+              alt="face"
               className="h-7 w-7 mr-4"
             />
             <div>
