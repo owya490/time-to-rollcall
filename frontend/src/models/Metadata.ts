@@ -1,8 +1,8 @@
-export type MetadataModelId = string;
+export type MetadataId = string;
 
 export type MetadataType = "select" | "input";
 export interface MetadataModel {
-  id: MetadataModelId;
+  id: MetadataId;
   key: string;
   type: MetadataType;
 }
@@ -19,9 +19,9 @@ export interface MetadataValueModel {
   [id: MetadataValueId]: string;
 }
 
-export const InitMetadata = {
+export const InitMetadataInput: MetadataModel = {
   id: "placeholder",
   key: "",
-  type: "select",
+  type: "input",
   values: [],
-};
+} as MetadataModel;

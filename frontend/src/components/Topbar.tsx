@@ -3,6 +3,7 @@ import { GroupPath, Path } from "@/helper/Path";
 import {
   EventContext,
   GroupContext,
+  MetadataContext,
   TagsContext,
   UserContext,
 } from "@/lib/context";
@@ -31,6 +32,9 @@ import { updateGroup } from "@/lib/groups";
 import EditGroup from "./group/EditGroup";
 import { promiseToast } from "@/helper/Toast";
 import DeleteConfirmation from "./event/DeleteEvent";
+import { MetadataModel } from "@/models/Metadata";
+import EditMetadata from "./members/EditMetadata";
+import { editMetadatas } from "@/lib/metadata";
 
 export default function Topbar({
   toggleEdit,
@@ -45,6 +49,7 @@ export default function Topbar({
   const group = useContext(GroupContext);
   const tags = useContext(TagsContext);
   const event = useContext(EventContext);
+  const metadata = useContext(MetadataContext);
   const [deleteTags, setDeleteTags] = useState<TagModel[]>([]);
   const [submitEventForm, setSubmitEventForm] = useState(InitEvent);
   const [updating, setUpdating] = useState(false);
@@ -92,9 +97,10 @@ export default function Topbar({
   const [submitGroupForm, setSubmitGroupForm] = useState<
     GroupModel | null | undefined
   >(null);
-
-  const [isOpenGroup, setIsOpenGroup] = useState(false);
-  const [updatingGroup, setUpdatingGroup] = useState(false);
+  const [metadatas, setMetadatas] = useState<
+    MetadataModel[] | null | undefined
+  >(null);
+  const [deleteMetadatas, setDeleteMetadatas] = useState<MetadataModel[]>([]);
 
   function closeDeleteConfirmationModal() {
     openModal();
@@ -116,7 +122,7 @@ export default function Topbar({
   >(null);
 
   async function editGroup() {
-    setUpdatingGroup(true);
+    setUpdating(true);
     if (submitGroupForm) {
       await promiseToast<void>(
         updateGroup(submitGroupForm, submitTagsForm, deleteTags),
@@ -125,27 +131,46 @@ export default function Topbar({
         "Could not update group."
       );
     }
-    setUpdatingGroup(false);
-    closeGroupModal();
+    setDeleteTags([]);
+    setUpdating(false);
+    closeModal();
   }
 
-  function closeGroupModal() {
-    setIsOpenGroup(false);
+  async function editMetadata() {
+    setUpdating(true);
+    if (group && metadatas) {
+      await promiseToast<void>(
+        editMetadatas(group.id, metadatas, deleteMetadatas),
+        "Updating Metadata...",
+        "Metadata Updated!",
+        "Could not update group."
+      );
+    }
+    setDeleteMetadatas([]);
+    setUpdating(false);
+    closeModal();
   }
 
   function openGroupModal() {
     if (group) setSubmitGroupForm(group);
     if (tags) setSubmitTagsForm(tags);
-    setIsOpenGroup(true);
+    setIsOpen(true);
+  }
+
+  function openMetadataModal() {
+    if (metadata) setMetadatas(metadata);
+    setIsOpen(true);
   }
 
   useEffect(() => {
-    if (group !== null && tags !== null) {
+    if (group !== null && tags !== null && metadata !== null) {
       setSubmitGroupForm(group);
       setSubmitTagsForm(tags);
+      setMetadatas(metadata);
     }
     // eslint-disable-next-line
-  }, [group, tags]);
+  }, [group, tags, metadata]);
+
   return (
     <nav className="bg-white flex items-center sticky justify-between px-6 py-6 w-full z-40 top-0 scroll-smooth">
       {event && group && tags !== null && (
@@ -167,19 +192,33 @@ export default function Topbar({
           updating={updating}
         />
       )}
-      {submitGroupForm && submitTagsForm !== null && (
-        <EditGroup
-          isOpen={isOpenGroup}
-          closeModal={closeGroupModal}
-          group={submitGroupForm}
-          setGroup={setSubmitGroupForm}
-          tags={submitTagsForm}
-          setTags={setSubmitTagsForm}
-          setDeleteTags={setDeleteTags}
-          submit={editGroup}
-          updating={updatingGroup}
-        />
-      )}
+      {submitGroupForm &&
+        submitTagsForm !== null &&
+        pathname === Path.Group + "/" + group?.id && (
+          <EditGroup
+            isOpen={isOpen}
+            closeModal={closeModal}
+            group={submitGroupForm}
+            setGroup={setSubmitGroupForm}
+            tags={submitTagsForm}
+            setTags={setSubmitTagsForm}
+            setDeleteTags={setDeleteTags}
+            submit={editGroup}
+            updating={updating}
+          />
+        )}
+      {metadatas &&
+        pathname === Path.Group + "/" + group?.id + GroupPath.Members && (
+          <EditMetadata
+            isOpen={isOpen}
+            closeModal={closeModal}
+            metadata={metadatas}
+            setMetadata={setMetadatas}
+            setDeleteMetadatas={setDeleteMetadatas}
+            submit={editMetadata}
+            updating={updating}
+          />
+        )}
       {group ? (
         getUniversityKey(group.name as University) ? (
           <Link
@@ -247,7 +286,11 @@ export default function Topbar({
           )}
           <Cog6ToothIcon
             className="cursor-pointer w-7 h-7 text-gray-500"
-            onClick={openGroupModal}
+            onClick={
+              pathname === Path.Group + "/" + group.id + GroupPath.Members
+                ? openMetadataModal
+                : openGroupModal
+            }
           />
         </div>
       ) : user && pathname === Path.Group ? (

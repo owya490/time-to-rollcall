@@ -1,7 +1,7 @@
-import { MetadataModelId, MetadataValueId } from "./Metadata";
+import { MetadataId, MetadataValueId } from "./Metadata";
 
 export interface MemberMetadataModel {
-  [key: MetadataModelId]: MetadataValueId | string;
+  [key: MetadataId]: MetadataValueId | string;
 }
 
 export type MemberId = string;
@@ -15,7 +15,7 @@ export interface MemberModel {
 
 export const InitMember = (
   name: string,
-  metadataKey?: MetadataModelId,
+  metadataKey?: MetadataId,
   metadataValue?: MetadataValueId | string
 ): MemberModel => {
   return {
@@ -48,8 +48,8 @@ export const getYearString = (year?: string) => {
 };
 
 export function compareMetadata(
-  obj1?: { [key: MetadataModelId]: MetadataValueId | string },
-  obj2?: { [key: MetadataModelId]: MetadataValueId | string }
+  obj1?: { [key: MetadataId]: MetadataValueId | string },
+  obj2?: { [key: MetadataId]: MetadataValueId | string }
 ): boolean {
   if (obj1 === undefined && obj2 === undefined) return true;
   if (obj1 === undefined || obj2 === undefined) return false;

@@ -29,13 +29,13 @@ export interface MemberCardProps {
 function MemberCard({ member, action }: MemberCardProps) {
   const metadata = useContext(MetadataContext);
   const role = metadata?.find(
-    (m) => m.key === "role" && m.type === "select"
+    (m) => m.key === "Role" && m.type === "select"
   ) as MetadataSelectModel | undefined;
   const year = metadata?.find(
-    (m) => m.key === "year" && m.type === "select"
+    (m) => m.key === "Year" && m.type === "select"
   ) as MetadataSelectModel | undefined;
   const campus = metadata?.find(
-    (m) => m.key === "campus" && m.type === "select"
+    (m) => m.key === "Campus" && m.type === "select"
   ) as MetadataSelectModel | undefined;
 
   return (

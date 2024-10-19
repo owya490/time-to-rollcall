@@ -52,8 +52,9 @@ export default function EditGroup({
         confirm={() => {
           if (tags && setTags && deleteTag && setDeleteTags) {
             setDeleteTags((prevTags) => prevTags.concat(deleteTag));
-            setTags([...tags.filter((t) => t.id !== deleteTag.id)]);
+            setTags(tags.filter((t) => t.id !== deleteTag.id));
             setDeleteConfirmationIsOpen(false);
+            setDeleteTag(null);
           }
         }}
         updating={false}

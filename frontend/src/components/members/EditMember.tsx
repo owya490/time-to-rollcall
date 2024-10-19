@@ -130,16 +130,14 @@ export default function EditMember({
                   {metadata &&
                     metadata.map((m, i) => (
                       <div key={i} className="my-4">
-                        <p className="text-sm text-gray-900">
-                          {m.key.slice(0, 1).toUpperCase() + m.key.slice(1)}
-                        </p>
+                        <p className="text-sm text-gray-900">{m.key}</p>
                         {m.type === "input" && (
                           <input
                             type="text"
                             autoFocus
                             className="w-full rounded-none resize-none border-t-0 bg-transparent font-sans text-lg font-semibold text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
                             placeholder={
-                              m.key === "ZID" ? "z5312345" : "Placeholder"
+                              m.key === "zID" ? "z5312345" : "Placeholder"
                             }
                             value={member.metadata?.[m.id]}
                             onChange={(e) =>
@@ -168,13 +166,18 @@ export default function EditMember({
                               }
                             >
                               <div className="flex justify-between items-center">
-                                <ListboxButton className="block w-full appearance-none rounded-lg bg-white/5 text-left text-lg font-semibold focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25">
-                                  {member.metadata?.[m.id]
-                                    ? (m as MetadataSelectModel).values[
-                                        member.metadata?.[m.id]
-                                      ] ?? member.metadata?.[m.id]
-                                    : "Unselected"}
-                                </ListboxButton>
+                                {member.metadata?.[m.id] ? (
+                                  <ListboxButton className="block w-full appearance-none rounded-lg bg-white/5 text-left text-lg font-semibold focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25">
+                                    {(m as MetadataSelectModel).values[
+                                      member.metadata?.[m.id]
+                                    ] ?? member.metadata?.[m.id]}
+                                  </ListboxButton>
+                                ) : (
+                                  <ListboxButton className="block w-full appearance-none rounded-lg bg-white/5 text-left text-lg font-semibold focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 text-gray-400">
+                                    Unselected
+                                  </ListboxButton>
+                                )}
+
                                 <ChevronUpIcon
                                   className="pointer-events-none absolute right-6 w-6 h-6 text-black"
                                   aria-hidden="true"
