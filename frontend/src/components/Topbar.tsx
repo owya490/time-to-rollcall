@@ -275,7 +275,10 @@ export default function Topbar({
       ) : group ? (
         <div className="flex items-center justify-end gap-4">
           {pathname === Path.Group + "/" + group.id + GroupPath.Members ? (
-            <UserGroupIconSolid className="cursor-pointer w-7 h-7 text-gray-500" />
+            <UserGroupIconSolid
+              className="cursor-pointer w-7 h-7 text-gray-500"
+              onClick={() => router.push(Path.Group + "/" + group.id)}
+            />
           ) : (
             <UserGroupIcon
               className="cursor-pointer w-7 h-7 text-gray-500"
