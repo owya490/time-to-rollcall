@@ -10,7 +10,7 @@ import { createMember, deleteMember, updateMember } from "@/lib/members";
 import { GroupId } from "@/models/Group";
 import { InitMember, MemberModel } from "@/models/Member";
 import { MetadataSelectModel } from "@/models/Metadata";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { searchForMemberByName } from "services/attendanceService";
 
 export default function GroupMember({
@@ -109,6 +109,24 @@ export default function GroupMember({
     setDeleteConfirmationIsOpen(true);
   }
 
+  const bottomButtonRef = useRef<HTMLDivElement>(null);
+  const fixPosition = () => {
+    if (bottomButtonRef.current && window.visualViewport) {
+      bottomButtonRef.current.style.top = `${window.visualViewport.height}px`;
+    }
+  };
+
+  useEffect(() => {
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", fixPosition);
+      fixPosition();
+    }
+
+    return () => {
+      window.visualViewport?.removeEventListener("resize", fixPosition);
+    };
+  }, []);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center my-24">
@@ -153,7 +171,7 @@ export default function GroupMember({
           />
         </div>
       </div>
-      <div className="fixed z-40 flex justify-center bottom-0 text-center w-full text-gray-700">
+      <div className="fixed z-40 -translate-y-full flex justify-center text-center w-full text-gray-700">
         <button
           type="button"
           className="text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
