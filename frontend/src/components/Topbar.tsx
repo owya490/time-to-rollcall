@@ -172,148 +172,150 @@ export default function Topbar({
   }, [group, tags, metadata]);
 
   return (
-    <nav className="bg-white flex items-center sticky justify-between px-6 py-3 w-full z-40 top-0 scroll-smooth">
-      {event && group && tags !== null && (
-        <EditEvent
-          groupId={group.id}
-          tags={tags}
-          isOpen={isOpen}
-          closeModal={closeModal}
-          submitEventForm={submitEventForm}
-          setSubmitEventForm={setSubmitEventForm}
-          submitEvent={editEvent}
-          deleteConfirmationIsOpen={deleteConfirmationIsOpen}
-          openDeleteConfirmationModal={openDeleteConfirmationModal}
-          closeDeleteConfirmationModal={closeDeleteConfirmationModal}
-          deleteEvent={deleteEventIn}
-          updatingDelete={updatingDelete}
-          selectedIndex={selectedIndex}
-          setSelectedIndex={setSelectedIndex}
-          updating={updating}
-        />
-      )}
-      {submitGroupForm &&
-        submitTagsForm !== null &&
-        pathname === Path.Group + "/" + group?.id && (
-          <EditGroup
+    <div>
+      <nav className="bg-white flex items-center fixed justify-between px-3 py-3 w-full z-40 top-0">
+        {event && group && tags !== null && (
+          <EditEvent
+            groupId={group.id}
+            tags={tags}
             isOpen={isOpen}
             closeModal={closeModal}
-            group={submitGroupForm}
-            setGroup={setSubmitGroupForm}
-            tags={submitTagsForm}
-            setTags={setSubmitTagsForm}
-            setDeleteTags={setDeleteTags}
-            submit={editGroup}
+            submitEventForm={submitEventForm}
+            setSubmitEventForm={setSubmitEventForm}
+            submitEvent={editEvent}
+            deleteConfirmationIsOpen={deleteConfirmationIsOpen}
+            openDeleteConfirmationModal={openDeleteConfirmationModal}
+            closeDeleteConfirmationModal={closeDeleteConfirmationModal}
+            deleteEvent={deleteEventIn}
+            updatingDelete={updatingDelete}
+            selectedIndex={selectedIndex}
+            setSelectedIndex={setSelectedIndex}
             updating={updating}
           />
         )}
-      {metadatas &&
-        pathname === Path.Group + "/" + group?.id + GroupPath.Members && (
-          <EditMetadata
-            isOpen={isOpen}
-            closeModal={closeModal}
-            metadata={metadatas}
-            setMetadata={setMetadatas}
-            setDeleteMetadatas={setDeleteMetadatas}
-            submit={editMetadata}
-            updating={updating}
-          />
-        )}
-      {group ? (
-        getUniversityKey(group.name as University) ? (
-          <Link
-            href={
-              pathname === Path.Group + "/" + group.id
-                ? Path.Group
-                : Path.Group + "/" + group.id
-            }
-          >
-            <GroupBadge
-              campus={group.name as University}
-              className="px-4 text-base"
+        {submitGroupForm &&
+          submitTagsForm !== null &&
+          pathname === Path.Group + "/" + group?.id && (
+            <EditGroup
+              isOpen={isOpen}
+              closeModal={closeModal}
+              group={submitGroupForm}
+              setGroup={setSubmitGroupForm}
+              tags={submitTagsForm}
+              setTags={setSubmitTagsForm}
+              setDeleteTags={setDeleteTags}
+              submit={editGroup}
+              updating={updating}
             />
-          </Link>
-        ) : (
-          <Link
-            href={
-              pathname === Path.Group + "/" + group.id
-                ? Path.Group
-                : Path.Group + "/" + group.id
-            }
-            className="bg-gray-900 rounded-full py-1 px-4 text-white font-light text-center"
-          >
-            {group.name}
-          </Link>
-        )
-      ) : user ? (
-        <div>Hi {user.displayName}</div>
-      ) : (
-        <div />
-      )}
-      {event ? (
-        <div className="flex items-center gap-4 justify-end">
-          {setToggleEdit && (
-            <>
-              {toggleEdit ? (
-                <PencilIconSolid
-                  className="cursor-pointer w-7 h-7 text-gray-500"
-                  onClick={() => setToggleEdit(!toggleEdit)}
-                />
-              ) : (
-                <PencilIcon
-                  className="cursor-pointer w-7 h-7 text-gray-500"
-                  onClick={() => setToggleEdit(!toggleEdit)}
-                />
-              )}
-            </>
           )}
-          <Cog6ToothIcon
-            className="cursor-pointer w-7 h-7 text-gray-500"
-            onClick={openModal}
-          />
-        </div>
-      ) : group ? (
-        <div className="flex items-center justify-end gap-4">
-          {pathname === Path.Group + "/" + group.id + GroupPath.Members ? (
-            <UserGroupIconSolid
-              className="cursor-pointer w-7 h-7 text-gray-500"
-              onClick={() => router.push(Path.Group + "/" + group.id)}
+        {metadatas &&
+          pathname === Path.Group + "/" + group?.id + GroupPath.Members && (
+            <EditMetadata
+              isOpen={isOpen}
+              closeModal={closeModal}
+              metadata={metadatas}
+              setMetadata={setMetadatas}
+              setDeleteMetadatas={setDeleteMetadatas}
+              submit={editMetadata}
+              updating={updating}
             />
+          )}
+        {group ? (
+          getUniversityKey(group.name as University) ? (
+            <Link
+              href={
+                pathname === Path.Group + "/" + group.id
+                  ? Path.Group
+                  : Path.Group + "/" + group.id
+              }
+            >
+              <GroupBadge
+                campus={group.name as University}
+                className="px-4 text-base"
+              />
+            </Link>
           ) : (
-            <UserGroupIcon
+            <Link
+              href={
+                pathname === Path.Group + "/" + group.id
+                  ? Path.Group
+                  : Path.Group + "/" + group.id
+              }
+              className="bg-gray-900 rounded-full py-1 px-4 text-white font-light text-center"
+            >
+              {group.name}
+            </Link>
+          )
+        ) : user ? (
+          <div>Hi {user.displayName}</div>
+        ) : (
+          <div />
+        )}
+        {event ? (
+          <div className="flex items-center gap-4 justify-end">
+            {setToggleEdit && (
+              <>
+                {toggleEdit ? (
+                  <PencilIconSolid
+                    className="cursor-pointer w-7 h-7 text-gray-500"
+                    onClick={() => setToggleEdit(!toggleEdit)}
+                  />
+                ) : (
+                  <PencilIcon
+                    className="cursor-pointer w-7 h-7 text-gray-500"
+                    onClick={() => setToggleEdit(!toggleEdit)}
+                  />
+                )}
+              </>
+            )}
+            <Cog6ToothIcon
               className="cursor-pointer w-7 h-7 text-gray-500"
-              onClick={() =>
-                router.push(Path.Group + "/" + group.id + GroupPath.Members)
+              onClick={openModal}
+            />
+          </div>
+        ) : group ? (
+          <div className="flex items-center justify-end gap-4">
+            {pathname === Path.Group + "/" + group.id + GroupPath.Members ? (
+              <UserGroupIconSolid
+                className="cursor-pointer w-7 h-7 text-gray-500"
+                onClick={() => router.push(Path.Group + "/" + group.id)}
+              />
+            ) : (
+              <UserGroupIcon
+                className="cursor-pointer w-7 h-7 text-gray-500"
+                onClick={() =>
+                  router.push(Path.Group + "/" + group.id + GroupPath.Members)
+                }
+              />
+            )}
+            <Cog6ToothIcon
+              className="cursor-pointer w-7 h-7 text-gray-500"
+              onClick={
+                pathname === Path.Group + "/" + group.id + GroupPath.Members
+                  ? openMetadataModal
+                  : openGroupModal
               }
             />
-          )}
-          <Cog6ToothIcon
-            className="cursor-pointer w-7 h-7 text-gray-500"
-            onClick={
-              pathname === Path.Group + "/" + group.id + GroupPath.Members
-                ? openMetadataModal
-                : openGroupModal
-            }
-          />
-        </div>
-      ) : user && pathname === Path.Group ? (
-        <div className="flex items-center justify-end gap-4">
-          <DeleteConfirmation
-            description="You will be logged out"
-            action="Log out"
-            isOpen={logoutConfirmationIsOpen}
-            closeModal={() => setLogoutConfirmationIsOpen(false)}
-            confirm={logOut}
-            updating={false}
-          />
-          <ArrowLeftEndOnRectangleIcon
-            className="cursor-pointer w-7 h-7 text-gray-500"
-            onClick={() => setLogoutConfirmationIsOpen(true)}
-          />
-        </div>
-      ) : (
-        <></>
-      )}
-    </nav>
+          </div>
+        ) : user && pathname === Path.Group ? (
+          <div className="flex items-center justify-end gap-4">
+            <DeleteConfirmation
+              description="You will be logged out"
+              action="Log out"
+              isOpen={logoutConfirmationIsOpen}
+              closeModal={() => setLogoutConfirmationIsOpen(false)}
+              confirm={logOut}
+              updating={false}
+            />
+            <ArrowLeftEndOnRectangleIcon
+              className="cursor-pointer w-7 h-7 text-gray-500"
+              onClick={() => setLogoutConfirmationIsOpen(true)}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
+      </nav>
+    </div>
   );
 }

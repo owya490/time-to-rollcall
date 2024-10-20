@@ -12,7 +12,7 @@ export default function AttendanceSearchBar({
   setSearchInput,
 }: AttendanceSearchBarProps) {
   return (
-    <div className="flex w-full border-y-[1px] py-2 border-gray-300 items-center">
+    <div className="flex w-full border-y-[1px] py-2 px-6 border-gray-300 items-center">
       <MagnifyingGlassIcon className="w-6 h-6 mr-2 text-gray-500" />
       <input
         disabled={disabled}

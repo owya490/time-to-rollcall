@@ -218,7 +218,7 @@ export default function Event({
             deleteMember={deleteMemberIn}
             updatingDelete={updatingDelete}
           />
-          <div className="my-3">
+          <div className="px-6 pt-6">
             <EventComponent event={event} />
           </div>
           <AttendanceSearchBar
