@@ -13,7 +13,7 @@ export default function PrivateLayout({
   return (
     <UserContext.Provider value={user}>
       <Toaster />
-      {children}
+      <div className="mt-16">{children}</div>
     </UserContext.Provider>
   );
 }

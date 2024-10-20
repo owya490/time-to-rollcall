@@ -24,7 +24,7 @@ export default function GroupAdmin() {
     user && (
       <>
         <Topbar />
-        <div className="mx-6">
+        <div className="mx-4">
           <h1 className="text-2xl text-gray-700 mb-4">Admin Page</h1>
           <button
             type="button"

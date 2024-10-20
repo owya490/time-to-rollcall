@@ -3,7 +3,7 @@ import Botbar from "@/components/Botbar";
 import Loader from "@/components/Loader";
 import Topbar from "@/components/Topbar";
 import EditEvent from "@/components/event/EditEvent";
-import EventComponent from "@/components/event/Event";
+import EventComponent from "@/components/event/EventComponent";
 import { Filter, InitFilter } from "@/helper/Filter";
 import { GroupPath, Path } from "@/helper/Path";
 import { inBetween } from "@/helper/Time";
@@ -148,7 +148,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
               updating={updating}
             />
           )}
-          <h1 className="mx-6 mt-3 text-2xl mb-16">Events</h1>
+          <h1 className="mx-4 mt-3 text-2xl mb-16">Events</h1>
           {group &&
             showedEvents.map((event, i) => (
               <div key={i}>

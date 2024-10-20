@@ -4,7 +4,7 @@ import Topbar from "@/components/Topbar";
 import AttendanceSearchBar from "@/components/event/AttendanceSearchBar";
 import AttendanceSignedIn from "@/components/event/AttendanceSignedIn";
 import AttendanceSuggested from "@/components/event/AttendanceSuggested";
-import EventComponent from "@/components/event/Event";
+import EventComponent from "@/components/event/EventComponent";
 import EditMember from "@/components/members/EditMember";
 import { promiseToast } from "@/helper/Toast";
 import {
@@ -218,7 +218,7 @@ export default function Event({
             deleteMember={deleteMemberIn}
             updatingDelete={updatingDelete}
           />
-          <div className="px-6 pt-6">
+          <div className="px-4 pt-6">
             <EventComponent event={event} />
           </div>
           <AttendanceSearchBar
@@ -228,7 +228,7 @@ export default function Event({
           />
           {searchInput.length > 0 && index === 0 && (
             <>
-              <div className="flex items-center h-fit mx-6 mb-2 mt-8">
+              <div className="flex items-center h-fit mx-4 mb-2 mt-8">
                 <p className="text-gray-500 text-[10px] font-light align-middle">
                   SEARCH RESULTS
                 </p>

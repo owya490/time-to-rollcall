@@ -19,7 +19,7 @@ export default function AttendanceSuggested({
   return (
     <div className="z-20 bg-white">
       {suggested.length > 0 && (
-        <div className="flex items-center h-fit mx-6 mb-2 mt-8">
+        <div className="flex items-center h-fit mx-4 mb-2 mt-8">
           <p className="text-gray-500 text-[10px] font-light align-middle">
             SEARCH RESULTS
           </p>

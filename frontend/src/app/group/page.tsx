@@ -41,7 +41,7 @@ export default function Groups() {
   return (
     <>
       <Topbar />
-      <div className="mx-6">
+      <div className="mx-4">
         <h1 className="text-2xl mt-6 mb-3">Your Groups</h1>
         <div className="flex flex-wrap gap-2 my-4">
           {groups?.map((group, i) =>

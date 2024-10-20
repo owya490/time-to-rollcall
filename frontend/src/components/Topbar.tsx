@@ -173,7 +173,7 @@ export default function Topbar({
 
   return (
     <div>
-      <nav className="bg-white flex items-center fixed justify-between px-3 py-3 w-full z-40 top-0">
+      <nav className="bg-white flex items-center fixed justify-between px-4 py-4 w-full z-40 top-0">
         {event && group && tags !== null && (
           <EditEvent
             groupId={group.id}

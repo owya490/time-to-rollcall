@@ -213,10 +213,10 @@ function MemberSignInCard({
           </div>
           <div
             className={
-              "flex w-[calc(200vw)] px-6 items-center" +
+              "flex w-[calc(200vw)] px-4 items-center justify-between" +
               (dragConfig?.dragType === "DELETE" ? " bg-gray-100" : "")
             }
-            onClick={(e) => {
+            onClick={() => {
               if (disabled) return;
               if (selectedRef.current || editRef.current) {
                 selectedRef.current = false;
@@ -236,33 +236,35 @@ function MemberSignInCard({
               }
             }}
           >
-            <Image
-              src={
-                gender && member.metadata?.[gender.id]
-                  ? gender.values[member.metadata?.[gender.id]] === "Male"
-                    ? MAN_SVG
+            <div className="flex justify-start items-center">
+              <Image
+                src={
+                  gender && member.metadata?.[gender.id]
+                    ? gender.values[member.metadata?.[gender.id]] === "Male"
+                      ? MAN_SVG
+                      : WOMAN_FACE_SVG
                     : WOMAN_FACE_SVG
-                  : WOMAN_FACE_SVG
-              }
-              height={0}
-              width={0}
-              alt="face"
-              className="h-7 w-7 mr-4"
-            />
-            <div>
-              <h3 className="font-light mb-2">{member.name}</h3>
-              <p className="text-xs text-gray-500 font-extralight">
-                {year && member.metadata?.[year.id]
-                  ? getYearString(year.values[member.metadata?.[year.id]]) ??
-                    getYearString(member.metadata?.[year.id])
-                  : ""}
-                {role && member.metadata?.[role.id]
-                  ? role.values[member.metadata?.[role.id]] ??
-                    member.metadata?.[role.id]
-                  : "Member"}
-              </p>
+                }
+                // height={0}
+                // width={0}
+                alt="face"
+                className="h-7 w-7 mr-4"
+              />
+              <div>
+                <h3 className="font-light mb-2">{member.name}</h3>
+                <p className="text-xs text-gray-500 font-extralight">
+                  {year && member.metadata?.[year.id]
+                    ? getYearString(year.values[member.metadata?.[year.id]]) ??
+                      getYearString(member.metadata?.[year.id])
+                    : ""}
+                  {role && member.metadata?.[role.id]
+                    ? role.values[member.metadata?.[role.id]] ??
+                      member.metadata?.[role.id]
+                    : "Member"}
+                </p>
+              </div>
             </div>
-            <div className="ml-auto">
+            <div>
               <GroupBadge
                 campus={
                   campus &&
