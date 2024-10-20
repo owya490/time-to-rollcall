@@ -96,8 +96,8 @@ export default function Event({
 
   const bottomButtonRef = useRef<HTMLDivElement>(null);
   const fixPosition = () => {
-    if (bottomButtonRef.current && window.visualViewport) {
-      bottomButtonRef.current.style.top = `${window.visualViewport.height}px`;
+    if (bottomButtonRef.current) {
+      bottomButtonRef.current.style.top = `${window.visualViewport?.height}px`;
     }
   };
 
@@ -317,39 +317,34 @@ export default function Event({
           </div>
           <div
             ref={bottomButtonRef}
-            className="fixed z-40 -translate-y-full flex justify-center text-center w-full text-gray-700"
-          >
-            <button
-              type="button"
-              className={
-                "text-sm py-4 px-1.5 w-full rounded-lg font-light " +
-                (toggleEdit ? "bg-green-200" : "bg-gray-300")
+            className={
+              "fixed z-40 -translate-y-full flex justify-center text-center text-gray-700 text-sm py-4 px-1.5 w-full rounded-lg font-light " +
+              (toggleEdit ? "bg-green-200" : "bg-gray-300")
+            }
+            onClick={() => {
+              if (toggleEdit) {
+                setSelectedMember(
+                  InitMember(
+                    searchInput,
+                    metadata?.find(
+                      (m) => m.key === "campus" && m.type === "select"
+                    )?.id,
+                    Object.entries(
+                      (
+                        metadata?.find(
+                          (m) => m.key === "campus" && m.type === "select"
+                        ) as MetadataSelectModel | undefined
+                      )?.values ?? {}
+                    ).find(([_, v]) => v === group?.name)?.[0]
+                  )
+                );
+                openModal();
+              } else {
+                setToggleEdit(true);
               }
-              onClick={() => {
-                if (toggleEdit) {
-                  setSelectedMember(
-                    InitMember(
-                      searchInput,
-                      metadata?.find(
-                        (m) => m.key === "campus" && m.type === "select"
-                      )?.id,
-                      Object.entries(
-                        (
-                          metadata?.find(
-                            (m) => m.key === "campus" && m.type === "select"
-                          ) as MetadataSelectModel | undefined
-                        )?.values ?? {}
-                      ).find(([_, v]) => v === group?.name)?.[0]
-                    )
-                  );
-                  openModal();
-                } else {
-                  setToggleEdit(true);
-                }
-              }}
-            >
-              {toggleEdit ? "Create and Add New Member" : "Enable Editing"}
-            </button>
+            }}
+          >
+            {toggleEdit ? "Create and Add New Member" : "Enable Editing"}
           </div>
         </>
       ) : (
