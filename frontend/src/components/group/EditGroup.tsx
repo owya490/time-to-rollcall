@@ -77,7 +77,7 @@ export default function EditGroup({
             <div className="fixed inset-0 bg-black/25" />
           </TransitionChild>
           <div className="fixed inset-0">
-            <div className="absolute w-full bottom-0">
+            <div className="fixed w-full bottom-0">
               <TransitionChild
                 enter="transition ease-in-out duration-300 transform"
                 enterFrom="transform translate-y-full"
@@ -99,7 +99,7 @@ export default function EditGroup({
                   >
                     {newGroup ? "Create New Group" : "Edit Group"}
                   </DialogTitle>
-                  <div className="overflow-auto max-h-[80vh] pb-10 px-4">
+                  <div className="overflow-auto max-h-[70vh] pb-10 px-4">
                     <div className="my-4">
                       <p className="text-sm text-gray-900">Name</p>
                       <input
@@ -246,14 +246,14 @@ export default function EditGroup({
                   </div>
                   <div className="flex justify-center">
                     {updating ? (
-                      <div className="bottom-2 absolute flex justify-center items-center">
+                      <div className="bottom-2 fixed flex justify-center items-center">
                         <Loader show />
                       </div>
                     ) : (
                       <button
                         type="button"
                         disabled={!group.name || tags?.some((t) => !t.name)}
-                        className="bottom-2 absolute z-50 inline-flex mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="bottom-2 fixed z-50 inline-flex mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={submit}
                       >
                         {newGroup ? "Create" : "Update"}
