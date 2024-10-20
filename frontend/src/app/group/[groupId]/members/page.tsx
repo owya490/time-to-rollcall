@@ -151,7 +151,8 @@ export default function GroupMember({
           />
         </div>
       </div>
-      <div
+      <button
+        type="button"
         className="fixed z-40 bottom-0 flex justify-center text-center text-gray-700 text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
         onClick={() => {
           setSelectedMember(
@@ -172,7 +173,7 @@ export default function GroupMember({
         }}
       >
         Create New Member
-      </div>
+      </button>
     </>
   );
 }

@@ -295,7 +295,8 @@ export default function Event({
               }}
             />
           </div>
-          <div
+          <button
+            type="button"
             className={
               "fixed z-40 bottom-0 flex justify-center text-center text-gray-700 text-sm py-4 px-1.5 w-full rounded-lg font-light " +
               (toggleEdit ? "bg-green-200" : "bg-gray-300")
@@ -324,7 +325,7 @@ export default function Event({
             }}
           >
             {toggleEdit ? "Create and Add New Member" : "Enable Editing"}
-          </div>
+          </button>
         </>
       ) : (
         <></>
