@@ -92,7 +92,7 @@ export default function EditMember({
               >
                 <DialogPanel className="rounded-t-3xl bg-white pt-4 pb-0 shadow-xl">
                   <div
-                    className="fixed right-2 top-2 p-2 cursor-pointer"
+                    className="absolute right-2 top-2 p-2 cursor-pointer"
                     onClick={closeModal}
                   >
                     <XMarkIcon className="w-6 h-6 text-black" />
