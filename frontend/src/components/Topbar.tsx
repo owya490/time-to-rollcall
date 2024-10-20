@@ -172,7 +172,7 @@ export default function Topbar({
   }, [group, tags, metadata]);
 
   return (
-    <nav className="bg-white flex items-center sticky justify-between px-6 py-6 w-full z-40 top-0 scroll-smooth">
+    <nav className="bg-white flex items-center sticky justify-between px-6 py-3 w-full z-40 top-0 scroll-smooth">
       {event && group && tags !== null && (
         <EditEvent
           groupId={group.id}

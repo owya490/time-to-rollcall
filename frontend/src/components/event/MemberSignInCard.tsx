@@ -293,19 +293,6 @@ function MemberSignInCard({
           </div>
         </div>
       </div>
-      {dragEnabled ? (
-        dragConfig.dragType == "ADD" ? (
-          <div className="-z-10">
-            <div className="bg-blue-600 h-20 top-0 w-full absolute flex justify-center items-center"></div>
-          </div>
-        ) : (
-          <div className="-z-10">
-            <div className="bg-red-600 h-20 top-0 w-full absolute flex justify-center items-center"></div>
-          </div>
-        )
-      ) : (
-        <></>
-      )}
     </div>
   );
 }

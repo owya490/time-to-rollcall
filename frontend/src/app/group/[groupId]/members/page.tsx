@@ -132,16 +132,14 @@ export default function GroupMember({
         deleteMember={deleteMemberIn}
         updatingDelete={updatingDelete}
       />
-      <h1 className="mx-6 text-2xl mb-6">Members</h1>
+      <h1 className="mx-6 mt-3 text-2xl mb-16">Members</h1>
       <div className="relative">
-        <div className="mx-6">
-          <div className="mb-6">
-            <AttendanceSearchBar
-              disabled={false}
-              searchInput={searchInput}
-              setSearchInput={setSearchInput}
-            />
-          </div>
+        <div className="mb-6">
+          <AttendanceSearchBar
+            disabled={false}
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
+          />
         </div>
         <div className="z-20 w-full">
           <Members

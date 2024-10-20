@@ -148,7 +148,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
               updating={updating}
             />
           )}
-          <h1 className="mx-6 text-2xl mb-16">Events</h1>
+          <h1 className="mx-6 mt-3 text-2xl mb-16">Events</h1>
           {group &&
             showedEvents.map((event, i) => (
               <div key={i}>

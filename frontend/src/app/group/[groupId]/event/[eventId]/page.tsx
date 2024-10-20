@@ -218,16 +218,14 @@ export default function Event({
             deleteMember={deleteMemberIn}
             updatingDelete={updatingDelete}
           />
-          <div className="mx-4">
-            <div className="mb-3">
-              <EventComponent event={event} />
-            </div>
-            <AttendanceSearchBar
-              disabled={!toggleEdit}
-              searchInput={searchInput}
-              setSearchInput={setSearchInput}
-            />
+          <div className="my-3">
+            <EventComponent event={event} />
           </div>
+          <AttendanceSearchBar
+            disabled={!toggleEdit}
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
+          />
           {searchInput.length > 0 && index === 0 && (
             <>
               <div className="flex items-center h-fit mx-6 mb-2 mt-8">
