@@ -10,7 +10,7 @@ import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
 import Image from "next/image";
 import { FC, memo, useContext, useEffect, useRef } from "react";
-import WOMAN_FACE_PNG from "../../../public/face-woman-profile.png";
+import WOMAN_FACE_SVG from "../../../public/face-woman-profile.svg";
 import MAN_SVG from "../../../public/man-profile.svg";
 import GroupBadge from "./GroupBadge";
 import { MetadataContext } from "@/lib/context";
@@ -238,11 +238,11 @@ function MemberSignInCard({
           >
             <Image
               src={
-                gender
-                  ? member.metadata?.[gender.id] === "Male"
+                gender && member.metadata?.[gender.id]
+                  ? gender.values[member.metadata?.[gender.id]] === "Male"
                     ? MAN_SVG
-                    : WOMAN_FACE_PNG
-                  : WOMAN_FACE_PNG
+                    : WOMAN_FACE_SVG
+                  : WOMAN_FACE_SVG
               }
               height={0}
               width={0}
