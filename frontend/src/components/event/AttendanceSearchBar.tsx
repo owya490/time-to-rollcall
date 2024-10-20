@@ -20,7 +20,7 @@ export default function AttendanceSearchBar({
         placeholder={
           !disabled ? "Search members" : "Click the pencil icon to edit!"
         }
-        className="w-full placeholder:text-sm placeholder:font-thin placeholder:align-middle outline-none"
+        className="w-full placeholder:text-sm placeholder:font-thin placeholder:align-middle outline-none bg-white"
         onChange={(e) => {
           setSearchInput(e.target.value);
         }}
