@@ -265,7 +265,9 @@ export default function Event({
           {searchInput.length === 0 &&
             (!event || !event.members || event.members.length === 0) && (
               <div className="text-center mt-8 text-gray-500">
-                Start searching members to add them!
+                {!toggleEdit
+                  ? "Click the pencil icon on the top right to enable editing!"
+                  : "Start searching members to add them!"}
               </div>
             )}
           <div className="w-full z-30">
