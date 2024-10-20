@@ -22,7 +22,7 @@ import { MetadataSelectModel } from "@/models/Metadata";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { searchForMemberByName } from "services/attendanceService";
 
 gsap.registerPlugin(Draggable, useGSAP);
@@ -93,24 +93,6 @@ export default function Event({
     setUpdating(false);
     closeModal();
   }
-
-  const bottomButtonRef = useRef<HTMLDivElement>(null);
-  const fixPosition = () => {
-    if (bottomButtonRef.current) {
-      bottomButtonRef.current.style.top = `${window.visualViewport?.height}px`;
-    }
-  };
-
-  useEffect(() => {
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", fixPosition);
-      fixPosition();
-    }
-
-    return () => {
-      window.visualViewport?.removeEventListener("resize", fixPosition);
-    };
-  }, []);
 
   useEffect(() => {
     if (event && members !== null) {
@@ -316,9 +298,8 @@ export default function Event({
             />
           </div>
           <div
-            ref={bottomButtonRef}
             className={
-              "fixed z-40 -translate-y-full flex justify-center text-center text-gray-700 text-sm py-4 px-1.5 w-full rounded-lg font-light " +
+              "fixed z-40 bottom-0 flex justify-center text-center text-gray-700 text-sm py-4 px-1.5 w-full rounded-lg font-light " +
               (toggleEdit ? "bg-green-200" : "bg-gray-300")
             }
             onClick={() => {
