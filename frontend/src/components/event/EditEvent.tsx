@@ -101,16 +101,16 @@ export default function EditEvent({
                 leaveFrom="transform translate-y-0"
                 leaveTo="transform translate-y-full"
               >
-                <DialogPanel className="rounded-t-3xl bg-white p-6 text-center shadow-xl">
+                <DialogPanel className="rounded-t-3xl bg-white p-4 text-center shadow-xl">
                   <div
-                    className="absolute right-4 top-4 p-2 cursor-pointer"
+                    className="absolute right-2 top-2 p-2 cursor-pointer"
                     onClick={closeModal}
                   >
                     <XMarkIcon className="w-6 h-6 text-black" />
                   </div>
                   {!newEvent && (
                     <div
-                      className="absolute left-4 top-4 p-2 cursor-pointer"
+                      className="absolute left-2 top-2 p-2 cursor-pointer"
                       onClick={openDeleteConfirmationModal}
                     >
                       <TrashIcon className="w-6 h-6 text-red-600" />

@@ -139,9 +139,9 @@ export default function EditMetadata({
                 leaveFrom="transform translate-y-0"
                 leaveTo="transform translate-y-full"
               >
-                <DialogPanel className="rounded-t-3xl bg-white p-6 shadow-xl">
+                <DialogPanel className="rounded-t-3xl bg-white pt-4 pb-0 shadow-xl">
                   <div
-                    className="absolute right-4 top-4 p-2 cursor-pointer"
+                    className="absolute right-2 top-2 p-2 cursor-pointer"
                     onClick={closeModal}
                   >
                     <XMarkIcon className="w-6 h-6 text-black" />
@@ -152,7 +152,7 @@ export default function EditMetadata({
                   >
                     Edit Metadata
                   </DialogTitle>
-                  <div className="overflow-auto max-h-[400px]">
+                  <div className="overflow-auto max-h-[80vh] pb-14 px-4">
                     {metadata.map((md, i) => (
                       <div className="my-4" key={i}>
                         <p className="text-sm text-gray-900">Name</p>
@@ -299,20 +299,22 @@ export default function EditMetadata({
                         Create Data Point
                       </button>
                     </div>
-                  </div>
-                  {updating ? (
-                    <div className="flex justify-center items-center">
-                      <Loader show />
+                    <div className="flex justify-center">
+                      {updating ? (
+                        <div className="bottom-2 absolute flex justify-center items-center">
+                          <Loader show />
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          className="bottom-2 absolute inline-flex mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                          onClick={submit}
+                        >
+                          Update
+                        </button>
+                      )}
                     </div>
-                  ) : (
-                    <button
-                      type="button"
-                      className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                      onClick={submit}
-                    >
-                      Update
-                    </button>
-                  )}
+                  </div>
                 </DialogPanel>
               </TransitionChild>
             </div>

@@ -52,9 +52,9 @@ export default function DeleteConfirmation({
               leaveFrom="transform translate-y-0"
               leaveTo="transform translate-y-full"
             >
-              <DialogPanel className="rounded-t-3xl bg-white p-6 shadow-xl">
+              <DialogPanel className="rounded-t-3xl bg-white p-4 shadow-xl">
                 <div
-                  className="absolute right-4 top-4 p-2"
+                  className="absolute right-2 top-2 p-2"
                   onClick={closeModal}
                 >
                   <XMarkIcon className="w-6 h-6 text-black" />
