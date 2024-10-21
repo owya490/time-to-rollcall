@@ -4,8 +4,9 @@ import Topbar from "@/components/Topbar";
 import AttendanceSearchBar from "@/components/event/AttendanceSearchBar";
 import AttendanceSignedIn from "@/components/event/AttendanceSignedIn";
 import AttendanceSuggested from "@/components/event/AttendanceSuggested";
-import EventComponent from "@/components/event/EventComponent";
+import LiveBadge from "@/components/event/LiveBadge";
 import EditMember from "@/components/members/EditMember";
+import { inBetween } from "@/helper/Time";
 import { promiseToast } from "@/helper/Toast";
 import {
   EventContext,
@@ -97,12 +98,15 @@ export default function Event({
   useEffect(() => {
     if (event && members !== null) {
       let membersNotSignedIn =
-        members?.filter(
-          (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)
-        ) ?? [];
+        members
+          ?.sort((a, b) => a.name.localeCompare(b.name))
+          .filter(
+            (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)
+          ) ?? [];
       let membersSignedIn =
         event.members
-          ?.map((m) => members?.find((member) => member.id === m.id))
+          ?.sort((a, b) => a.name.localeCompare(b.name))
+          .map((m) => members?.find((member) => member.id === m.id))
           .filter((m): m is MemberModel => m !== undefined) ?? [];
       if (searchInput.length > 0) {
         setLoadAnimation(true);
@@ -218,53 +222,24 @@ export default function Event({
             deleteMember={deleteMemberIn}
             updatingDelete={updatingDelete}
           />
-          <div className="px-4 pt-6">
-            <EventComponent event={event} />
+          <div className="flex mt-6 mx-4 mb-3 justify-between items-start">
+            <h1 className="text-2xl">{event.name}</h1>
+            {inBetween(event.dateStart, time, event.dateEnd) && <LiveBadge />}
+            {time < event.dateStart && (
+              <p className="text-xs font-medium text-gray-500">NOT YET</p>
+            )}
+            {time > event.dateEnd && (
+              <p className="text-xs font-medium text-gray-500">ENDED</p>
+            )}
           </div>
           <AttendanceSearchBar
             disabled={!toggleEdit}
             searchInput={searchInput}
             setSearchInput={setSearchInput}
           />
-          {searchInput.length > 0 && index === 0 && (
-            <>
-              <div className="flex items-center h-fit mx-4 mb-2 mt-8">
-                <p className="text-gray-500 text-[10px] font-light align-middle">
-                  SEARCH RESULTS
-                </p>
-              </div>
-              <div className="flex flex-col items-center gap-2 text-center w-full my-4 text-gray-700">
-                <p>That member doesn&apos;t exist</p>
-                <button
-                  type="button"
-                  className="text-sm py-1.5 px-1.5 rounded-lg bg-green-100 font-light"
-                  onClick={() => {
-                    setSelectedMember(
-                      InitMember(
-                        searchInput,
-                        metadata?.find(
-                          (m) => m.key === "campus" && m.type === "select"
-                        )?.id,
-                        Object.entries(
-                          (
-                            metadata?.find(
-                              (m) => m.key === "campus" && m.type === "select"
-                            ) as MetadataSelectModel | undefined
-                          )?.values ?? {}
-                        ).find(([_, v]) => v === group?.name)?.[0]
-                      )
-                    );
-                    openModal();
-                  }}
-                >
-                  Create New Member
-                </button>
-              </div>
-            </>
-          )}
           {searchInput.length === 0 &&
             (!event || !event.members || event.members.length === 0) && (
-              <div className="text-center mt-8 text-gray-500">
+              <div className="text-center my-6 mt-8 text-gray-500">
                 {!toggleEdit
                   ? "Click the pencil icon on the top right to enable editing!"
                   : "Start searching members to add them!"}
@@ -274,7 +249,26 @@ export default function Event({
             <AttendanceSuggested
               disabled={!toggleEdit}
               suggested={membersNotSignedIn.slice(0, index)}
+              searchInputLength={searchInput.length}
               loadAnimation={loadAnimation}
+              create={() => {
+                setSelectedMember(
+                  InitMember(
+                    searchInput,
+                    metadata?.find(
+                      (m) => m.key === "campus" && m.type === "select"
+                    )?.id,
+                    Object.entries(
+                      (
+                        metadata?.find(
+                          (m) => m.key === "campus" && m.type === "select"
+                        ) as MetadataSelectModel | undefined
+                      )?.values ?? {}
+                    ).find(([_, v]) => v === group?.name)?.[0]
+                  )
+                );
+                openModal();
+              }}
               action={(member: MemberModel) => {
                 addMemberToEvent(groupId, eventId, member.id);
               }}
@@ -288,6 +282,7 @@ export default function Event({
             <AttendanceSignedIn
               disabled={!toggleEdit}
               signedIn={membersSignedIn.slice(0, indexSignedIn)}
+              totalAttendance={event.members?.length ?? 0}
               action={(member: MemberModel) => {
                 removeMemberFromEvent(groupId, eventId, member.id);
               }}

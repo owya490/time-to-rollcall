@@ -214,7 +214,7 @@ function MemberSignInCard({
           <div
             className={
               "flex w-[calc(200vw)] px-4 items-center justify-between" +
-              (dragConfig?.dragType === "DELETE" ? " bg-gray-100" : "")
+              (dragConfig?.dragType === "DELETE" ? " bg-blue-100" : "")
             }
             onClick={() => {
               if (disabled) return;

@@ -134,7 +134,7 @@ export default function GroupMember({
       />
       <h1 className="mx-4 mt-3 text-2xl mb-16">Members</h1>
       <div className="relative">
-        <div className="mb-6">
+        <div className="mb-2">
           <AttendanceSearchBar
             disabled={false}
             searchInput={searchInput}
