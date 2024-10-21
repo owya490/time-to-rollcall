@@ -222,7 +222,12 @@ export default function Event({
             deleteMember={deleteMemberIn}
             updatingDelete={updatingDelete}
           />
-          <div className="flex mt-6 mx-4 mb-3 justify-between items-start">
+          <div
+            className={
+              "flex mx-4 mb-3 justify-between items-start" +
+              (time > event.dateEnd ? " pt-4" : "")
+            }
+          >
             <h1 className="text-2xl">{event.name}</h1>
             {inBetween(event.dateStart, time, event.dateEnd) && <LiveBadge />}
             {time < event.dateStart && (

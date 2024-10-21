@@ -10,6 +10,7 @@ import {
   arrayUnion,
   arrayRemove,
   deleteDoc,
+  where,
 } from "firebase/firestore";
 import {
   convertCollectionToJavascript,
@@ -22,6 +23,7 @@ import { convertTagIdToReference } from "./tags";
 import { MemberId } from "@/models/Member";
 import { convertMemberIdToReference } from "./members";
 import { currentYearStr } from "@/helper/Time";
+import { TagModel } from "@/models/Tag";
 
 export async function getEvents(groupId: GroupId) {
   const events = await getDocs(
@@ -29,6 +31,22 @@ export async function getEvents(groupId: GroupId) {
       collection(firestore, "groups", groupId, "events"),
       orderBy("dateEnd", "desc"),
       orderBy("dateStart", "desc")
+    )
+  );
+  return (await convertCollectionToJavascript(events.docs)) as EventModel[];
+}
+
+export async function getEventsByTag(groupId: GroupId, tags: TagModel[]) {
+  const events = await getDocs(
+    query(
+      collection(firestore, "groups", groupId, "events"),
+      where(
+        "tags",
+        "array-contains-any",
+        tags.map((t) => doc(firestore, "groups", groupId, "tags", t.id))
+      ),
+      orderBy("dateEnd", "asc"),
+      orderBy("dateStart", "asc")
     )
   );
   return (await convertCollectionToJavascript(events.docs)) as EventModel[];
