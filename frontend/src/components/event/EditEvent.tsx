@@ -77,7 +77,7 @@ export default function EditEvent({
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog
           as="div"
-          className="fixed inset-0 z-40 w-full"
+          className="fixed inset-0 z-40 w-full overflow-hidden"
           onClose={closeModal}
         >
           <TransitionChild
