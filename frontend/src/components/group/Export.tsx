@@ -77,11 +77,11 @@ export default function Export({
                   as="h3"
                   className="text-xl font-medium leading-6 text-gray-900 text-center"
                 >
-                  Export
+                  Export to Sheet
                 </DialogTitle>
                 <div className="overflow-auto max-h-[70vh] pb-14 px-4">
                   <p className="my-2 text-xs font-light text-gray-400">
-                    Select Tags to Export
+                    Select Event Tags to Export
                   </p>
                   <div className="flex flex-wrap justify-center max-h-32 overflow-auto">
                     {tags?.map((t, i) => (
@@ -111,11 +111,30 @@ export default function Export({
                     ))}
                   </div>
                   <p className="my-2 text-xs font-light text-gray-400">
-                    Select Data to Export
+                    Select Member Data to Export
                   </p>
-                  <div className="flex flex-col justify-center max-h-32 overflow-auto">
+                  <div className="flex flex-col max-h-32 scroll-mt-4 overflow-auto">
+                    <button
+                      className="py-1"
+                      style={{
+                        backgroundColor: "lightGray",
+                        color: "gray",
+                      }}
+                    >
+                      Name
+                    </button>
+                    <button
+                      className="py-1"
+                      style={{
+                        backgroundColor: "lightGray",
+                        color: "gray",
+                      }}
+                    >
+                      Email
+                    </button>
                     {metadata?.map((md, i) => (
                       <button
+                        className="py-1"
                         style={
                           exportMetadata.map((emd) => emd.id).includes(md.id)
                             ? {
