@@ -77,13 +77,13 @@ export default function Export({
                   as="h3"
                   className="text-xl font-medium leading-6 text-gray-900 text-center"
                 >
-                  Export to Sheet
+                  Export data
                 </DialogTitle>
                 <div className="overflow-auto max-h-[70vh] pb-14 px-4">
                   <p className="my-2 text-xs font-light text-gray-400">
                     Select Event Tags to Export
                   </p>
-                  <div className="flex flex-wrap justify-center max-h-32 overflow-auto">
+                  <div className="flex flex-wrap max-h-32 overflow-auto">
                     {tags?.map((t, i) => (
                       <Tag
                         key={i}
@@ -111,38 +111,37 @@ export default function Export({
                     ))}
                   </div>
                   <p className="my-2 text-xs font-light text-gray-400">
-                    Select Member Data to Export
+                    Select fields to export
                   </p>
-                  <div className="flex flex-col max-h-32 scroll-mt-4 overflow-auto">
-                    <button
-                      className="py-1"
-                      style={{
-                        backgroundColor: "lightGray",
-                        color: "gray",
-                      }}
+                  <div className="flex flex-col max-h-48 scroll-mt-4 gap-0.5 overflow-auto">
+                    <div
+                      className={`flex cursor-pointer items-center justify-start gap-6 px-2 py-3 rounded-xl bg-gray-100`}
                     >
-                      Name
-                    </button>
-                    <button
-                      className="py-1"
-                      style={{
-                        backgroundColor: "lightGray",
-                        color: "gray",
-                      }}
+                      <input
+                        checked
+                        disabled
+                        type="checkbox"
+                        className="w-4 h-4"
+                      />
+                      <label className="text-slate-800 font-medium text-[15px]">
+                        Name
+                      </label>
+                    </div>
+                    <div
+                      className={`flex cursor-pointer items-center justify-start gap-6 px-2 py-3 rounded-xl bg-gray-100`}
                     >
-                      Email
-                    </button>
+                      <input
+                        checked
+                        disabled
+                        type="checkbox"
+                        className="w-4 h-4"
+                      />
+                      <label className="text-slate-800 font-medium text-[15px]">
+                        Email
+                      </label>
+                    </div>
                     {metadata?.map((md, i) => (
-                      <button
-                        className="py-1"
-                        style={
-                          exportMetadata.map((emd) => emd.id).includes(md.id)
-                            ? {
-                                backgroundColor: "lightBlue",
-                                color: "black",
-                              }
-                            : { color: "gray" }
-                        }
+                      <div
                         key={i}
                         onClick={() =>
                           setExportMetadata(
@@ -164,9 +163,23 @@ export default function Export({
                               : exportMetadata.concat(md)
                           )
                         }
+                        className={`flex cursor-pointer items-center justify-start gap-6 px-2 py-3 rounded-xl ${
+                          exportMetadata.map((emd) => emd.id).includes(md.id)
+                            ? "bg-gray-100"
+                            : ""
+                        }`}
                       >
-                        {md.key}
-                      </button>
+                        <input
+                          checked={exportMetadata
+                            .map((emd) => emd.id)
+                            .includes(md.id)}
+                          type="checkbox"
+                          className="w-4 h-4"
+                        />
+                        <label className="text-slate-800 font-medium text-[15px]">
+                          {md.key}
+                        </label>
+                      </div>
                     ))}
                   </div>
                 </div>
