@@ -275,7 +275,12 @@ export default function Event({
                 openModal();
               }}
               action={(member: MemberModel) => {
-                addMemberToEvent(groupId, eventId, member.id);
+                promiseToast<void>(
+                  addMemberToEvent(groupId, eventId, member.id),
+                  `Adding ${member.name}...`,
+                  `${member.name} Added!`,
+                  `Could not add ${member.name}.`
+                );
               }}
               edit={(member: MemberModel) => {
                 setSelectedMember(member);
@@ -289,7 +294,12 @@ export default function Event({
               signedIn={membersSignedIn.slice(0, indexSignedIn)}
               totalAttendance={event.members?.length ?? 0}
               action={(member: MemberModel) => {
-                removeMemberFromEvent(groupId, eventId, member.id);
+                promiseToast<void>(
+                  removeMemberFromEvent(groupId, eventId, member.id),
+                  `Removing ${member.name}...`,
+                  `${member.name} Removed!`,
+                  `Could not remove ${member.name}.`
+                );
               }}
               edit={(member: MemberModel) => {
                 setSelectedMember(member);

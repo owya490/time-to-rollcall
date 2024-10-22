@@ -1,0 +1,142 @@
+import { downloadEventsToExcel } from "@/lib/excel";
+import { TagModel } from "@/models/Tag";
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Transition,
+  TransitionChild,
+} from "@headlessui/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { Fragment, useContext, useState } from "react";
+import Tag from "../event/Tag";
+import Loader from "../Loader";
+import { MetadataContext } from "@/lib/context";
+import { promiseToast } from "@/helper/Toast";
+
+export default function Export({
+  groupId,
+  isOpen,
+  closeModal,
+  tags,
+}: {
+  groupId: string;
+  isOpen: boolean;
+  closeModal: () => void;
+  tags?: TagModel[];
+}) {
+  const metadata = useContext(MetadataContext);
+  const [exportTags, setExportTags] = useState<TagModel[]>([]);
+  const [updating, setUpdating] = useState<boolean>(false);
+  return (
+    <Transition appear show={isOpen} as={Fragment}>
+      <Dialog
+        as="div"
+        className="fixed inset-0 z-50 w-full overflow-hidden"
+        onClose={closeModal}
+      >
+        <TransitionChild
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black/25" />
+        </TransitionChild>
+        <div className="fixed inset-0">
+          <div className="fixed w-full bottom-0">
+            <TransitionChild
+              enter="transition ease-in-out duration-300 transform"
+              enterFrom="transform translate-y-full"
+              enterTo="transform translate-y-0"
+              leave="transition ease-in-out duration-300 transform"
+              leaveFrom="transform translate-y-0"
+              leaveTo="transform translate-y-full"
+            >
+              <DialogPanel className="rounded-t-3xl bg-white pt-4 pb-0 shadow-xl">
+                <div
+                  className="absolute right-2 top-2 p-2 cursor-pointer"
+                  onClick={closeModal}
+                >
+                  <XMarkIcon className="w-6 h-6 text-black" />
+                </div>
+                <DialogTitle
+                  as="h3"
+                  className="text-xl font-medium leading-6 text-gray-900 text-center"
+                >
+                  Export
+                </DialogTitle>
+                <div className="overflow-auto max-h-[70vh] pb-14 px-4">
+                  <p className="my-2 text-xs font-light text-gray-400">
+                    Select Tags to Export
+                  </p>
+                  <div className="flex flex-wrap justify-center max-h-32 overflow-auto">
+                    {tags?.map((t, i) => (
+                      <Tag
+                        key={i}
+                        tag={t}
+                        selected={exportTags.map((t) => t.id).includes(t.id)}
+                        onClick={() =>
+                          setExportTags(
+                            exportTags.map((t) => t.id).includes(t.id)
+                              ? exportTags
+                                  .slice(
+                                    0,
+                                    exportTags.map((t) => t.id).indexOf(t.id)
+                                  )
+                                  .concat(
+                                    exportTags.slice(
+                                      exportTags
+                                        .map((t) => t.id)
+                                        .indexOf(t.id) + 1
+                                    )
+                                  )
+                              : exportTags.concat(t)
+                          )
+                        }
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="flex justify-center">
+                  {updating ? (
+                    <div className="bottom-2 fixed flex justify-center items-center">
+                      <Loader show />
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      className="bottom-2 fixed z-50 inline-flex mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={async () => {
+                        if (metadata !== null) {
+                          setUpdating(true);
+                          await promiseToast<void>(
+                            downloadEventsToExcel(
+                              groupId,
+                              exportTags,
+                              metadata
+                            ),
+                            "Exporting...",
+                            "Events Exported!",
+                            "Could not export events."
+                          );
+                          closeModal();
+                          setUpdating(false);
+                        }
+                      }}
+                    >
+                      Export
+                    </button>
+                  )}
+                </div>
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </Transition>
+  );
+}

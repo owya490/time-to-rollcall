@@ -1,101 +1,90 @@
 import ExcelJS from "exceljs";
 import { getEventsByTag } from "./events";
 import { TagModel } from "@/models/Tag";
-import { MetadataModel } from "@/models/Metadata";
+import { MetadataModel, MetadataSelectModel } from "@/models/Metadata";
+import { saveAs } from "file-saver";
 import { GroupId } from "@/models/Group";
+import { toddMMYYYY, sameDay, hoursAndMinutes } from "@/helper/Time";
+import { MemberMetadataModel } from "@/models/Member";
 
 export async function downloadEventsToExcel(
   groupId: GroupId,
-  metadata: MetadataModel[],
-  tags: TagModel[]
+  tags: TagModel[],
+  metadata?: MetadataModel[]
 ) {
-  metadata;
   const events = await getEventsByTag(groupId, tags);
   const workbook = new ExcelJS.Workbook();
   for (const event of events) {
     const worksheet = workbook.addWorksheet(event.name);
-    worksheet.columns = [
-      { header: "Name", key: "course", width: 15 },
-      ...metadata.map((md) => ({ header: md.key, key: md.id, width: 30 })),
-      { header: "Assessment", key: "assessment", width: 30 },
-      { header: "Input tokens", key: "input_tokens", width: 10 },
-      { header: "Rubric included", key: "rubric_included", width: 10 },
-      { header: "Output tokens", key: "output_tokens", width: 10 },
-      { header: "GPT4o-mini cost", key: "gpt_cost", width: 10 },
-      { header: "Rubric breakdown", key: "rubric_breakdown", width: 30 },
-      { header: "Overall score", key: "overall_score", width: 10 },
-      { header: "Overall grade", key: "overall_grade", width: 10 },
-      { header: "Full rubric analysis", key: "rubric_analysis", width: 40 },
-      { header: "Strengths", key: "strengths", width: 30 },
-      { header: "Weaknesses", key: "weaknesses", width: 30 },
-      { header: "Recommendations", key: "recommendations", width: 30 },
+    // Add event details at the top
+    worksheet.addRow(["Name", event.name]);
+    worksheet.addRow([
+      "Date",
+      `${toddMMYYYY(event.dateStart)}${
+        sameDay(event.dateStart, event.dateEnd)
+          ? " - " + hoursAndMinutes(event.dateEnd)
+          : " - " + toddMMYYYY(event.dateEnd)
+      }`,
+    ]);
+    worksheet.addRow(["Tags", event.tags.map((t) => t.name).join(", ")]);
+    worksheet.addRow(["Total Attendance", event.members?.length ?? 0]);
+    worksheet.mergeCells("B1", "C1");
+    worksheet.mergeCells("B2", "C2");
+    worksheet.mergeCells("B3", "C3");
+    worksheet.mergeCells("B4", "C4");
+    for (let i = 1; i <= 4; i++) {
+      const row = worksheet.getRow(i);
+      row.font = { bold: true, name: "Calibri", size: 12 };
+      row.alignment = { vertical: "middle", horizontal: "left" };
+    }
+    worksheet.addRow([]);
+    worksheet.getRow(5).values = [
+      "Name",
+      "Email",
+      ...(metadata?.map((md) => md.key) ?? []),
     ];
-  }
-  // const headerRow = worksheet.getRow(1);
-  // headerRow.font = { name: 'Calibri', bold: true };
-  // headerRow.eachCell((cell) => {
-  //   cell.fill = {
-  //     type: 'pattern',
-  //     pattern: 'solid',
-  //     fgColor: { argb: 'ADD8E6' },
-  //   };
-  //   cell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
-  // });
-  // headerRow.height = 50;
-  // const dataRows = markerMessages.map((markerMessage) => {
-  //   const response = markerMessage.responses?.[0];
-  //   const rubricBreakdown = response?.breakdown_of_rubric;
-  //   const summary = response?.summary;
-  //   let rubric_breakdown = '';
-  //   let rubric_analysis: ExcelJS.RichText[] = [];
-  //   if (rubricBreakdown) {
-  //     response?.breakdown_of_rubric?.forEach((breakdown, index) => {
-  //       rubric_breakdown += `${breakdown.topic} (${breakdown.score}, ${getGradeAcronym(breakdown.grade || '')})`;
-  //       rubric_analysis.push({ text: `${breakdown.topic}\n`, font: { name: 'Calibri', bold: true } });
-  //       rubric_analysis.push({ text: `${breakdown.content}${index !== rubricBreakdown.length - 1 ? '\n\n' : ''}` });
-  //       if (index !== rubricBreakdown.length - 1) {
-  //         rubric_breakdown += '\n';
-  //       }
-  //     });
-  //   }
-  //   return {
-  //     course: markerMessage.course?.code,
-  //     assessment: markerMessage.assessment_title,
-  //     input_tokens: markerMessage.input_tokens,
-  //     rubric_included: markerMessage.rubric ? 'Yes' : 'No',
-  //     output_tokens: markerMessage.output_tokens,
-  //     gpt_cost: getCost(markerMessage.input_tokens, markerMessage.output_tokens),
-  //     rubric_breakdown,
-  //     overall_score: response?.overall_score,
-  //     overall_grade: getGradeAcronym(response?.overall_grade || ''),
-  //     rubric_analysis,
-  //     strengths: summary?.strengths,
-  //     weaknesses: summary?.weaknesses,
-  //     recommendations: summary?.recommendations,
-  //   };
-  // });
 
-  // dataRows.forEach((dataRow) => {
-  //   const row = worksheet.addRow(dataRow);
-  //   row.height = 70;
-  //   row.getCell('course').alignment = { horizontal: 'center' };
-  //   row.getCell('assessment').alignment = { wrapText: true };
-  //   row.getCell('input_tokens').alignment = { horizontal: 'center' };
-  //   row.getCell('rubric_included').alignment = { horizontal: 'center' };
-  //   row.getCell('output_tokens').alignment = { horizontal: 'center' };
-  //   row.getCell('gpt_cost').alignment = { horizontal: 'center' };
-  //   row.getCell('rubric_breakdown').alignment = { wrapText: true };
-  //   row.getCell('overall_score').alignment = { horizontal: 'center' };
-  //   row.getCell('overall_grade').alignment = { horizontal: 'center' };
-  //   const analysisCell = row.getCell('rubric_analysis');
-  //   analysisCell.value = { richText: dataRow.rubric_analysis };
-  //   analysisCell.alignment = { wrapText: true, vertical: 'top' };
-  //   row.getCell('strengths').alignment = { wrapText: true, vertical: 'top' };
-  //   row.getCell('weaknesses').alignment = { wrapText: true, vertical: 'top' };
-  //   row.getCell('recommendations').alignment = { wrapText: true, vertical: 'top' };
-  // });
-  // workbook.xlsx.writeBuffer().then((buffer) => {
-  //   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  //   saveAs(blob, `marker_assessments_report_${todaysDateInDDMMYY()}.xlsx`);
-  // });
+    const headerRow = worksheet.getRow(5);
+    headerRow.font = { name: "Calibri", bold: true };
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "ADD8E6" },
+      };
+      cell.alignment = {
+        vertical: "middle",
+        horizontal: "center",
+        wrapText: true,
+      };
+    });
+    headerRow.height = 40;
+
+    worksheet.columns = [
+      { key: "name", width: 20 },
+      { key: "email", width: 35 },
+    ].concat(metadata ? metadata.map((md) => ({ key: md.id, width: 30 })) : []);
+
+    event.members?.map((member) =>
+      worksheet.addRow({
+        name: member.name,
+        email: member.email,
+        ...metadata?.reduce((acc, md) => {
+          acc[md.id] =
+            md.type === "input"
+              ? member.metadata?.[md.id] ?? ""
+              : (md as MetadataSelectModel).values[
+                  member.metadata?.[md.id] ?? ""
+                ];
+          return acc;
+        }, {} as MemberMetadataModel),
+      })
+    );
+    workbook.xlsx.writeBuffer().then((buffer) => {
+      const blob = new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      saveAs(blob, `Attendance_[${tags.map((t) => t.name).join(", ")}].xlsx`);
+    });
+  }
 }

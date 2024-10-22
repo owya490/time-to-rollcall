@@ -25,7 +25,18 @@ import { convertMemberIdToReference } from "./members";
 import { currentYearStr } from "@/helper/Time";
 import { TagModel } from "@/models/Tag";
 
-export async function getEvents(groupId: GroupId) {
+export async function getEventsAsc(groupId: GroupId) {
+  const events = await getDocs(
+    query(
+      collection(firestore, "groups", groupId, "events"),
+      orderBy("dateStart", "asc"),
+      orderBy("dateEnd", "asc")
+    )
+  );
+  return (await convertCollectionToJavascript(events.docs)) as EventModel[];
+}
+
+export async function getEventsDesc(groupId: GroupId) {
   const events = await getDocs(
     query(
       collection(firestore, "groups", groupId, "events"),
@@ -37,6 +48,9 @@ export async function getEvents(groupId: GroupId) {
 }
 
 export async function getEventsByTag(groupId: GroupId, tags: TagModel[]) {
+  if (tags.length === 0) {
+    return getEventsAsc(groupId);
+  }
   const events = await getDocs(
     query(
       collection(firestore, "groups", groupId, "events"),
@@ -45,24 +59,12 @@ export async function getEventsByTag(groupId: GroupId, tags: TagModel[]) {
         "array-contains-any",
         tags.map((t) => doc(firestore, "groups", groupId, "tags", t.id))
       ),
-      orderBy("dateEnd", "asc"),
-      orderBy("dateStart", "asc")
+      orderBy("dateStart", "asc"),
+      orderBy("dateEnd", "asc")
     )
   );
   return (await convertCollectionToJavascript(events.docs)) as EventModel[];
 }
-
-// export async function getEventsbyTag(groupId: string, tagIds: TagId[]) {
-//   const events = await getDocs(
-//     query(
-//       collection(firestore, "groups", groupId, "events"),
-//       where("tags", "array-contains-any", tagIds),
-//       orderBy("dateEnd", "desc"),
-//       orderBy("dateStart", "desc")
-//     )
-//   );
-//   return (await convertCollectionToJavascript(events.docs)) as EventModel[];
-// }
 
 export async function getEvent(groupId: GroupId, eventId: EventId) {
   const event = await getDoc(

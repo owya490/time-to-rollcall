@@ -4,6 +4,7 @@ import Loader from "@/components/Loader";
 import Topbar from "@/components/Topbar";
 import EditEvent from "@/components/event/EditEvent";
 import EventComponent from "@/components/event/EventComponent";
+import Export from "@/components/group/Export";
 import { Filter, InitFilter } from "@/helper/Filter";
 import { GroupPath, Path } from "@/helper/Path";
 import { inBetween } from "@/helper/Time";
@@ -31,9 +32,18 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   const [submitEventForm, setSubmitEventForm] = useState<EventModel>(InitEvent);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenExport, setIsOpenExport] = useState(false);
 
   function closeModal() {
     setIsOpen(false);
+  }
+
+  function openExportModal() {
+    setIsOpenExport(true);
+  }
+
+  function closeExportModal() {
+    setIsOpenExport(false);
   }
 
   function openModal() {
@@ -130,6 +140,14 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
       ) : (
         <>
           {group && tags !== null && (
+            <Export
+              groupId={params.groupId}
+              isOpen={isOpenExport}
+              closeModal={closeExportModal}
+              tags={tags}
+            />
+          )}
+          {group && tags !== null && (
             <EditEvent
               groupId={group.id}
               tags={tags}
@@ -148,7 +166,16 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
               updating={updating}
             />
           )}
-          <h1 className="mx-4 mt-3 text-2xl mb-16">Events</h1>
+          <div className="flex justify-between mx-4 mt-3 mb-16">
+            <h1 className="text-2xl">Events</h1>
+            <button
+              type="button"
+              className="text-center text-gray-700 text-sm rounded-lg py-2 px-2 bg-gray-200"
+              onClick={openExportModal}
+            >
+              EXPORT
+            </button>
+          </div>
           {group &&
             showedEvents.map((event, i) => (
               <div key={i}>
