@@ -8,11 +8,12 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import Tag from "../event/Tag";
 import Loader from "../Loader";
 import { MetadataContext } from "@/lib/context";
 import { promiseToast } from "@/helper/Toast";
+import { MetadataInputModel, MetadataSelectModel } from "@/models/Metadata";
 
 export default function Export({
   groupId,
@@ -27,7 +28,16 @@ export default function Export({
 }) {
   const metadata = useContext(MetadataContext);
   const [exportTags, setExportTags] = useState<TagModel[]>([]);
+  const [exportMetadata, setExportMetadata] = useState<
+    (MetadataInputModel | MetadataSelectModel)[]
+  >([]);
   const [updating, setUpdating] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (metadata) {
+      setExportMetadata(metadata);
+    }
+  }, [metadata]);
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
@@ -100,6 +110,46 @@ export default function Export({
                       />
                     ))}
                   </div>
+                  <p className="my-2 text-xs font-light text-gray-400">
+                    Select Data to Export
+                  </p>
+                  <div className="flex flex-col justify-center max-h-32 overflow-auto">
+                    {metadata?.map((md, i) => (
+                      <button
+                        style={
+                          exportMetadata.map((emd) => emd.id).includes(md.id)
+                            ? {
+                                backgroundColor: "lightBlue",
+                                color: "black",
+                              }
+                            : { color: "gray" }
+                        }
+                        key={i}
+                        onClick={() =>
+                          setExportMetadata(
+                            exportMetadata.map((emd) => emd.id).includes(md.id)
+                              ? exportMetadata
+                                  .slice(
+                                    0,
+                                    exportMetadata
+                                      .map((emd) => emd.id)
+                                      .indexOf(md.id)
+                                  )
+                                  .concat(
+                                    exportMetadata.slice(
+                                      exportMetadata
+                                        .map((emd) => emd.id)
+                                        .indexOf(md.id) + 1
+                                    )
+                                  )
+                              : exportMetadata.concat(md)
+                          )
+                        }
+                      >
+                        {md.key}
+                      </button>
+                    ))}
+                  </div>
                 </div>
                 <div className="flex justify-center">
                   {updating ? (
@@ -111,13 +161,13 @@ export default function Export({
                       type="button"
                       className="bottom-2 fixed z-50 inline-flex mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={async () => {
-                        if (metadata !== null) {
+                        if (exportMetadata !== null) {
                           setUpdating(true);
                           await promiseToast<void>(
                             downloadEventsToExcel(
                               groupId,
                               exportTags,
-                              metadata
+                              exportMetadata
                             ),
                             "Exporting...",
                             "Events Exported!",
