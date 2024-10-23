@@ -34,10 +34,6 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenExport, setIsOpenExport] = useState(false);
 
-  function closeModal() {
-    setIsOpen(false);
-  }
-
   function openExportModal() {
     setIsOpenExport(true);
   }
@@ -50,6 +46,10 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
     setSelectedIndex(0);
     setUpdating(false);
     setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
   }
 
   async function deleteEventIn() {
