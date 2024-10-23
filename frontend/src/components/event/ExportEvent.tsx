@@ -1,5 +1,4 @@
-import { downloadEventsToExcel } from "@/lib/excel";
-import { TagModel } from "@/models/Tag";
+import { downloadEventToExcel } from "@/lib/excel";
 import {
   Dialog,
   DialogPanel,
@@ -9,26 +8,22 @@ import {
 } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Fragment, useContext, useEffect, useState } from "react";
-import Tag from "../event/Tag";
 import Loader from "../Loader";
 import { MetadataContext } from "@/lib/context";
 import { promiseToast } from "@/helper/Toast";
 import { MetadataInputModel, MetadataSelectModel } from "@/models/Metadata";
-import { GroupId } from "@/models/Group";
+import { EventModel } from "@/models/Event";
 
-export default function Export({
-  groupId,
+export default function ExportEvent({
+  event,
   isOpen,
   closeModal,
-  tags,
 }: {
-  groupId: GroupId;
+  event: EventModel;
   isOpen: boolean;
   closeModal: () => void;
-  tags?: TagModel[];
 }) {
   const metadata = useContext(MetadataContext);
-  const [exportTags, setExportTags] = useState<TagModel[]>([]);
   const [exportMetadata, setExportMetadata] = useState<
     (MetadataInputModel | MetadataSelectModel)[]
   >([]);
@@ -81,36 +76,6 @@ export default function Export({
                   Export data
                 </DialogTitle>
                 <div className="overflow-auto max-h-[70vh] pb-14 px-4">
-                  <p className="my-2 text-xs font-light text-gray-400">
-                    Select Event Tags to Export
-                  </p>
-                  <div className="flex flex-wrap max-h-32 overflow-auto">
-                    {tags?.map((t, i) => (
-                      <Tag
-                        key={i}
-                        tag={t}
-                        selected={exportTags.map((t) => t.id).includes(t.id)}
-                        onClick={() =>
-                          setExportTags(
-                            exportTags.map((t) => t.id).includes(t.id)
-                              ? exportTags
-                                  .slice(
-                                    0,
-                                    exportTags.map((t) => t.id).indexOf(t.id)
-                                  )
-                                  .concat(
-                                    exportTags.slice(
-                                      exportTags
-                                        .map((t) => t.id)
-                                        .indexOf(t.id) + 1
-                                    )
-                                  )
-                              : exportTags.concat(t)
-                          )
-                        }
-                      />
-                    ))}
-                  </div>
                   <p className="my-2 text-xs font-light text-gray-400">
                     Select fields to export
                   </p>
@@ -198,14 +163,10 @@ export default function Export({
                         if (exportMetadata !== null) {
                           setUpdating(true);
                           await promiseToast<void>(
-                            downloadEventsToExcel(
-                              groupId,
-                              exportTags,
-                              exportMetadata
-                            ),
-                            "Exporting...",
-                            "Events Exported!",
-                            "Could not export events."
+                            downloadEventToExcel(event, exportMetadata),
+                            `Exporting ${event.name}...`,
+                            `${event.name} Exported!`,
+                            `Could not export ${event.name}.`
                           );
                           closeModal();
                           setUpdating(false);

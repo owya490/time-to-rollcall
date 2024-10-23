@@ -15,6 +15,7 @@ import {
   Cog6ToothIcon,
   PencilIcon,
   ArrowLeftEndOnRectangleIcon,
+  BookmarkSquareIcon,
 } from "@heroicons/react/24/outline";
 import {
   UserGroupIcon as UserGroupIconSolid,
@@ -35,6 +36,7 @@ import DeleteConfirmation from "./event/DeleteEvent";
 import { MetadataModel } from "@/models/Metadata";
 import EditMetadata from "./members/EditMetadata";
 import { editMetadatas } from "@/lib/metadata";
+import ExportEvent from "./event/ExportEvent";
 
 export default function Topbar({
   toggleEdit,
@@ -55,6 +57,15 @@ export default function Topbar({
   const [updating, setUpdating] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isOpenExport, setIsOpenExport] = useState(false);
+
+  function openExportModal() {
+    setIsOpenExport(true);
+  }
+
+  function closeExportModal() {
+    setIsOpenExport(false);
+  }
 
   async function editEvent() {
     setUpdating(true);
@@ -253,6 +264,15 @@ export default function Topbar({
         )}
         {event ? (
           <div className="flex items-center gap-4 justify-end">
+            <ExportEvent
+              event={event}
+              isOpen={isOpenExport}
+              closeModal={closeExportModal}
+            />
+            <BookmarkSquareIcon
+              className="cursor-pointer w-7 h-7 text-gray-500"
+              onClick={openExportModal}
+            />
             {setToggleEdit && (
               <>
                 {toggleEdit ? (
