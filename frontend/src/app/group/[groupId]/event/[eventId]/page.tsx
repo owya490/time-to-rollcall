@@ -101,12 +101,13 @@ export default function Event({
         members
           ?.sort((a, b) => a.name.localeCompare(b.name))
           .filter(
-            (m) => !event?.members?.some((signedIn) => signedIn.id === m.id)
+            (m) =>
+              !event?.members?.some((signedIn) => signedIn.member.id === m.id)
           ) ?? [];
       let membersSignedIn =
         event.members
-          ?.sort((a, b) => a.name.localeCompare(b.name))
-          .map((m) => members?.find((member) => member.id === m.id))
+          ?.sort((a, b) => a.member.name.localeCompare(b.member.name))
+          .map((m) => members?.find((member) => member.id === m.member.id))
           .filter((m): m is MemberModel => m !== undefined) ?? [];
       if (searchInput.length > 0) {
         setLoadAnimation(true);
@@ -295,7 +296,11 @@ export default function Event({
               totalAttendance={event.members?.length ?? 0}
               action={(member: MemberModel) => {
                 promiseToast<void>(
-                  removeMemberFromEvent(groupId, eventId, member.id),
+                  removeMemberFromEvent(
+                    groupId,
+                    eventId,
+                    event.members?.find((m) => m.member.id === member.id)
+                  ),
                   `Removing ${member.name}...`,
                   `${member.name} Removed!`,
                   `Could not remove ${member.name}.`

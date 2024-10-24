@@ -37,8 +37,10 @@ async function addEventToWorkbook(
   }
   worksheet.addRow([]);
   worksheet.getRow(5).values = [
+    "Sign In",
     "Name",
     "Email",
+    // "Notes",
     ...(metadata?.map((md) => md.key) ?? []),
   ];
 
@@ -59,20 +61,24 @@ async function addEventToWorkbook(
   headerRow.height = 40;
 
   worksheet.columns = [
+    { key: "signInTime", width: 20 },
     { key: "name", width: 20 },
     { key: "email", width: 35 },
+    // { key: "notes", width: 35 },
   ].concat(metadata ? metadata.map((md) => ({ key: md.id, width: 30 })) : []);
 
-  event.members?.map((member) =>
+  event.members?.map((info) =>
     worksheet.addRow({
-      name: member.name,
-      email: member.email,
+      signInTime: toddMMYYYY(info.signInTime),
+      name: info.member.name,
+      email: info.member.email,
+      notes: info.notes,
       ...metadata?.reduce((acc, md) => {
         acc[md.id] =
           md.type === "input"
-            ? member.metadata?.[md.id] ?? ""
+            ? info.member.metadata?.[md.id] ?? ""
             : (md as MetadataSelectModel).values[
-                member.metadata?.[md.id] ?? ""
+                info.member.metadata?.[md.id] ?? ""
               ];
         return acc;
       }, {} as MemberMetadataModel),

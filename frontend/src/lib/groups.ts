@@ -1,5 +1,5 @@
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
-import { firestore } from "@/lib/firebase";
+import { convertToFirestore, firestore } from "@/lib/firebase";
 import { GroupModel } from "@/models/Group";
 import { addTag, deleteTag, updateTag } from "./tags";
 import { TagModel } from "@/models/Tag";
@@ -17,8 +17,10 @@ export async function updateGroup(
   tags: TagModel[] | null | undefined,
   deleteTags: TagModel[]
 ) {
-  const { id, ...groupWithoutId } = group;
-  await updateDoc(doc(firestore, "groups", group.id), groupWithoutId);
+  await updateDoc(
+    doc(firestore, "groups", group.id),
+    convertToFirestore(group)
+  );
   for (const tag of deleteTags) {
     await deleteTag(group.id, tag.id);
   }

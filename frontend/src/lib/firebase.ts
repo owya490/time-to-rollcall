@@ -49,31 +49,38 @@ export const firestore = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp);
 export const STATE_CHANGED = "state_changed";
 
+async function convertObjectFields(obj: any) {
+  for (const [key, value] of Object.entries(obj)) {
+    obj[key] = await handleField(value);
+  }
+  return obj;
+}
+
+async function handleField(value: any): Promise<any> {
+  if (value instanceof Timestamp) {
+    return value.toDate();
+  } else if (value instanceof DocumentReference) {
+    const docData = await getDoc(value);
+    return convertToJavascript(docData);
+  } else if (Array.isArray(value)) {
+    return Promise.all(value.map(handleField));
+  } else if (typeof value === "object" && value !== null) {
+    return convertObjectFields(value);
+  }
+  return value;
+}
+
 /// Helper functions
 export async function convertToJavascript(document: DocumentSnapshot) {
   let data = document.data();
   if (!data) {
     return undefined;
   }
-  data["id"] = document.id;
   for (const [key, value] of Object.entries(data)) {
-    if (value instanceof Timestamp) {
-      data[key] = value.toDate();
-    } else if (value instanceof DocumentReference) {
-      data[key] = await getDoc(value);
-    } else if (
-      Array.isArray(value) &&
-      value.every((item) => item instanceof DocumentReference)
-    ) {
-      data[key] = (
-        await Promise.all(
-          value.map(async (v) => convertToJavascript(await getDoc(v)))
-        )
-      ).filter((v) => v !== undefined);
-    } else {
-      data[key] = value;
-    }
+    data[key] = await handleField(value);
   }
+  data["id"] = document.id;
+  data["docRef"] = document.ref;
   return data;
 }
 

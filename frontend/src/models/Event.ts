@@ -10,7 +10,13 @@ export interface EventModel {
   tags: TagModel[];
   dateStart: Date;
   dateEnd: Date;
-  members?: MemberModel[];
+  members?: MemberInformation[];
+}
+
+export interface MemberInformation {
+  member: MemberModel;
+  signInTime: Date;
+  notes?: string;
 }
 
 export const InitEvent = (campus?: string): EventModel => {

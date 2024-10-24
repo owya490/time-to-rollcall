@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import {
   convertCollectionToJavascript,
+  convertToFirestore,
   convertToJavascript,
   firestore,
 } from "./firebase";
@@ -35,7 +36,7 @@ export async function editMetadatas(
 export async function addMetadata(groupId: GroupId, tag: MetadataModel) {
   const addedDoc = await addDoc(
     collection(firestore, "groups", groupId, "metadata"),
-    convertMetadataToDocument(tag)
+    convertToFirestore(tag)
   );
   return { ...tag, id: addedDoc.id };
 }
@@ -43,7 +44,7 @@ export async function addMetadata(groupId: GroupId, tag: MetadataModel) {
 export async function updateMetadata(groupId: GroupId, tag: MetadataModel) {
   await updateDoc(
     doc(firestore, "groups", groupId, "metadata", tag.id),
-    convertMetadataToDocument(tag)
+    convertToFirestore(tag)
   );
 }
 
@@ -72,9 +73,4 @@ export function convertMetadataIdToReference(
   tagId: MetadataId
 ) {
   return doc(firestore, "groups", groupId, "metadata", tagId);
-}
-
-function convertMetadataToDocument(tag: MetadataModel) {
-  const { id, ...tagWithoutId } = tag;
-  return tagWithoutId;
 }

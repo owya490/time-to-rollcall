@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import {
   convertCollectionToJavascript,
+  convertToFirestore,
   convertToJavascript,
   firestore,
 } from "./firebase";
@@ -18,7 +19,7 @@ import {
 export async function addTag(groupId: GroupId, tag: TagModel) {
   const addedDoc = await addDoc(
     collection(firestore, "groups", groupId, "tags"),
-    convertTagToDocument(tag)
+    convertToFirestore(tag)
   );
   return { ...tag, id: addedDoc.id };
 }
@@ -26,7 +27,7 @@ export async function addTag(groupId: GroupId, tag: TagModel) {
 export async function updateTag(groupId: GroupId, tag: TagModel) {
   await updateDoc(
     doc(firestore, "groups", groupId, "tags", tag.id),
-    convertTagToDocument(tag)
+    convertToFirestore(tag)
   );
 }
 
@@ -46,9 +47,4 @@ export async function getTag(groupId: GroupId, tagId: TagId) {
 
 export function convertTagIdToReference(groupId: GroupId, tagId: TagId) {
   return doc(firestore, "groups", groupId, "tags", tagId);
-}
-
-function convertTagToDocument(tag: TagModel) {
-  const { id, ...tagWithoutId } = tag;
-  return tagWithoutId;
 }

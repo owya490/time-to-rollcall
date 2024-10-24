@@ -90,6 +90,19 @@ export default function ExportEvent({
                         className="w-4 h-4"
                       />
                       <label className="text-slate-800 font-medium text-[15px]">
+                        Sign In Time
+                      </label>
+                    </div>
+                    <div
+                      className={`flex cursor-pointer items-center justify-start gap-6 px-2 py-3 rounded-xl bg-gray-100`}
+                    >
+                      <input
+                        defaultChecked
+                        disabled
+                        type="checkbox"
+                        className="w-4 h-4"
+                      />
+                      <label className="text-slate-800 font-medium text-[15px]">
                         Name
                       </label>
                     </div>
@@ -106,6 +119,19 @@ export default function ExportEvent({
                         Email
                       </label>
                     </div>
+                    {/* <div
+                      className={`flex cursor-pointer items-center justify-start gap-6 px-2 py-3 rounded-xl bg-gray-100`}
+                    >
+                      <input
+                        defaultChecked
+                        disabled
+                        type="checkbox"
+                        className="w-4 h-4"
+                      />
+                      <label className="text-slate-800 font-medium text-[15px]">
+                        Notes
+                      </label>
+                    </div> */}
                     {metadata?.map((md, i) => (
                       <div
                         key={i}

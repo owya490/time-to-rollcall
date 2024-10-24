@@ -11,13 +11,15 @@ import {
   arrayRemove,
   deleteDoc,
   where,
+  Timestamp,
 } from "firebase/firestore";
 import {
   convertCollectionToJavascript,
+  convertToFirestore,
   convertToJavascript,
   firestore,
 } from "@/lib/firebase";
-import { EventId, EventModel } from "@/models/Event";
+import { EventId, EventModel, MemberInformation } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import { convertTagIdToReference } from "./tags";
 import { MemberId } from "@/models/Member";
@@ -78,7 +80,7 @@ export async function submitEvent(groupId: GroupId, event: EventModel) {
   const addedDoc = await addDoc(
     collection(firestore, "groups", groupId, "events"),
     {
-      ...eventWithoutTags,
+      ...convertToFirestore(eventWithoutTags),
       tags: tags.map((t) => doc(firestore, "groups", groupId, "tags", t.id)),
     }
   );
@@ -97,12 +99,15 @@ export async function deleteEvent(groupId: GroupId, eventId: EventId) {
 }
 
 function convertEventToDocument(groupId: GroupId, event: EventModel) {
-  const { id, tags, members, ...eventWithoutId } = event;
+  const { tags, members, ...eventWithoutId } = event;
   return {
-    ...eventWithoutId,
+    ...convertToFirestore(eventWithoutId),
     tags: tags.map((t) => convertTagIdToReference(groupId, t.id)),
     members:
-      members?.map((m) => convertMemberIdToReference(groupId, m.id)) ?? [],
+      members?.map((m) => ({
+        ...m,
+        member: convertMemberIdToReference(groupId, m.member.id),
+      })) ?? [],
   };
 }
 
@@ -112,8 +117,8 @@ export async function addMemberToEvent(
   memberId: MemberId
 ) {
   await updateDoc(doc(firestore, "groups", groupId, "events", eventId), {
-    members: arrayUnion(
-      doc(
+    members: arrayUnion({
+      member: doc(
         firestore,
         "groups",
         groupId,
@@ -121,27 +126,23 @@ export async function addMemberToEvent(
         currentYearStr,
         "members",
         memberId
-      )
-    ),
+      ),
+      signInTime: new Date(),
+    }),
   });
 }
 
 export async function removeMemberFromEvent(
   groupId: GroupId,
   eventId: EventId,
-  memberId: MemberId
+  memberInfo?: MemberInformation
 ) {
-  await updateDoc(doc(firestore, "groups", groupId, "events", eventId), {
-    members: arrayRemove(
-      doc(
-        firestore,
-        "groups",
-        groupId,
-        "members",
-        currentYearStr,
-        "members",
-        memberId
-      )
-    ),
-  });
+  memberInfo &&
+    (await updateDoc(doc(firestore, "groups", groupId, "events", eventId), {
+      members: arrayRemove({
+        ...memberInfo,
+        member: memberInfo.member.docRef,
+        signInTime: Timestamp.fromDate(memberInfo.signInTime),
+      }),
+    }));
 }

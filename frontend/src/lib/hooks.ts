@@ -97,20 +97,6 @@ export function useMembersListener(
   return members;
 }
 
-export function useEventsListener(
-  user: User | null | undefined,
-  groupId?: string
-) {
-  const { data: events } = useFirestoreCol<EventModel>(
-    firestore,
-    `groups/${groupId}/events`,
-    user !== null && groupId && user?.groups?.includes(groupId) ? true : false,
-    undefined,
-    orderBy("dateEnd", "desc")
-  );
-  return events;
-}
-
 export function useMetadataListener(
   user: User | null | undefined,
   groupId?: string
@@ -133,6 +119,20 @@ export function useTagsListener(
     user !== null && groupId && user?.groups?.includes(groupId) ? true : false
   );
   return tags;
+}
+
+export function useEventsListener(
+  user: User | null | undefined,
+  groupId?: string
+) {
+  const { data: events } = useFirestoreCol<EventModel>(
+    firestore,
+    `groups/${groupId}/events`,
+    user !== null && groupId && user?.groups?.includes(groupId) ? true : false,
+    undefined,
+    orderBy("dateEnd", "desc")
+  );
+  return events;
 }
 
 export function useEventListener(

@@ -1,5 +1,5 @@
 import { currentYearStr } from "@/helper/Time";
-import { firestore } from "@/lib/firebase";
+import { convertToFirestore, firestore } from "@/lib/firebase";
 import { GroupId } from "@/models/Group";
 import { MemberId, MemberModel } from "@/models/Member";
 import { addDoc, collection, deleteDoc, doc, setDoc } from "firebase/firestore";
@@ -49,11 +49,11 @@ export async function deleteMember(groupId: GroupId, memberId: MemberId) {
 }
 
 function convertMemberToDocument(member: MemberModel) {
-  const { id, metadata, ...memberWithoutId } = member;
+  const { metadata, ...memberWithoutId } = member;
   if (metadata) {
-    return { ...memberWithoutId, metadata };
+    return { ...convertToFirestore(memberWithoutId), metadata };
   }
-  return memberWithoutId;
+  return convertToFirestore(memberWithoutId);
 }
 
 export function convertMemberIdToReference(

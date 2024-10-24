@@ -1,3 +1,4 @@
+import { DocumentReference } from "firebase/firestore";
 import { MetadataId, MetadataValueId } from "./Metadata";
 
 export interface MemberMetadataModel {
@@ -7,6 +8,7 @@ export interface MemberMetadataModel {
 export type MemberId = string;
 
 export interface MemberModel {
+  docRef?: DocumentReference;
   id: MemberId;
   name: string;
   email?: string;
