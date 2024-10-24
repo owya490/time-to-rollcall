@@ -33,23 +33,23 @@ export async function editMetadatas(
   }
 }
 
-export async function addMetadata(groupId: GroupId, tag: MetadataModel) {
+export async function addMetadata(groupId: GroupId, md: MetadataModel) {
   const addedDoc = await addDoc(
     collection(firestore, "groups", groupId, "metadata"),
-    convertToFirestore(tag)
+    convertToFirestore(md)
   );
-  return { ...tag, id: addedDoc.id };
+  return { ...md, id: addedDoc.id };
 }
 
-export async function updateMetadata(groupId: GroupId, tag: MetadataModel) {
+export async function updateMetadata(groupId: GroupId, md: MetadataModel) {
   await updateDoc(
-    doc(firestore, "groups", groupId, "metadata", tag.id),
-    convertToFirestore(tag)
+    doc(firestore, "groups", groupId, "metadata", md.id),
+    convertToFirestore(md)
   );
 }
 
-export async function deleteMetadata(groupId: GroupId, tagId: MetadataId) {
-  await deleteDoc(doc(firestore, "groups", groupId, "metadata", tagId));
+export async function deleteMetadata(groupId: GroupId, mdId: MetadataId) {
+  await deleteDoc(doc(firestore, "groups", groupId, "metadata", mdId));
 }
 
 export async function getMetadatas(groupId: GroupId) {
@@ -61,16 +61,14 @@ export async function getMetadatas(groupId: GroupId) {
   )) as MetadataModel[];
 }
 
-export async function getMetadata(groupId: GroupId, tagId: MetadataId) {
-  const tag = await getDoc(
-    doc(firestore, "groups", groupId, "metadata", tagId)
-  );
-  return (await convertToJavascript(tag)) as MetadataModel;
+export async function getMetadata(groupId: GroupId, mdId: MetadataId) {
+  const md = await getDoc(doc(firestore, "groups", groupId, "metadata", mdId));
+  return (await convertToJavascript(md)) as MetadataModel;
 }
 
 export function convertMetadataIdToReference(
   groupId: GroupId,
-  tagId: MetadataId
+  mdId: MetadataId
 ) {
-  return doc(firestore, "groups", groupId, "metadata", tagId);
+  return doc(firestore, "groups", groupId, "metadata", mdId);
 }

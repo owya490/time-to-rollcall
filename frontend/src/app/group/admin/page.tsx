@@ -2,15 +2,6 @@
 import Topbar from "@/components/Topbar";
 import { Path } from "@/helper/Path";
 import { UserContext } from "@/lib/context";
-import { firestore } from "@/lib/firebase";
-import { MemberModel } from "@/models/Member";
-import {
-  DocumentReference,
-  collection,
-  doc,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 
@@ -44,9 +35,17 @@ export default function GroupAdmin() {
   //   }
   // };
 
-  const changeMembers = async () => {
+  const addOrderToMetadata = async () => {
     console.log("start");
     // await changeMembersForGroup("ccSgQTXvLRnin0OjwvRM");
+    // for (const group of groups ?? []) {
+    //   const mds = await getMetadatas(group.id);
+    //   let index = 1;
+    //   for (const md of mds) {
+    //     await updateMetadata(group.id, { ...md, order: index });
+    //     ++index;
+    //   }
+    // }
     console.log("end");
   };
 
@@ -59,7 +58,7 @@ export default function GroupAdmin() {
           <button
             type="button"
             className="p-2 bg-slate-200"
-            onClick={() => changeMembers()}
+            onClick={() => addOrderToMetadata()}
           >
             Change Members
           </button>

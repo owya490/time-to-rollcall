@@ -158,7 +158,6 @@ export default function Topbar({
       );
     }
     setDeleteMetadatas([]);
-    setUpdating(false);
     closeModal();
   }
 
@@ -169,6 +168,7 @@ export default function Topbar({
   }
 
   function openMetadataModal() {
+    setUpdating(false);
     if (metadata) setMetadatas(metadata);
     setIsOpen(true);
   }

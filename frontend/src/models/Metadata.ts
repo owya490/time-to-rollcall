@@ -5,6 +5,7 @@ export interface MetadataModel {
   id: MetadataId;
   key: string;
   type: MetadataType;
+  order: number;
 }
 
 export interface MetadataSelectModel extends MetadataModel {
@@ -19,9 +20,9 @@ export interface MetadataValueModel {
   [id: MetadataValueId]: string;
 }
 
-export const InitMetadataInput: MetadataModel = {
+export const InitMetadataInput = (order: number): MetadataModel => ({
   id: "placeholder",
   key: "",
   type: "input",
-  values: [],
-} as MetadataModel;
+  order,
+});

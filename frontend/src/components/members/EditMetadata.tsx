@@ -11,7 +11,12 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  TrashIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import Loader from "../Loader";
 import DeleteConfirmation from "../event/DeleteEvent";
@@ -28,7 +33,7 @@ export default function EditMetadata({
   isOpen: boolean;
   closeModal: () => void;
   metadata: MetadataModel[];
-  setMetadata: (metadata: MetadataModel[]) => void;
+  setMetadata: Dispatch<SetStateAction<MetadataModel[] | null | undefined>>;
   setDeleteMetadatas: Dispatch<SetStateAction<MetadataModel[]>>;
   submit: () => void;
   updating: boolean;
@@ -130,7 +135,7 @@ export default function EditMetadata({
             <div className="fixed inset-0 bg-black/25" />
           </TransitionChild>
           <div className="fixed inset-0 flex justify-center">
-            <div className="fixed max-w-md:w-full md:w-[600px] bottom-0">
+            <div className="fixed w-full bottom-0">
               <TransitionChild
                 enter="transition ease-in-out duration-300 transform"
                 enterFrom="transform translate-y-full"
@@ -155,7 +160,51 @@ export default function EditMetadata({
                   <div className="overflow-auto max-h-[70vh] pb-14 px-4">
                     {metadata.map((md, i) => (
                       <div className="my-4" key={i}>
-                        <p className="text-sm text-gray-900">Name</p>
+                        <div className="flex justify-start">
+                          <ArrowDownIcon
+                            className="w-5 h-5 cursor-pointer"
+                            onClick={() =>
+                              i !== metadata.length - 1 &&
+                              setMetadata((prevMD) => {
+                                const updatedObjects = [...(prevMD ?? [])];
+
+                                [updatedObjects[i], updatedObjects[i + 1]] = [
+                                  updatedObjects[i + 1],
+                                  updatedObjects[i],
+                                ];
+
+                                const tempId = updatedObjects[i].order;
+                                updatedObjects[i].order =
+                                  updatedObjects[i + 1].order;
+                                updatedObjects[i + 1].order = tempId;
+
+                                return updatedObjects;
+                              })
+                            }
+                          />
+                          <p className="text-sm text-gray-900">{i + 1}. Name</p>
+                          <ArrowUpIcon
+                            className="w-5 h-5 cursor-pointer"
+                            onClick={() =>
+                              i !== 0 &&
+                              setMetadata((prevMD) => {
+                                const updatedObjects = [...(prevMD ?? [])];
+
+                                [updatedObjects[i - 1], updatedObjects[i]] = [
+                                  updatedObjects[i],
+                                  updatedObjects[i - 1],
+                                ];
+
+                                const tempId = updatedObjects[i - 1].order;
+                                updatedObjects[i - 1].order =
+                                  updatedObjects[i].order;
+                                updatedObjects[i].order = tempId;
+
+                                return updatedObjects;
+                              })
+                            }
+                          />
+                        </div>
                         <div className="flex justify-between items-center">
                           <input
                             type="text"
@@ -293,7 +342,16 @@ export default function EditMetadata({
                         type="button"
                         className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-xs font-light text-blue-900"
                         onClick={() =>
-                          setMetadata([...metadata, InitMetadataInput])
+                          setMetadata([
+                            ...metadata,
+                            InitMetadataInput(
+                              metadata.reduce(
+                                (max, obj) =>
+                                  obj.order > max ? obj.order : max,
+                                metadata[0].order
+                              ) + 1
+                            ),
+                          ])
                         }
                       >
                         Create Data Point

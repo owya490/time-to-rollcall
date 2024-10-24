@@ -104,7 +104,9 @@ export function useMetadataListener(
   const { data: metadata } = useFirestoreCol<MetadataModel>(
     firestore,
     `groups/${groupId}/metadata`,
-    user !== null && groupId && user?.groups?.includes(groupId) ? true : false
+    user !== null && groupId && user?.groups?.includes(groupId) ? true : false,
+    undefined,
+    orderBy("order", "asc")
   );
   return metadata;
 }
