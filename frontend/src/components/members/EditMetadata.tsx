@@ -162,7 +162,7 @@ export default function EditMetadata({
                   </DialogTitle>
                   <div className="overflow-auto max-h-[70vh] pb-16 px-4">
                     {metadata.map((md, i) => (
-                      <div className="flex">
+                      <div className="flex" key={i}>
                         {order && (
                           <div className="mt-5 mr-3 p-2">
                             <ChevronUpIcon
@@ -192,10 +192,7 @@ export default function EditMetadata({
                             />
                           </div>
                         )}
-                        <div
-                          className="flex-grow my-2 p-4 bg-gray-100 rounded-xl"
-                          key={i}
-                        >
+                        <div className="flex-grow my-2 p-4 bg-gray-100 rounded-xl">
                           <div className="flex justify-between items-center">
                             <input
                               type="text"
