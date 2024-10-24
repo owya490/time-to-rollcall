@@ -173,26 +173,29 @@ export default function EditMember({
                               >
                                 <div className="flex justify-between items-center">
                                   {member.metadata?.[m.id] ? (
-                                    <ListboxButton className="block w-full appearance-none rounded-lg bg-white/5 text-left text-lg font-semibold focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25">
+                                    <ListboxButton className="flex justify-between w-full appearance-none rounded-lg bg-white/5 text-left text-lg font-semibold focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25">
                                       {(m as MetadataSelectModel).values[
                                         member.metadata?.[m.id]
                                       ] ?? member.metadata?.[m.id]}
+                                      <ChevronUpIcon
+                                        className="pointer-events-none w-6 h-6 text-black"
+                                        aria-hidden="true"
+                                      />
                                     </ListboxButton>
                                   ) : (
-                                    <ListboxButton className="block w-full appearance-none rounded-lg bg-white/5 text-left text-lg font-semibold focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 text-gray-400">
-                                      Unselected
+                                    <ListboxButton className="flex justify-between w-full appearance-none rounded-lg bg-white/5 text-left text-lg font-semibold focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 text-gray-400">
+                                      <p>Unselected</p>
+                                      <ChevronUpIcon
+                                        className="pointer-events-none w-6 h-6 text-black"
+                                        aria-hidden="true"
+                                      />
                                     </ListboxButton>
                                   )}
-
-                                  <ChevronUpIcon
-                                    className="pointer-events-none w-6 h-6 text-black"
-                                    aria-hidden="true"
-                                  />
                                 </div>
                                 <ListboxOptions
                                   anchor="top"
                                   transition
-                                  className="rounded-xl border w-full border-white/5 bg-gray-100 p-1 focus:outline-none transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
+                                  className="rounded-xl border max-md:w-full md:w-[600px] border-white/5 bg-gray-100 p-1 focus:outline-none transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
                                 >
                                   {(m as MetadataSelectModel).values &&
                                     Object.entries(

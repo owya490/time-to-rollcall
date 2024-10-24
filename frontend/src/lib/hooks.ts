@@ -92,7 +92,9 @@ export function useMembersListener(
   const { data: members } = useFirestoreCol<MemberModel>(
     firestore,
     `groups/${groupId}/members/${currentYearStr}/members`,
-    user !== null && groupId && user?.groups?.includes(groupId) ? true : false
+    user !== null && groupId && user?.groups?.includes(groupId) ? true : false,
+    undefined,
+    orderBy("name", "asc")
   );
   return members;
 }
