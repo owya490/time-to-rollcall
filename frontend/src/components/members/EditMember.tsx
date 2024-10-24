@@ -81,7 +81,7 @@ export default function EditMember({
             <div className="fixed inset-0 bg-black/25" />
           </TransitionChild>
           <div className="fixed inset-0 flex justify-center">
-            <div className="fixed max-w-md:w-full md:w-[600px] bottom-0">
+            <div className="fixed max-md:w-full md:w-[600px] bottom-0">
               <TransitionChild
                 enter="transition ease-in-out duration-300 transform"
                 enterFrom="transform translate-y-full"
@@ -90,7 +90,7 @@ export default function EditMember({
                 leaveFrom="transform translate-y-0"
                 leaveTo="transform translate-y-full"
               >
-                <DialogPanel className="rounded-t-3xl bg-white pt-4 pb-0 shadow-xl">
+                <DialogPanel className="rounded-t-3xl bg-white pt-4 pb-0 shadow-xl w-full">
                   <div
                     className="absolute right-2 top-2 p-2 cursor-pointer"
                     onClick={closeModal}

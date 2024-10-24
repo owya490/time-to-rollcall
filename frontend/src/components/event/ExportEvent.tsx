@@ -53,7 +53,7 @@ export default function ExportEvent({
           <div className="fixed inset-0 bg-black/25" />
         </TransitionChild>
         <div className="fixed inset-0 flex justify-center">
-          <div className="fixed max-w-md:w-full md:w-[600px] bottom-0">
+          <div className="fixed max-md:w-full md:w-[600px] bottom-0">
             <TransitionChild
               enter="transition ease-in-out duration-300 transform"
               enterFrom="transform translate-y-full"
@@ -75,13 +75,13 @@ export default function ExportEvent({
                 >
                   Export data
                 </DialogTitle>
+                <p className="my-2 px-4 text-xs font-light text-gray-400">
+                  Select fields to export
+                </p>
                 <div className="overflow-auto max-h-[70vh] pb-14 px-4">
-                  <p className="my-2 text-xs font-light text-gray-400">
-                    Select fields to export
-                  </p>
-                  <div className="flex flex-col max-h-48 scroll-mt-4 gap-0.5 overflow-auto">
+                  <div className="flex flex-col scroll-mt-4 gap-0.5 overflow-auto">
                     <div
-                      className={`flex cursor-pointer items-center justify-start gap-6 px-2 py-3 rounded-xl bg-gray-100`}
+                      className={`flex items-center justify-start gap-6 px-2 py-3 rounded-xl bg-gray-100`}
                     >
                       <input
                         defaultChecked
@@ -94,7 +94,7 @@ export default function ExportEvent({
                       </label>
                     </div>
                     <div
-                      className={`flex cursor-pointer items-center justify-start gap-6 px-2 py-3 rounded-xl bg-gray-100`}
+                      className={`flex items-center justify-start gap-6 px-2 py-3 rounded-xl bg-gray-100`}
                     >
                       <input
                         defaultChecked
@@ -107,7 +107,7 @@ export default function ExportEvent({
                       </label>
                     </div>
                     <div
-                      className={`flex cursor-pointer items-center justify-start gap-6 px-2 py-3 rounded-xl bg-gray-100`}
+                      className={`flex items-center justify-start gap-6 px-2 py-3 rounded-xl bg-gray-100`}
                     >
                       <input
                         defaultChecked
@@ -120,7 +120,7 @@ export default function ExportEvent({
                       </label>
                     </div>
                     {/* <div
-                      className={`flex cursor-pointer items-center justify-start gap-6 px-2 py-3 rounded-xl bg-gray-100`}
+                      className={`flex items-center justify-start gap-6 px-2 py-3 rounded-xl bg-gray-100`}
                     >
                       <input
                         defaultChecked
