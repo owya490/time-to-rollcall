@@ -160,7 +160,7 @@ export default function EditMetadata({
                   >
                     Edit Metadata
                   </DialogTitle>
-                  <div className="overflow-auto max-h-[70vh] pb-2 px-4">
+                  <div className="overflow-auto max-h-[70vh] pb-16 px-4">
                     {metadata.map((md, i) => (
                       <div className="flex">
                         {order && (
