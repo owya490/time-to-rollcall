@@ -27,26 +27,26 @@ export default function GroupAdmin() {
     // eslint-disable-next-line
   }, [user]);
 
-  const changeMembersForGroup = async (groupId: string) => {
-    const events = await getDocs(
-      collection(firestore, "groups", groupId, "events")
-    );
-    for (const event of events.docs) {
-      const data = event.data();
-      if (data.members) {
-        await updateDoc(doc(firestore, "groups", groupId, "events", event.id), {
-          members: data.members.map((m: DocumentReference) => ({
-            member: m,
-            signInTime: data.dateStart,
-          })),
-        });
-      }
-    }
-  };
+  // const changeMembersForGroup = async (groupId: string) => {
+  //   const events = await getDocs(
+  //     collection(firestore, "groups", groupId, "events")
+  //   );
+  //   for (const event of events.docs) {
+  //     const data = event.data();
+  //     if (data.members) {
+  //       await updateDoc(doc(firestore, "groups", groupId, "events", event.id), {
+  //         members: data.members.map((m: DocumentReference) => ({
+  //           member: m,
+  //           signInTime: data.dateStart,
+  //         })),
+  //       });
+  //     }
+  //   }
+  // };
 
   const changeMembers = async () => {
     console.log("start");
-    await changeMembersForGroup("ccSgQTXvLRnin0OjwvRM");
+    // await changeMembersForGroup("ccSgQTXvLRnin0OjwvRM");
     console.log("end");
   };
 
