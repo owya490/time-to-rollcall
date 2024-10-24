@@ -122,7 +122,7 @@ export default function EditGroup({
                           <p className="text-sm text-gray-900">Tags</p>
                           <button
                             type="button"
-                            className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-xs font-light text-blue-900"
+                            className="rounded-3xl border-transparent border-2 bg-black px-3 py-1 mx-1 my-1 text-xs font-light text-white"
                             onClick={() => setTags([...tags, InitTag])}
                           >
                             Create Tag
