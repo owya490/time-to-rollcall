@@ -244,10 +244,10 @@ export default function Event({
             <h1 className="text-2xl">{event.name}</h1>
             {inBetween(event.dateStart, time, event.dateEnd) && <LiveBadge />}
             {time < event.dateStart && (
-              <p className="text-xs font-medium text-gray-500">NOT YET</p>
+              <p className="text-xs font-medium text-gray-400">NOT YET</p>
             )}
             {time > event.dateEnd && (
-              <p className="text-xs font-medium text-gray-500">ENDED</p>
+              <p className="text-xs font-medium text-gray-600">ENDED</p>
             )}
           </div>
           <AttendanceSearchBar

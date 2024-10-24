@@ -39,9 +39,9 @@ export default function EventComponent({
         <div className="flex ml-auto">
           {happeningNow && <LiveBadge />}
           {before && (
-            <p className="text-xs font-medium text-gray-500">NOT YET</p>
+            <p className="text-xs font-medium text-gray-400">NOT YET</p>
           )}
-          {after && <p className="text-xs font-medium text-gray-500">ENDED</p>}
+          {after && <p className="text-xs font-medium text-gray-600">ENDED</p>}
         </div>
       </div>
       <div className="pt-3 pb-6">
@@ -80,7 +80,11 @@ export default function EventComponent({
               e.stopPropagation();
               openModal?.();
             }}
-            className="rounded-3xl text-sm p-1 px-3 bg-white border-2 border-gray-600 text-gray-600 hover:bg-gray-300"
+            className={`rounded-3xl text-sm p-1 px-3 bg-white border-2 hover:bg-gray-200 ${
+              before
+                ? "border-gray-400 text-gray-400"
+                : "border-gray-600 text-gray-600"
+            }`}
           >
             Edit
           </button>
