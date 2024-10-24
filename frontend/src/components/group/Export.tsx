@@ -43,7 +43,7 @@ export default function Export({
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="fixed inset-0 z-50 w-full overflow-hidden"
+        className="fixed inset-0 z-50 overflow-hidden"
         onClose={closeModal}
       >
         <TransitionChild
@@ -57,8 +57,8 @@ export default function Export({
         >
           <div className="fixed inset-0 bg-black/25" />
         </TransitionChild>
-        <div className="fixed inset-0">
-          <div className="fixed w-full bottom-0">
+        <div className="fixed inset-0 flex justify-center">
+          <div className="fixed max-w-md:w-full md:w-[600px] bottom-0">
             <TransitionChild
               enter="transition ease-in-out duration-300 transform"
               enterFrom="transform translate-y-full"
