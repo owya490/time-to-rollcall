@@ -269,14 +269,14 @@ function MemberSignInCard({
                 </p>
               </div>
             </div>
-            <div className="flex justify-end items-center gap-4 h-full">
+            <div className="flex justify-end items-center h-full">
               <GroupBadge
                 campus={
                   campus &&
                   member.metadata?.[campus.id] &&
                   campus.values[member.metadata?.[campus.id]]
                 }
-                className="w-14 text-sm"
+                className="w-14 text-sm mr-4"
               />
               {!mobile && (
                 <div
