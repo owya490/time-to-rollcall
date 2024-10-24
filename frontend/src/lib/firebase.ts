@@ -51,19 +51,25 @@ export const STATE_CHANGED = "state_changed";
 
 async function convertObjectFields(obj: any) {
   for (const [key, value] of Object.entries(obj)) {
-    obj[key] = await handleField(value);
+    const v = await handleField(value);
+    if (v === undefined) {
+      return undefined;
+    }
+    obj[key] = v;
   }
   return obj;
 }
 
-async function handleField(value: any): Promise<any> {
+async function handleField(value: any): Promise<any | undefined> {
   if (value instanceof Timestamp) {
     return value.toDate();
   } else if (value instanceof DocumentReference) {
     const docData = await getDoc(value);
     return convertToJavascript(docData);
   } else if (Array.isArray(value)) {
-    return Promise.all(value.map(handleField));
+    return (await Promise.all(value.map(handleField))).filter(
+      (d) => d !== undefined
+    );
   } else if (typeof value === "object" && value !== null) {
     return convertObjectFields(value);
   }
@@ -77,7 +83,10 @@ export async function convertToJavascript(document: DocumentSnapshot) {
     return undefined;
   }
   for (const [key, value] of Object.entries(data)) {
-    data[key] = await handleField(value);
+    const v = await handleField(value);
+    if (v !== undefined) {
+      data[key] = v;
+    }
   }
   data["id"] = document.id;
   data["docRef"] = document.ref;
