@@ -1,6 +1,5 @@
 "use client";
-import { EventContext, UserContext } from "@/lib/context";
-import { useEventListener } from "@/lib/hooks";
+import { EventContext, EventsContext } from "@/lib/context";
 import { EventId } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import React, { useContext } from "react";
@@ -12,8 +11,7 @@ export default function PrivateLayoutEvent({
   children: React.ReactNode;
   params: { groupId: GroupId; eventId: EventId };
 }) {
-  const user = useContext(UserContext);
-  const event = useEventListener(user, params.groupId, params.eventId);
+  const event = useContext(EventsContext)?.find((e) => e.id === params.eventId);
 
   return (
     <EventContext.Provider value={event}>{children}</EventContext.Provider>
