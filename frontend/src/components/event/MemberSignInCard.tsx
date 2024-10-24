@@ -15,6 +15,7 @@ import MAN_SVG from "../../../public/man-profile.svg";
 import GroupBadge from "./GroupBadge";
 import { MetadataContext } from "@/lib/context";
 import { MetadataSelectModel } from "@/models/Metadata";
+import useMediaQuery from "@/helper/useMediaQuery";
 
 export const MemberSignIn: FC<MemberSignInCardProps> = memo(
   ({ ...props }) => {
@@ -121,6 +122,7 @@ function MemberSignInCard({
       gsap.from(frontRef.current, { height: 0, duration: 0.3 });
     }
   }, [triggerAddAnimation]);
+  const mobile = useMediaQuery("(max-width: 768px)");
 
   useGSAP(() => {
     const handleDragEnd = (e: any) => {
@@ -138,13 +140,13 @@ function MemberSignInCard({
         (positionX.current - e.pageX) / (e.timeStamp - timeStamp.current);
       if (
         positionX.current - e.pageX + (selectedRef.current ? 104 : 20) >
-          window.innerWidth / 2 ||
+          window.innerWidth / (mobile ? 2 : 4) ||
         velocity > 1.2
       ) {
         remove();
       } else if (
         e.pageX - positionX.current + (editRef.current ? 104 : 20) >
-          window.innerWidth / 2 ||
+          window.innerWidth / (mobile ? 2 : 4) ||
         velocity < -1.2
       ) {
         edit();
@@ -200,7 +202,7 @@ function MemberSignInCard({
   return (
     <div className="overflow-hidden" id={id} key={id}>
       <div className="z-10" id={frontId} ref={frontRef}>
-        <div className={"flex h-20 w-[calc(100vw+84px)]"}>
+        <div className={"flex h-20 w-[calc(100%+84px)]"}>
           <div
             className="absolute top-0 -left-[calc(200vw)]"
             onClick={() => {
@@ -212,11 +214,14 @@ function MemberSignInCard({
             </div>
           </div>
           <div
-            className={
-              "flex w-[calc(200vw)] px-4 items-center justify-between" +
-              (dragConfig?.dragType === "DELETE" ? " bg-blue-100" : "")
-            }
+            className={`flex w-[calc(200%)] pl-4 items-center justify-between ${
+              dragConfig?.dragType === "DELETE" ? " bg-blue-100" : ""
+            } ${!mobile ? "cursor-pointer" : ""}`}
             onClick={() => {
+              if (!mobile) {
+                edit();
+                return;
+              }
               if (disabled) return;
               if (selectedRef.current || editRef.current) {
                 selectedRef.current = false;
@@ -236,7 +241,7 @@ function MemberSignInCard({
               }
             }}
           >
-            <div className="flex justify-start items-center">
+            <div className="flex justify-between items-center">
               <Image
                 src={
                   gender && member.metadata?.[gender.id]
@@ -264,7 +269,7 @@ function MemberSignInCard({
                 </p>
               </div>
             </div>
-            <div>
+            <div className="flex justify-end items-center gap-4 h-full">
               <GroupBadge
                 campus={
                   campus &&
@@ -273,6 +278,25 @@ function MemberSignInCard({
                 }
                 className="w-14 text-sm"
               />
+              {!mobile && (
+                <div
+                  className={`flex items-center h-full w-20 justify-center p-2 cursor-pointer ${
+                    dragConfig?.dragType === "ADD"
+                      ? "bg-blue-600"
+                      : "bg-red-600"
+                  }`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    if (!disabled) remove();
+                  }}
+                >
+                  {dragConfig?.dragType === "ADD" ? (
+                    <ArrowRightIcon className="h-5 w-5 text-white" />
+                  ) : (
+                    <ArrowUturnLeftIcon className="h-5 w-5 text-white" />
+                  )}
+                </div>
+              )}
             </div>
           </div>
           <div
@@ -282,13 +306,17 @@ function MemberSignInCard({
             }}
           >
             {dragEnabled ? (
-              dragConfig.dragType == "ADD" ? (
+              dragConfig.dragType === "ADD" ? (
                 <div className="bg-blue-600 h-20 flex w-screen justify-start items-center">
-                  <ArrowRightIcon className="h-5 w-5 ml-8 text-white" />
+                  {mobile && (
+                    <ArrowRightIcon className="h-5 w-5 ml-8 text-white" />
+                  )}
                 </div>
               ) : (
                 <div className="bg-red-600 h-20 flex w-screen justify-start items-center">
-                  <ArrowUturnLeftIcon className="h-5 w-5 ml-8 text-white" />
+                  {mobile && (
+                    <ArrowUturnLeftIcon className="h-5 w-5 ml-8 text-white" />
+                  )}
                 </div>
               )
             ) : null}

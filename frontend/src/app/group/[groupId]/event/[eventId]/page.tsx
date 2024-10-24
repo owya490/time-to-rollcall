@@ -263,66 +263,68 @@ export default function Event({
                   : "Start searching members to add them!"}
               </div>
             )}
-          <div className="w-full z-30">
-            <AttendanceSuggested
-              disabled={!toggleEdit}
-              suggested={membersNotSignedIn.slice(0, index)}
-              searchInputLength={searchInput.length}
-              loadAnimation={loadAnimation}
-              create={() => {
-                setSelectedMember(
-                  InitMember(
-                    searchInput,
-                    metadata?.find(
-                      (m) => m.key === "campus" && m.type === "select"
-                    )?.id,
-                    Object.entries(
-                      (
-                        metadata?.find(
-                          (m) => m.key === "campus" && m.type === "select"
-                        ) as MetadataSelectModel | undefined
-                      )?.values ?? {}
-                    ).find(([_, v]) => v === group?.name)?.[0]
-                  )
-                );
-                openModal();
-              }}
-              action={(member: MemberModel) => {
-                promiseToast<void>(
-                  addMemberToEvent(groupId, eventId, member.id),
-                  `Adding ${member.name}...`,
-                  `${member.name} Added!`,
-                  `Could not add ${member.name}.`
-                );
-              }}
-              edit={(member: MemberModel) => {
-                setSelectedMember(member);
-                openModal();
-              }}
-            />
-          </div>
-          <div className="z-30 w-full">
-            <AttendanceSignedIn
-              disabled={!toggleEdit}
-              signedIn={membersSignedIn.slice(0, indexSignedIn)}
-              totalAttendance={event.members?.length ?? 0}
-              action={(member: MemberModel) => {
-                promiseToast<void>(
-                  removeMemberFromEvent(
-                    groupId,
-                    eventId,
-                    event.members?.find((m) => m.member.id === member.id)
-                  ),
-                  `Removing ${member.name}...`,
-                  `${member.name} Removed!`,
-                  `Could not remove ${member.name}.`
-                );
-              }}
-              edit={(member: MemberModel) => {
-                setSelectedMember(member);
-                openModal();
-              }}
-            />
+          <div className="md:grid md:grid-cols-2 md:grid-flow-row z-30">
+            <div className="w-full">
+              <AttendanceSuggested
+                disabled={!toggleEdit}
+                suggested={membersNotSignedIn.slice(0, index)}
+                searchInputLength={searchInput.length}
+                loadAnimation={loadAnimation}
+                create={() => {
+                  setSelectedMember(
+                    InitMember(
+                      searchInput,
+                      metadata?.find(
+                        (m) => m.key === "campus" && m.type === "select"
+                      )?.id,
+                      Object.entries(
+                        (
+                          metadata?.find(
+                            (m) => m.key === "campus" && m.type === "select"
+                          ) as MetadataSelectModel | undefined
+                        )?.values ?? {}
+                      ).find(([_, v]) => v === group?.name)?.[0]
+                    )
+                  );
+                  openModal();
+                }}
+                action={(member: MemberModel) => {
+                  promiseToast<void>(
+                    addMemberToEvent(groupId, eventId, member.id),
+                    `Adding ${member.name}...`,
+                    `${member.name} Added!`,
+                    `Could not add ${member.name}.`
+                  );
+                }}
+                edit={(member: MemberModel) => {
+                  setSelectedMember(member);
+                  openModal();
+                }}
+              />
+            </div>
+            <div className="w-full">
+              <AttendanceSignedIn
+                disabled={!toggleEdit}
+                signedIn={membersSignedIn.slice(0, indexSignedIn)}
+                totalAttendance={event.members?.length ?? 0}
+                action={(member: MemberModel) => {
+                  promiseToast<void>(
+                    removeMemberFromEvent(
+                      groupId,
+                      eventId,
+                      event.members?.find((m) => m.member.id === member.id)
+                    ),
+                    `Removing ${member.name}...`,
+                    `${member.name} Removed!`,
+                    `Could not remove ${member.name}.`
+                  );
+                }}
+                edit={(member: MemberModel) => {
+                  setSelectedMember(member);
+                  openModal();
+                }}
+              />
+            </div>
           </div>
           <div className="flex flex-col fixed z-40 bottom-0 w-full">
             <button
