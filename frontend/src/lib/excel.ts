@@ -69,7 +69,7 @@ async function addEventToWorkbook(
 
   event.members?.map((info) =>
     worksheet.addRow({
-      signInTime: toddMMYYYY(info.signInTime),
+      signInTime: info.signInTime ? toddMMYYYY(info.signInTime) : "",
       name: info.member.name,
       email: info.member.email,
       notes: info.notes,

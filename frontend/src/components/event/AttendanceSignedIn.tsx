@@ -1,13 +1,12 @@
-import { MemberModel } from "@/models/Member";
 import { MemberSignIn } from "./MemberSignInCard";
+import { MemberInformation } from "@/models/Event";
 
 interface AttendanceSignedInProps {
   disabled: boolean;
-  signedIn?: MemberModel[];
+  signedIn?: MemberInformation[];
   totalAttendance: number;
-
-  action: (member: MemberModel) => void;
-  edit: (member: MemberModel) => void;
+  action: (memberInfo: MemberInformation) => void;
+  edit: (memberInfo: MemberInformation) => void;
 }
 
 export default function AttendanceSignedIn({
@@ -29,12 +28,12 @@ export default function AttendanceSignedIn({
           </p>
         </div>
       </div>
-      {signedIn?.map((member) => {
+      {signedIn?.map((memberInfo) => {
         return (
           <MemberSignIn
             disabled={disabled}
-            key={member.id}
-            member={member}
+            key={memberInfo.member.id}
+            memberInfo={memberInfo}
             dragConfig={{
               draggable: true,
               dragType: "DELETE",

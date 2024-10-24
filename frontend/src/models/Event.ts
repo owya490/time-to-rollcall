@@ -15,7 +15,7 @@ export interface EventModel {
 
 export interface MemberInformation {
   member: MemberModel;
-  signInTime: Date;
+  signInTime?: Date;
   notes?: string;
 }
 

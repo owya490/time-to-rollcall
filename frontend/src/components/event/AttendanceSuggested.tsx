@@ -1,14 +1,15 @@
-import { MemberModel } from "@/models/Member";
 import { MemberSignIn } from "./MemberSignInCard";
 import useMediaQuery from "@/helper/useMediaQuery";
+import { MemberInformation } from "@/models/Event";
+import { MemberModel } from "@/models/Member";
 
 interface AttendanceSuggested {
   disabled: boolean;
   suggested: MemberModel[];
   searchInputLength: number;
   create: () => void;
-  action: (member: MemberModel) => void;
-  edit: (member: MemberModel) => void;
+  action: (memberInfo: MemberInformation) => void;
+  edit: (memberInfo: MemberInformation) => void;
   loadAnimation: boolean;
 }
 
@@ -43,14 +44,14 @@ export default function AttendanceSuggested({
           <MemberSignIn
             disabled={disabled}
             key={member.id}
-            member={member}
+            memberInfo={{ member }}
             dragConfig={{
               draggable: true,
               dragType: "ADD",
               action,
               edit,
             }}
-            refreshDependency={suggested}
+            refreshDependency={suggested.map((member) => ({ member }))}
             triggerAddAnimation={loadAnimation}
           />
         );

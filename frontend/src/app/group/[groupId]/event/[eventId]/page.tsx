@@ -14,9 +14,13 @@ import {
   MembersContext,
   MetadataContext,
 } from "@/lib/context";
-import { addMemberToEvent, removeMemberFromEvent } from "@/lib/events";
+import {
+  addMemberToEvent,
+  removeMemberFromEvent,
+  updateEventMembers,
+} from "@/lib/events";
 import { createMember, deleteMember, updateMember } from "@/lib/members";
-import { EventId } from "@/models/Event";
+import { EventId, MemberInformation } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import { InitMember, MemberModel } from "@/models/Member";
 import { MetadataSelectModel } from "@/models/Metadata";
@@ -24,7 +28,10 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Draggable from "gsap/dist/Draggable";
 import { useContext, useEffect, useState } from "react";
-import { searchForMemberByName } from "services/attendanceService";
+import {
+  searchForMemberByName,
+  searchForMemberInformationByName,
+} from "services/attendanceService";
 
 gsap.registerPlugin(Draggable, useGSAP);
 
@@ -44,15 +51,22 @@ export default function Event({
   const [membersNotSignedIn, setMembersNotSignedIn] = useState<MemberModel[]>(
     []
   );
-  const [membersSignedIn, setMembersSignedIn] = useState<MemberModel[]>([]);
+  const [membersSignedIn, setMembersSignedIn] = useState<MemberInformation[]>(
+    []
+  );
   const [index, setIndex] = useState<number>(0);
   const [indexSignedIn, setIndexSignedIn] = useState<number>(0);
   const [loadAnimation, setLoadAnimation] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<MemberModel>(
-    InitMember("")
-  );
+  const [selectedMemberInfo, setSelectedMemberInfo] =
+    useState<MemberInformation>({
+      member: InitMember(""),
+      signInTime: new Date(),
+    });
+  const [previousSignInTime, setPreviousSignInTime] = useState<
+    Date | undefined
+  >(new Date());
   const [toggleEdit, setToggleEdit] = useState(true);
   const [time, setTime] = useState(new Date());
 
@@ -75,8 +89,11 @@ export default function Event({
 
   async function editMember() {
     setUpdating(true);
-    if (selectedMember.id === "placeholder") {
-      const newMember = await createMember(params.groupId, selectedMember);
+    if (selectedMemberInfo.member.id === "placeholder") {
+      const newMember = await createMember(
+        params.groupId,
+        selectedMemberInfo.member
+      );
       await promiseToast<void>(
         addMemberToEvent(params.groupId, params.eventId, newMember.id),
         "Creating and Adding Member...",
@@ -85,11 +102,31 @@ export default function Event({
       );
     } else {
       await promiseToast<void>(
-        updateMember(params.groupId, selectedMember),
+        updateMember(params.groupId, selectedMemberInfo.member),
         "Updating Member...",
         "Member Updated!",
         "Could not update member."
       );
+      if (
+        previousSignInTime !== selectedMemberInfo.signInTime &&
+        event?.members
+      ) {
+        const index = event.members.findIndex(
+          (m) => m.member.id === selectedMemberInfo.member.id
+        );
+        if (index !== -1) {
+          await promiseToast<void>(
+            updateEventMembers(params.groupId, event.id, [
+              ...event.members.slice(0, index),
+              selectedMemberInfo,
+              ...event.members.slice(index + 1),
+            ]),
+            "Updating Sign in time...",
+            "Sign in time Updated!",
+            "Could not update sign in time."
+          );
+        }
+      }
     }
     setUpdating(false);
     closeModal();
@@ -105,10 +142,9 @@ export default function Event({
               !event?.members?.some((signedIn) => signedIn.member.id === m.id)
           ) ?? [];
       let membersSignedIn =
-        event.members
-          ?.sort((a, b) => a.member.name.localeCompare(b.member.name))
-          .map((m) => members?.find((member) => member.id === m.member.id))
-          .filter((m): m is MemberModel => m !== undefined) ?? [];
+        event.members?.sort((a, b) =>
+          a.member.name.localeCompare(b.member.name)
+        ) ?? [];
       if (searchInput.length > 0) {
         setLoadAnimation(true);
         const { suggested, notSuggested } = searchForMemberByName(
@@ -118,7 +154,7 @@ export default function Event({
         setMembersNotSignedIn(suggested.concat(notSuggested));
         setIndex(suggested.length);
         const { suggested: signedIn, notSuggested: signedInNotSuggested } =
-          searchForMemberByName(membersSignedIn, searchInput);
+          searchForMemberInformationByName(membersSignedIn, searchInput);
         setMembersSignedIn(signedIn.concat(signedInNotSuggested));
         setIndexSignedIn(signedIn.length);
       } else {
@@ -147,7 +183,7 @@ export default function Event({
       setMembersNotSignedIn(suggested.concat(notSuggested));
       setIndex(suggested.length);
       const { suggested: signedIn, notSuggested: signedInNotSuggested } =
-        searchForMemberByName(membersSignedIn, searchInput);
+        searchForMemberInformationByName(membersSignedIn, searchInput);
       setMembersSignedIn(signedIn.concat(signedInNotSuggested));
       setIndexSignedIn(signedIn.length);
     } else if (prevSearchActive && searchInput.length === 0) {
@@ -166,21 +202,27 @@ export default function Event({
 
   async function deleteMemberIn() {
     setUpdatingDelete(true);
-    if (params.groupId && event && selectedMember) {
-      if (membersSignedIn.find((msi) => msi.id === selectedMember.id)) {
+    if (params.groupId && event && selectedMemberInfo.member) {
+      if (
+        membersSignedIn.find(
+          (msi) => msi.member.id === selectedMemberInfo.member.id
+        )
+      ) {
         await promiseToast<void>(
           removeMemberFromEvent(
             groupId,
             eventId,
-            event.members?.find((m) => m.member.id === selectedMember.id)
+            event.members?.find(
+              (m) => m.member.id === selectedMemberInfo.member.id
+            )
           ),
-          `Removing ${selectedMember.name}...`,
-          `${selectedMember.name} Removed!`,
-          `Could not remove ${selectedMember.name}.`
+          `Removing ${selectedMemberInfo.member.name}...`,
+          `${selectedMemberInfo.member.name} Removed!`,
+          `Could not remove ${selectedMemberInfo.member.name}.`
         );
       }
       await promiseToast<void>(
-        deleteMember(params.groupId, selectedMember.id),
+        deleteMember(params.groupId, selectedMemberInfo.member.id),
         "Deleting Member...",
         "Member Deleted!",
         "Could not delete member."
@@ -225,8 +267,10 @@ export default function Event({
           <EditMember
             isOpen={isOpen}
             closeModal={closeModal}
-            member={selectedMember}
-            setMember={setSelectedMember}
+            member={selectedMemberInfo.member}
+            setMember={(member) =>
+              setSelectedMemberInfo({ ...selectedMemberInfo, member })
+            }
             submit={editMember}
             updating={updating}
             deleteConfirmationIsOpen={deleteConfirmationIsOpen}
@@ -234,6 +278,10 @@ export default function Event({
             closeDeleteConfirmationModal={closeDeleteConfirmationModal}
             deleteMember={deleteMemberIn}
             updatingDelete={updatingDelete}
+            signInTime={selectedMemberInfo.signInTime}
+            updateSignInTime={(signInTime) =>
+              setSelectedMemberInfo({ ...selectedMemberInfo, signInTime })
+            }
           />
           <div
             className={
@@ -255,14 +303,6 @@ export default function Event({
             searchInput={searchInput}
             setSearchInput={setSearchInput}
           />
-          {searchInput.length === 0 &&
-            (!event || !event.members || event.members.length === 0) && (
-              <div className="text-center my-6 mt-8 text-gray-500">
-                {!toggleEdit
-                  ? "Click the pencil icon on the top right to enable editing!"
-                  : "Start searching members to add them!"}
-              </div>
-            )}
           <div className="md:grid md:grid-cols-2 md:grid-flow-row z-30">
             <div className="w-full">
               <AttendanceSuggested
@@ -271,8 +311,8 @@ export default function Event({
                 searchInputLength={searchInput.length}
                 loadAnimation={loadAnimation}
                 create={() => {
-                  setSelectedMember(
-                    InitMember(
+                  setSelectedMemberInfo({
+                    member: InitMember(
                       searchInput,
                       metadata?.find(
                         (m) => m.key === "campus" && m.type === "select"
@@ -284,11 +324,13 @@ export default function Event({
                           ) as MetadataSelectModel | undefined
                         )?.values ?? {}
                       ).find(([_, v]) => v === group?.name)?.[0]
-                    )
-                  );
+                    ),
+                    signInTime: new Date(),
+                  });
                   openModal();
                 }}
-                action={(member: MemberModel) => {
+                action={(memberInfo: MemberInformation) => {
+                  const { member } = memberInfo;
                   promiseToast<void>(
                     addMemberToEvent(groupId, eventId, member.id),
                     `Adding ${member.name}...`,
@@ -296,18 +338,27 @@ export default function Event({
                     `Could not add ${member.name}.`
                   );
                 }}
-                edit={(member: MemberModel) => {
-                  setSelectedMember(member);
+                edit={(memberInfo: MemberInformation) => {
+                  setSelectedMemberInfo(memberInfo);
                   openModal();
                 }}
               />
+              {searchInput.length === 0 &&
+                (!event || !event.members || event.members.length === 0) && (
+                  <div className="text-center my-6 mt-8 text-gray-500">
+                    {!toggleEdit
+                      ? "Click the pencil icon on the top right to enable editing!"
+                      : "Start searching members to add them!"}
+                  </div>
+                )}
             </div>
             <div className="w-full">
               <AttendanceSignedIn
                 disabled={!toggleEdit}
                 signedIn={membersSignedIn.slice(0, indexSignedIn)}
                 totalAttendance={event.members?.length ?? 0}
-                action={(member: MemberModel) => {
+                action={(memberInfo: MemberInformation) => {
+                  const { member } = memberInfo;
                   promiseToast<void>(
                     removeMemberFromEvent(
                       groupId,
@@ -319,8 +370,9 @@ export default function Event({
                     `Could not remove ${member.name}.`
                   );
                 }}
-                edit={(member: MemberModel) => {
-                  setSelectedMember(member);
+                edit={(memberInfo: MemberInformation) => {
+                  setSelectedMemberInfo(memberInfo);
+                  setPreviousSignInTime(memberInfo.signInTime);
                   openModal();
                 }}
               />
@@ -329,14 +381,11 @@ export default function Event({
           <div className="flex flex-col fixed z-40 bottom-0 w-full">
             <button
               type="button"
-              className={
-                "text-gray-700 text-sm py-4 px-1.5 w-full font-light text-center " +
-                (toggleEdit ? "bg-green-200" : "bg-gray-300")
-              }
+              className="text-gray-700 text-sm py-4 px-1.5 w-full font-light text-center bg-green-200"
               onClick={() => {
                 if (toggleEdit) {
-                  setSelectedMember(
-                    InitMember(
+                  setSelectedMemberInfo({
+                    member: InitMember(
                       searchInput,
                       metadata?.find(
                         (m) => m.key === "campus" && m.type === "select"
@@ -348,8 +397,9 @@ export default function Event({
                           ) as MetadataSelectModel | undefined
                         )?.values ?? {}
                       ).find(([_, v]) => v === group?.name)?.[0]
-                    )
-                  );
+                    ),
+                    signInTime: new Date(),
+                  });
                   openModal();
                 } else {
                   setToggleEdit(true);

@@ -21,6 +21,7 @@ import Loader from "../Loader";
 import { MetadataContext } from "@/lib/context";
 import DeleteConfirmation from "../event/DeleteEvent";
 import { MetadataSelectModel } from "@/models/Metadata";
+import { convertToDateTimeLocalString } from "@/helper/Time";
 
 export default function EditMember({
   isOpen,
@@ -34,6 +35,8 @@ export default function EditMember({
   closeDeleteConfirmationModal,
   deleteMember,
   updatingDelete,
+  signInTime,
+  updateSignInTime,
 }: {
   isOpen: boolean;
   closeModal: () => void;
@@ -46,6 +49,8 @@ export default function EditMember({
   closeDeleteConfirmationModal?: () => void;
   deleteMember?: () => void;
   updatingDelete?: boolean;
+  signInTime?: Date;
+  updateSignInTime?: (d: Date) => void;
 }) {
   const metadata = useContext(MetadataContext);
   const newMember = member.id === "placeholder";
@@ -239,6 +244,18 @@ export default function EditMember({
                         }
                       />
                     </div>
+                    {signInTime && updateSignInTime && (
+                      <div className="flex flex-wrap my-4 justify-between items-center">
+                        <p className="text-xs">Sign in time</p>
+                        <input
+                          type="datetime-local"
+                          value={convertToDateTimeLocalString(signInTime)}
+                          onChange={(event) => {
+                            updateSignInTime(new Date(event.target.value));
+                          }}
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="flex justify-center">
                     {updating ? (

@@ -1,5 +1,5 @@
 "use client";
-import { getYearString, MemberModel } from "@/models/Member";
+import { getYearString } from "@/models/Member";
 import { useGSAP } from "@gsap/react";
 import {
   ArrowRightIcon,
@@ -16,6 +16,7 @@ import GroupBadge from "./GroupBadge";
 import { MetadataContext } from "@/lib/context";
 import { MetadataSelectModel } from "@/models/Metadata";
 import useMediaQuery from "@/helper/useMediaQuery";
+import { MemberInformation } from "@/models/Event";
 
 export const MemberSignIn: FC<MemberSignInCardProps> = memo(
   ({ ...props }) => {
@@ -24,9 +25,11 @@ export const MemberSignIn: FC<MemberSignInCardProps> = memo(
   (prevProps, nextProps) => {
     return (
       prevProps.disabled === nextProps.disabled &&
-      prevProps.member.id === nextProps.member.id &&
-      prevProps.member.name === nextProps.member.name &&
-      prevProps.member.metadata === nextProps.member.metadata
+      prevProps.memberInfo.signInTime === nextProps.memberInfo.signInTime &&
+      prevProps.memberInfo.member.id === nextProps.memberInfo.member.id &&
+      prevProps.memberInfo.member.name === nextProps.memberInfo.member.name &&
+      prevProps.memberInfo.member.metadata ===
+        nextProps.memberInfo.member.metadata
     );
   }
 );
@@ -37,21 +40,21 @@ export type DragType = "DELETE" | "ADD";
 export interface DragConfig {
   draggable: boolean;
   dragType: DragType;
-  action: (member: MemberModel) => void;
-  edit: (member: MemberModel) => void;
+  action: (memberInfo: MemberInformation) => void;
+  edit: (memberInfo: MemberInformation) => void;
 }
 
 export interface MemberSignInCardProps {
   disabled: boolean;
-  member: MemberModel;
+  memberInfo: MemberInformation;
   dragConfig?: DragConfig;
-  refreshDependency?: MemberModel[];
+  refreshDependency?: MemberInformation[];
   triggerAddAnimation?: boolean;
 }
 
 function MemberSignInCard({
   disabled,
-  member,
+  memberInfo,
   dragConfig,
   refreshDependency,
   triggerAddAnimation,
@@ -71,12 +74,12 @@ function MemberSignInCard({
   ) as MetadataSelectModel | undefined;
   const selectedRef = useRef(false);
   const editRef = useRef(false);
-  const id = member.id;
+  const id = memberInfo.member.id;
   const frontId = "front-" + id;
   const remove = () => {
     const timeline = gsap.timeline({
       onComplete: () => {
-        dragConfig?.action(member);
+        dragConfig?.action(memberInfo);
       },
     });
     timeline.to(
@@ -95,7 +98,7 @@ function MemberSignInCard({
   const edit = () => {
     const timeline = gsap.timeline({
       onStart: () => {
-        dragConfig?.edit(member);
+        dragConfig?.edit(memberInfo);
       },
     });
     timeline.to(
@@ -244,8 +247,9 @@ function MemberSignInCard({
             <div className="flex justify-between items-center">
               <Image
                 src={
-                  gender && member.metadata?.[gender.id]
-                    ? gender.values[member.metadata?.[gender.id]] === "Male"
+                  gender && memberInfo.member.metadata?.[gender.id]
+                    ? gender.values[memberInfo.member.metadata?.[gender.id]] ===
+                      "Male"
                       ? MAN_SVG
                       : WOMAN_FACE_SVG
                     : WOMAN_FACE_SVG
@@ -256,15 +260,16 @@ function MemberSignInCard({
                 className="h-7 w-7 mr-4"
               />
               <div>
-                <h3 className="font-light mb-2">{member.name}</h3>
+                <h3 className="font-light mb-2">{memberInfo.member.name}</h3>
                 <p className="text-xs text-gray-500 font-extralight">
-                  {year && member.metadata?.[year.id]
-                    ? getYearString(year.values[member.metadata?.[year.id]]) ??
-                      getYearString(member.metadata?.[year.id])
+                  {year && memberInfo.member.metadata?.[year.id]
+                    ? getYearString(
+                        year.values[memberInfo.member.metadata?.[year.id]]
+                      ) ?? getYearString(memberInfo.member.metadata?.[year.id])
                     : ""}
-                  {role && member.metadata?.[role.id]
-                    ? role.values[member.metadata?.[role.id]] ??
-                      member.metadata?.[role.id]
+                  {role && memberInfo.member.metadata?.[role.id]
+                    ? role.values[memberInfo.member.metadata?.[role.id]] ??
+                      memberInfo.member.metadata?.[role.id]
                     : "Member"}
                 </p>
               </div>
@@ -273,8 +278,8 @@ function MemberSignInCard({
               <GroupBadge
                 campus={
                   campus &&
-                  member.metadata?.[campus.id] &&
-                  campus.values[member.metadata?.[campus.id]]
+                  memberInfo.member.metadata?.[campus.id] &&
+                  campus.values[memberInfo.member.metadata?.[campus.id]]
                 }
                 className="w-14 text-sm mr-4"
               />
