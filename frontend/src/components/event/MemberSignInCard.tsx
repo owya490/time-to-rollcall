@@ -281,8 +281,12 @@ function MemberSignInCard({
               {!mobile && (
                 <div
                   className={`flex items-center h-full w-20 justify-center p-2 cursor-pointer ${
-                    dragConfig?.dragType === "ADD" && "bg-blue-600"
-                  } ${dragConfig?.dragType === "DELETE" && "bg-red-600"}`}
+                    disabled
+                      ? "bg-gray-400"
+                      : dragConfig?.dragType === "ADD"
+                      ? "bg-blue-600"
+                      : "bg-red-600"
+                  }`}
                   onClick={(event) => {
                     event.stopPropagation();
                     if (!disabled) remove();
