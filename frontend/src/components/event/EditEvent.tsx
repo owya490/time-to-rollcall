@@ -155,9 +155,8 @@ export default function EditEvent({
                             {newEvent ? "Create" : "Edit"} Your event.
                           </DialogTitle>
                           <p className="mt-3 px-12 text-sm text-gray-500">
-                            Start by naming your event. This will be the name
-                            displayed for everyone but it can always be changed
-                            later.
+                            Name your event. This will be the name displayed for
+                            everyone but it can always be changed later.
                           </p>
                           <input
                             type="text"
@@ -188,7 +187,7 @@ export default function EditEvent({
                             Categorise your event.
                           </DialogTitle>
                           <p className="my-2 text-xs font-light text-gray-400">
-                            Add Tags
+                            Select Tags
                           </p>
                           <div className="flex flex-wrap justify-center max-h-32 overflow-auto">
                             {tags?.map((t, i) => (

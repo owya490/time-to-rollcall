@@ -269,7 +269,7 @@ export default function EditMember({
                       <button
                         type="button"
                         disabled={!member.name}
-                        className="bottom-2 fixed z-50 inline-flex mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="bottom-2 fixed z-50 inline-flex mt-4 justify-center rounded-3xl border border-transparent bg-black px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={submit}
                       >
                         {newMember ? "Create" : "Update"}

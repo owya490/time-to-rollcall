@@ -12,8 +12,10 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 import {
-  ArrowDownIcon,
-  ArrowUpIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  PlusCircleIcon,
+  PlusIcon,
   TrashIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -39,6 +41,7 @@ export default function EditMetadata({
   updating: boolean;
 }) {
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+  const [order, setOrder] = useState<boolean>(false);
   const [deleteConfirmationIsOpen, setDeleteConfirmationIsOpen] =
     useState(false);
   const [deleteValue, setDeleteValue] = useState<MetadataValueId | null>(null);
@@ -144,7 +147,7 @@ export default function EditMetadata({
                 leaveFrom="transform translate-y-0"
                 leaveTo="transform translate-y-full"
               >
-                <DialogPanel className="rounded-t-3xl bg-white pt-4 pb-0 shadow-xl">
+                <DialogPanel className="rounded-t-3xl bg-white pt-4 shadow-xl">
                   <div
                     className="absolute right-2 top-2 p-2 cursor-pointer"
                     onClick={closeModal}
@@ -157,102 +160,63 @@ export default function EditMetadata({
                   >
                     Edit Metadata
                   </DialogTitle>
-                  <div className="overflow-auto max-h-[70vh] pb-14 px-4">
+                  <div className="overflow-auto max-h-[70vh] pb-2 px-4">
                     {metadata.map((md, i) => (
-                      <div className="my-4" key={i}>
-                        <div className="flex justify-start">
-                          <ArrowDownIcon
-                            className="w-5 h-5 cursor-pointer"
-                            onClick={() =>
-                              i !== metadata.length - 1 &&
-                              setMetadata((prevMD) => {
-                                const updatedObjects = [...(prevMD ?? [])];
+                      <div className="flex">
+                        {order && (
+                          <div className="mt-5 mr-3 p-2">
+                            <ChevronUpIcon
+                              className={`w-6 h-6 ${
+                                i === 0
+                                  ? "text-gray-300"
+                                  : "text-gray-500 cursor-pointer"
+                              }`}
+                              onClick={() =>
+                                i !== 0 &&
+                                setMetadata((prevMD) => {
+                                  const updatedObjects = [...(prevMD ?? [])];
 
-                                [updatedObjects[i], updatedObjects[i + 1]] = [
-                                  updatedObjects[i + 1],
-                                  updatedObjects[i],
-                                ];
+                                  [updatedObjects[i - 1], updatedObjects[i]] = [
+                                    updatedObjects[i],
+                                    updatedObjects[i - 1],
+                                  ];
 
-                                const tempId = updatedObjects[i].order;
-                                updatedObjects[i].order =
-                                  updatedObjects[i + 1].order;
-                                updatedObjects[i + 1].order = tempId;
+                                  const tempId = updatedObjects[i - 1].order;
+                                  updatedObjects[i - 1].order =
+                                    updatedObjects[i].order;
+                                  updatedObjects[i].order = tempId;
 
-                                return updatedObjects;
-                              })
-                            }
-                          />
-                          <p className="text-sm text-gray-900">{i + 1}. Name</p>
-                          <ArrowUpIcon
-                            className="w-5 h-5 cursor-pointer"
-                            onClick={() =>
-                              i !== 0 &&
-                              setMetadata((prevMD) => {
-                                const updatedObjects = [...(prevMD ?? [])];
-
-                                [updatedObjects[i - 1], updatedObjects[i]] = [
-                                  updatedObjects[i],
-                                  updatedObjects[i - 1],
-                                ];
-
-                                const tempId = updatedObjects[i - 1].order;
-                                updatedObjects[i - 1].order =
-                                  updatedObjects[i].order;
-                                updatedObjects[i].order = tempId;
-
-                                return updatedObjects;
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <input
-                            type="text"
-                            autoFocus
-                            className="w-full rounded-none resize-none border-t-0 bg-transparent font-sans text-lg font-semibold text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
-                            placeholder="Notes"
-                            value={md.key}
-                            onChange={(e) => {
-                              setMetadata([
-                                ...metadata.slice(0, i),
-                                {
-                                  ...md,
-                                  key: e.target.value,
-                                },
-                                ...metadata.slice(i + 1),
-                              ]);
-                            }}
-                          />
-                          <div
-                            className="p-2 cursor-pointer"
-                            onClick={() => {
-                              if (md.id !== "placeholder") {
-                                setDeleteIndex(i);
-                                setDeleteConfirmationIsOpen(true);
-                              }
-                            }}
-                          >
-                            <TrashIcon
-                              className={
-                                "w-6 h-6 " +
-                                (md.id === "placeholder"
-                                  ? "text-gray-200"
-                                  : "text-red-600")
+                                  return updatedObjects;
+                                })
                               }
                             />
                           </div>
-                        </div>
-                        <div className="flex justify-between">
-                          <p className="text-sm text-gray-900 font-bold">
-                            Have Specific Values?
-                          </p>
-                          <label className="relative inline-flex items-center cursor-pointer">
+                        )}
+                        <div
+                          className="flex-grow my-2 p-4 bg-gray-100 rounded-xl"
+                          key={i}
+                        >
+                          <div className="flex justify-between items-center">
                             <input
-                              type="checkbox"
-                              id="mySwitch"
-                              checked={md.type === "select"}
-                              className="sr-only peer"
-                              onChange={() =>
+                              type="text"
+                              autoFocus
+                              className="w-full rounded-none resize-none border-t-0 bg-transparent font-sans text-lg font-semibold text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
+                              placeholder="Field name"
+                              value={md.key}
+                              onChange={(e) => {
+                                setMetadata([
+                                  ...metadata.slice(0, i),
+                                  {
+                                    ...md,
+                                    key: e.target.value,
+                                  },
+                                  ...metadata.slice(i + 1),
+                                ]);
+                              }}
+                            />
+                            <div
+                              className="cursor-pointer"
+                              onClick={() =>
                                 setMetadata([
                                   ...metadata.slice(0, i),
                                   {
@@ -263,114 +227,182 @@ export default function EditMetadata({
                                   ...metadata.slice(i + 1),
                                 ])
                               }
-                            />
-                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer-checked:bg-blue-600 transition-all duration-300"></div>
-                            <div className="absolute w-5 h-5 bg-white rounded-full left-0.5 top-0.5 peer-checked:translate-x-full transition-transform duration-300"></div>
-                          </label>
-                        </div>
-                        {md.type === "select" && (
-                          <div>
-                            <p className="text-sm text-gray-900">Values</p>
-                            {Object.entries(
-                              (md as MetadataSelectModel).values
-                            ).map(([k, v], j) => (
-                              <div
-                                key={j}
-                                className="flex w-full justify-between items-center"
-                              >
-                                <input
-                                  key={j}
-                                  type="text"
-                                  autoFocus
-                                  className="w-full rounded-none resize-none border-t-0 bg-transparent font-sans text-md text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
-                                  placeholder="Placeholder"
-                                  value={v}
-                                  onChange={(e) => {
-                                    setMetadata([
-                                      ...metadata.slice(0, i),
-                                      {
-                                        ...md,
-                                        values: {
-                                          ...(md as MetadataSelectModel).values,
-                                          [k]: e.target.value,
-                                        },
-                                      } as MetadataModel,
-                                      ...metadata.slice(i + 1),
-                                    ]);
-                                  }}
-                                />
-                                <div
-                                  className="p-1 cursor-pointer"
-                                  onClick={() => {
-                                    if (md.id !== "placeholder") {
-                                      setDeleteIndex(i);
-                                      setDeleteValue(k);
-                                      setDeleteValueConfirmationIsOpen(true);
-                                    }
-                                  }}
-                                >
-                                  <TrashIcon
-                                    className={
-                                      "w-5 h-5 " +
-                                      (md.id === "placeholder"
-                                        ? "text-gray-200"
-                                        : "text-red-600")
-                                    }
-                                  />
-                                </div>
-                              </div>
-                            ))}
-                            <button
-                              className="text-md text-gray-500 bg-gray-100"
-                              onClick={() => {
-                                setMetadata(
-                                  updateMetadataValues(
-                                    md as MetadataSelectModel,
-                                    i
-                                  )
-                                );
-                              }}
                             >
-                              Add Value +
-                            </button>
+                              {md.type === "select" ? (
+                                <XMarkIcon className="w-6 h-6 text-gray-500" />
+                              ) : (
+                                <PlusIcon className="w-6 h-6 text-gray-500" />
+                              )}
+                            </div>
+                          </div>
+                          {md.type === "select" && (
+                            <div className="mt-4">
+                              {(md as MetadataSelectModel).values &&
+                                Object.entries(
+                                  (md as MetadataSelectModel).values
+                                ).map(([k, v], j) => (
+                                  <div
+                                    key={j}
+                                    className="flex mb-2 w-full justify-between items-center"
+                                  >
+                                    <div className="bg-gray-200 rounded-xl flex-grow mr-4 text-sm">
+                                      <input
+                                        key={j}
+                                        type="text"
+                                        autoFocus
+                                        className="w-full p-2 rounded-none font-medium resize-none border-t-0 bg-transparent font-sans text-md text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
+                                        placeholder="Placeholder"
+                                        value={v}
+                                        onChange={(e) => {
+                                          setMetadata([
+                                            ...metadata.slice(0, i),
+                                            {
+                                              ...md,
+                                              values: {
+                                                ...(md as MetadataSelectModel)
+                                                  .values,
+                                                [k]: e.target.value,
+                                              },
+                                            } as MetadataModel,
+                                            ...metadata.slice(i + 1),
+                                          ]);
+                                        }}
+                                      />
+                                    </div>
+                                    <button
+                                      className="p-1 text-gray-400 text-xs"
+                                      onClick={() => {
+                                        if (md.id !== "placeholder") {
+                                          setDeleteIndex(i);
+                                          setDeleteValue(k);
+                                          setDeleteValueConfirmationIsOpen(
+                                            true
+                                          );
+                                        }
+                                      }}
+                                    >
+                                      Remove
+                                    </button>
+                                  </div>
+                                ))}
+                              <button
+                                className="flex items-center gap-2 p-2 bg-white rounded-xl"
+                                onClick={() => {
+                                  setMetadata(
+                                    updateMetadataValues(
+                                      md as MetadataSelectModel,
+                                      i
+                                    )
+                                  );
+                                }}
+                              >
+                                <p className="text-sm text-gray-500">
+                                  Add value
+                                </p>
+                                <PlusCircleIcon className="w-4 h-4 text-gray-500" />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                        {order ? (
+                          <div className="mt-5 ml-3 p-2">
+                            <ChevronDownIcon
+                              className={`w-6 h-6 ${
+                                i !== metadata.length - 1
+                                  ? "text-gray-500 cursor-pointer"
+                                  : "text-gray-300"
+                              }`}
+                              onClick={() =>
+                                i !== metadata.length - 1 &&
+                                setMetadata((prevMD) => {
+                                  const updatedObjects = [...(prevMD ?? [])];
+
+                                  [updatedObjects[i], updatedObjects[i + 1]] = [
+                                    updatedObjects[i + 1],
+                                    updatedObjects[i],
+                                  ];
+
+                                  const tempId = updatedObjects[i].order;
+                                  updatedObjects[i].order =
+                                    updatedObjects[i + 1].order;
+                                  updatedObjects[i + 1].order = tempId;
+
+                                  return updatedObjects;
+                                })
+                              }
+                            />
+                          </div>
+                        ) : (
+                          <div className="mt-3 ml-3 p-2">
+                            <TrashIcon
+                              className={
+                                "w-6 h-6 " +
+                                (md.id === "placeholder"
+                                  ? "text-gray-200"
+                                  : "text-red-600 cursor-pointer")
+                              }
+                              onClick={() => {
+                                if (md.id !== "placeholder") {
+                                  setDeleteIndex(i);
+                                  setDeleteConfirmationIsOpen(true);
+                                }
+                              }}
+                            />
                           </div>
                         )}
                       </div>
                     ))}
-                    <div className="flex justify-center">
-                      <button
-                        type="button"
-                        className="rounded-3xl border-transparent border-2 bg-blue-200 px-3 py-1 mx-1 my-1 text-xs font-light text-blue-900"
-                        onClick={() =>
-                          setMetadata([
-                            ...metadata,
-                            InitMetadataInput(
-                              metadata.reduce(
-                                (max, obj) =>
-                                  obj.order > max ? obj.order : max,
-                                metadata[0].order
-                              ) + 1
-                            ),
-                          ])
-                        }
-                      >
-                        Create Data Point
-                      </button>
-                    </div>
-                    <div className="flex justify-center">
-                      {updating ? (
-                        <div className="bottom-2 fixed flex justify-center items-center">
+                    <button
+                      type="button"
+                      className="flex justify-between items-center bg-white p-2 mt-2"
+                      onClick={() =>
+                        setMetadata([
+                          ...metadata,
+                          InitMetadataInput(
+                            metadata.reduce(
+                              (max, obj) => (obj.order > max ? obj.order : max),
+                              metadata[0].order
+                            ) + 1
+                          ),
+                        ])
+                      }
+                    >
+                      <p className="text-gray-500 mr-3">Add field</p>
+                      <PlusCircleIcon className="w-5 h-5 text-gray-500" />
+                    </button>
+                    {updating ? (
+                      <div className="flex justify-center items-center">
+                        <div className="bottom-2 fixed">
                           <Loader show />
                         </div>
-                      ) : (
+                      </div>
+                    ) : (
+                      <div className="flex justify-center">
                         <button
                           type="button"
-                          className="bottom-2 fixed inline-flex mt-4 z-50 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="bottom-2 fixed inline-flex mt-4 z-50 justify-center rounded-3xl border border-transparent bg-black px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                           onClick={submit}
                         >
                           Update
                         </button>
-                      )}
+                      </div>
+                    )}
+                    <div className="flex justify-end items-center">
+                      <p className="bottom-3.5 mr-14 text-sm fixed text-gray-400 font-medium">
+                        Order
+                      </p>
+                      <label className="bottom-3 fixed inline-flex items-center cursor-pointer">
+                        <input
+                          disabled={updating}
+                          type="checkbox"
+                          id="mySwitch"
+                          checked={order}
+                          className="sr-only peer"
+                          onChange={() => setOrder(!order)}
+                        />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-black rounded-full peer-checked:bg-black transition-all duration-300"></div>
+                        <div className="absolute w-5 h-5 bg-white rounded-full left-0.5 top-0.5 peer-checked:translate-x-full transition-transform duration-300"></div>
+                      </label>
                     </div>
                   </div>
                 </DialogPanel>

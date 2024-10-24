@@ -82,7 +82,7 @@ export default function Export({
                 </DialogTitle>
                 <div className="overflow-auto max-h-[70vh] pb-14 px-4">
                   <p className="my-2 text-xs font-light text-gray-400">
-                    Select Event Tags to Export
+                    Select Event tags to export
                   </p>
                   <div className="flex flex-wrap max-h-32 overflow-auto">
                     {tags?.map((t, i) => (
