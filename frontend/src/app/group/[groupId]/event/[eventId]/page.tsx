@@ -142,9 +142,14 @@ export default function Event({
               !event?.members?.some((signedIn) => signedIn.member.id === m.id)
           ) ?? [];
       let membersSignedIn =
-        event.members?.sort((a, b) =>
-          a.member.name.localeCompare(b.member.name)
-        ) ?? [];
+        (event.members
+          ?.sort((a, b) => a.member.name.localeCompare(b.member.name))
+          .map((mi) => ({
+            ...mi,
+            member: members?.find((m) => m.id === mi.member.id),
+          }))
+          .filter((mi) => mi.member !== undefined) as MemberInformation[]) ??
+        [];
       if (searchInput.length > 0) {
         setLoadAnimation(true);
         const { suggested, notSuggested } = searchForMemberByName(

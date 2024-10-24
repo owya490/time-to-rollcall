@@ -249,7 +249,7 @@ export default function EditMember({
                     </div>
                     {signInTime && updateSignInTime && (
                       <div className="flex flex-wrap my-4 justify-between items-center">
-                        <p className="text-xs">Sign in time</p>
+                        <p className="text-sm">Sign in time</p>
                         <input
                           type="datetime-local"
                           value={convertToDateTimeLocalString(signInTime)}
