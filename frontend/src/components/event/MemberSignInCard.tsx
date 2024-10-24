@@ -122,7 +122,7 @@ function MemberSignInCard({
       gsap.from(frontRef.current, { height: 0, duration: 0.3 });
     }
   }, [triggerAddAnimation]);
-  const mobile = useMediaQuery("(max-width: 768px)");
+  const mobile = !useMediaQuery("(min-width: 768px)");
 
   useGSAP(() => {
     const handleDragEnd = (e: any) => {
@@ -281,10 +281,8 @@ function MemberSignInCard({
               {!mobile && (
                 <div
                   className={`flex items-center h-full w-20 justify-center p-2 cursor-pointer ${
-                    dragConfig?.dragType === "ADD"
-                      ? "bg-blue-600"
-                      : "bg-red-600"
-                  }`}
+                    dragConfig?.dragType === "ADD" && "bg-blue-600"
+                  } ${dragConfig?.dragType === "DELETE" && "bg-red-600"}`}
                   onClick={(event) => {
                     event.stopPropagation();
                     if (!disabled) remove();
@@ -305,21 +303,24 @@ function MemberSignInCard({
               if (selectedRef.current && !disabled) remove();
             }}
           >
-            {dragEnabled ? (
-              dragConfig.dragType === "ADD" ? (
-                <div className="bg-blue-600 h-20 flex w-screen justify-start items-center">
-                  {mobile && (
-                    <ArrowRightIcon className="h-5 w-5 ml-8 text-white" />
-                  )}
-                </div>
-              ) : (
-                <div className="bg-red-600 h-20 flex w-screen justify-start items-center">
-                  {mobile && (
-                    <ArrowUturnLeftIcon className="h-5 w-5 ml-8 text-white" />
-                  )}
-                </div>
-              )
-            ) : null}
+            {dragEnabled && (
+              <>
+                {dragConfig.dragType === "ADD" && (
+                  <div className="bg-blue-600 h-20 flex w-screen justify-start items-center">
+                    {mobile && (
+                      <ArrowRightIcon className="h-5 w-5 ml-8 text-white" />
+                    )}
+                  </div>
+                )}
+                {dragConfig.dragType === "DELETE" && (
+                  <div className="bg-red-600 h-20 flex w-screen justify-start items-center">
+                    {mobile && (
+                      <ArrowUturnLeftIcon className="h-5 w-5 ml-8 text-white" />
+                    )}
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
