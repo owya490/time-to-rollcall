@@ -93,7 +93,10 @@ export async function convertToJavascript(document: DocumentSnapshot) {
   return data;
 }
 
-export function convertToFirestore(data: { id: string; docRef?: string }) {
+export function convertToFirestore(data: {
+  id: string;
+  docRef?: DocumentReference;
+}) {
   const { id, docRef, ...dataWithoutId } = data;
   return dataWithoutId;
 }
