@@ -130,8 +130,6 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
     }
   }, [group, events, params.groupId]);
 
-  console.log(events);
-
   return (
     <>
       <Topbar />

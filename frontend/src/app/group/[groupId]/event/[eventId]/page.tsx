@@ -166,7 +166,19 @@ export default function Event({
 
   async function deleteMemberIn() {
     setUpdatingDelete(true);
-    if (params.groupId && selectedMember) {
+    if (params.groupId && event && selectedMember) {
+      if (membersSignedIn.find((msi) => msi.id === selectedMember.id)) {
+        await promiseToast<void>(
+          removeMemberFromEvent(
+            groupId,
+            eventId,
+            event.members?.find((m) => m.member.id === selectedMember.id)
+          ),
+          `Removing ${selectedMember.name}...`,
+          `${selectedMember.name} Removed!`,
+          `Could not remove ${selectedMember.name}.`
+        );
+      }
       await promiseToast<void>(
         deleteMember(params.groupId, selectedMember.id),
         "Deleting Member...",

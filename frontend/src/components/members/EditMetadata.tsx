@@ -66,7 +66,7 @@ export default function EditMetadata({
       <DeleteConfirmation
         description={
           (deleteIndex ? metadata[deleteIndex]?.key : "Data") +
-          " will be deleted forever"
+          " will be deleted forever and all past events"
         }
         isOpen={deleteConfirmationIsOpen}
         closeModal={() => {
