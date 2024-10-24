@@ -114,7 +114,7 @@ export default function Export({
                   <p className="my-2 text-xs font-light text-gray-400">
                     Select fields to export
                   </p>
-                  <div className="flex flex-col max-h-96 scroll-mt-4 gap-0.5 overflow-auto">
+                  <div className="flex flex-col max-h-72 scroll-mt-4 gap-0.5 overflow-auto">
                     <div
                       className={`flex items-center justify-start gap-6 px-2 py-3 rounded-xl bg-gray-100`}
                     >

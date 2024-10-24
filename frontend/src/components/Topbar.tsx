@@ -15,7 +15,7 @@ import {
   Cog6ToothIcon,
   PencilIcon,
   ArrowLeftEndOnRectangleIcon,
-  BookmarkSquareIcon,
+  ArrowDownTrayIcon,
 } from "@heroicons/react/24/outline";
 import {
   UserGroupIcon as UserGroupIconSolid,
@@ -269,7 +269,7 @@ export default function Topbar({
               isOpen={isOpenExport}
               closeModal={closeExportModal}
             />
-            <BookmarkSquareIcon
+            <ArrowDownTrayIcon
               className="cursor-pointer w-7 h-7 text-gray-500"
               onClick={openExportModal}
             />

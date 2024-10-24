@@ -14,6 +14,7 @@ import { deleteEvent, submitEvent, updateEvent } from "@/lib/events";
 import { EventModel, InitEvent } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import { TagId } from "@/models/Tag";
+import { ArrowDownTrayIcon } from "@heroicons/react/16/solid";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
@@ -170,10 +171,11 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
             <h1 className="text-2xl">Events</h1>
             <button
               type="button"
-              className="text-center text-gray-700 text-sm rounded-lg py-2 px-2 bg-gray-200"
               onClick={openExportModal}
+              className="flex justify-end gap-2 items-center text-center text-gray-700 text-sm rounded-lg py-2 px-2 bg-gray-200"
             >
-              EXPORT
+              <ArrowDownTrayIcon className="cursor-pointer w-6 h-6 text-gray-500" />
+              <p>EXPORT MULTIPLE</p>
             </button>
           </div>
           {group &&
