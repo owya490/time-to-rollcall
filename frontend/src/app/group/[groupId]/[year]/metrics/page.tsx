@@ -152,7 +152,11 @@ export default function Metrics({
                     <Line
                       type="monotone"
                       dataKey="Attendance"
-                      stroke={tag.colour}
+                      stroke={
+                        tag.colour
+                          ? getColourClasses(tag.colour).hex
+                          : "#3B82F6"
+                      }
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -174,7 +178,9 @@ export default function Metrics({
                   .map((e, i) => (
                     <Cell
                       key={i}
-                      fill={e?.colour ? getColourClasses(e.colour).hex : "blue"}
+                      fill={
+                        e?.colour ? getColourClasses(e.colour).hex : "#3B82F6"
+                      }
                     />
                   ))}
               </Bar>

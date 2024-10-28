@@ -9,109 +9,108 @@ type ColourClass = {
 type ColourClasses = {
   [key: string]: ColourClass;
 };
-
 export const colourClasses: ColourClasses = {
   gray: {
     bg: "bg-gray-100 border-gray-100 text-gray-500",
     fill: "fill-gray-400",
     bgSelected: "bg-gray-300 border-gray-600 text-gray-900",
-    hex: "#9CA3AF", // Gray
+    hex: "#6B7280", // text-gray-500
   },
   red: {
     bg: "bg-red-100 border-red-100 text-red-500",
     fill: "fill-red-400",
     bgSelected: "bg-red-300 border-red-600 text-red-900",
-    hex: "#EF4444", // Red
+    hex: "#EF4444", // text-red-500
   },
   orange: {
     bg: "bg-orange-100 border-orange-100 text-orange-500",
     fill: "fill-orange-400",
     bgSelected: "bg-orange-300 border-orange-600 text-orange-900",
-    hex: "#F97316", // Orange
+    hex: "#F97316", // text-orange-500
   },
   amber: {
     bg: "bg-amber-100 border-amber-100 text-amber-500",
     fill: "fill-amber-400",
     bgSelected: "bg-amber-300 border-amber-600 text-amber-900",
-    hex: "#F59E0B", // Amber
+    hex: "#F59E0B", // text-amber-500
   },
   yellow: {
     bg: "bg-yellow-100 border-yellow-100 text-yellow-500",
     fill: "fill-yellow-400",
     bgSelected: "bg-yellow-300 border-yellow-600 text-yellow-900",
-    hex: "#EAB308", // Yellow
+    hex: "#EAB308", // text-yellow-500
   },
   lime: {
     bg: "bg-lime-100 border-lime-100 text-lime-500",
     fill: "fill-lime-400",
     bgSelected: "bg-lime-300 border-lime-600 text-lime-900",
-    hex: "#84CC16", // Lime
+    hex: "#84CC16", // text-lime-500
   },
   green: {
     bg: "bg-green-100 border-green-100 text-green-500",
     fill: "fill-green-400",
     bgSelected: "bg-green-300 border-green-600 text-green-900",
-    hex: "#22C55E", // Green
+    hex: "#22C55E", // text-green-500
   },
   emerald: {
     bg: "bg-emerald-100 border-emerald-100 text-emerald-500",
     fill: "fill-emerald-400",
     bgSelected: "bg-emerald-300 border-emerald-600 text-emerald-900",
-    hex: "#10B981", // Emerald
+    hex: "#10B981", // text-emerald-500
   },
   teal: {
     bg: "bg-teal-100 border-teal-100 text-teal-500",
     fill: "fill-teal-400",
     bgSelected: "bg-teal-300 border-teal-600 text-teal-900",
-    hex: "#14B8A6", // Teal
+    hex: "#14B8A6", // text-teal-500
   },
   cyan: {
     bg: "bg-cyan-100 border-cyan-100 text-cyan-500",
     fill: "fill-cyan-400",
     bgSelected: "bg-cyan-300 border-cyan-600 text-cyan-900",
-    hex: "#06B6D4", // Cyan
+    hex: "#06B6D4", // text-cyan-500
   },
   blue: {
     bg: "bg-blue-100 border-blue-100 text-blue-500",
     fill: "fill-blue-400",
     bgSelected: "bg-blue-300 border-blue-600 text-blue-900",
-    hex: "#3B82F6", // Blue
+    hex: "#3B82F6", // text-blue-500
   },
   indigo: {
     bg: "bg-indigo-100 border-indigo-100 text-indigo-500",
     fill: "fill-indigo-400",
     bgSelected: "bg-indigo-300 border-indigo-600 text-indigo-900",
-    hex: "#6366F1", // Indigo
+    hex: "#6366F1", // text-indigo-500
   },
   violet: {
     bg: "bg-violet-100 border-violet-100 text-violet-500",
     fill: "fill-violet-400",
     bgSelected: "bg-violet-300 border-violet-600 text-violet-900",
-    hex: "#8B5CF6", // Violet
+    hex: "#8B5CF6", // text-violet-500
   },
   purple: {
     bg: "bg-purple-100 border-purple-100 text-purple-500",
     fill: "fill-purple-400",
     bgSelected: "bg-purple-300 border-purple-600 text-purple-900",
-    hex: "#A855F7", // Purple
+    hex: "#A855F7", // text-purple-500
   },
   fuchsia: {
     bg: "bg-fuchsia-100 border-fuchsia-100 text-fuchsia-500",
     fill: "fill-fuchsia-400",
     bgSelected: "bg-fuchsia-300 border-fuchsia-600 text-fuchsia-900",
-    hex: "#D946EF", // Fuchsia
+    hex: "#D946EF", // text-fuchsia-500
   },
   pink: {
     bg: "bg-pink-100 border-pink-100 text-pink-500",
     fill: "fill-pink-400",
     bgSelected: "bg-pink-300 border-pink-600 text-pink-900",
-    hex: "#EC4899", // Pink
+    hex: "#EC4899", // text-pink-500
   },
   rose: {
     bg: "bg-rose-100 border-rose-100 text-rose-500",
     fill: "fill-rose-400",
     bgSelected: "bg-rose-300 border-rose-600 text-rose-900",
-    hex: "#F43F5E", // Rose
+    hex: "#F43F5E", // text-rose-500
   },
 };
 
