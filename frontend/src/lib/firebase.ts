@@ -8,7 +8,7 @@ import {
   DocumentSnapshot,
   Timestamp,
   getDoc,
-  getFirestore,
+  initializeFirestore,
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
@@ -44,7 +44,9 @@ microsoftProvider.setCustomParameters({
 });
 
 // Firestore exports
-export const firestore = getFirestore(firebaseApp);
+export const firestore = initializeFirestore(firebaseApp, {
+  ignoreUndefinedProperties: true,
+});
 // Storage exports
 export const storage = getStorage(firebaseApp);
 export const STATE_CHANGED = "state_changed";

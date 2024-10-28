@@ -5,4 +5,6 @@ admin.initializeApp();
 const db = admin.firestore();
 const auth = admin.auth();
 
-export {admin, db, auth};
+db.settings({ ignoreUndefinedProperties: true });
+
+export { admin, db, auth };
