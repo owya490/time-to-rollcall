@@ -1,5 +1,5 @@
 "use client";
-import Tag from "@/components/event/Tag";
+import Tag, { getColourClasses } from "@/components/event/Tag";
 import Topbar from "@/components/Topbar";
 import { Path } from "@/helper/Path";
 import { allowedYears, currentYearStr } from "@/helper/Time";
@@ -76,7 +76,6 @@ export default function Metrics({
               0
             ) / eventsByTag[tag.id].attendance.length,
         };
-        console.log(eventsByTag[tag.id].average);
       }
       setMetricByTag(eventsByTag);
     }
@@ -161,7 +160,7 @@ export default function Metrics({
             </div>
           );
         })}
-        <h1>Average attendance</h1>
+        <h1 className="text-xl">Average attendance by Tag</h1>
         <div style={{ width: "100%", height: "300px" }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={Object.values(metricByTag).map((m) => m.average)}>
@@ -173,7 +172,10 @@ export default function Metrics({
                 {Object.values(metricByTag)
                   .map((m) => m.average)
                   .map((e, i) => (
-                    <Cell key={i} fill={e?.colour ?? "blue"} />
+                    <Cell
+                      key={i}
+                      fill={e?.colour ? getColourClasses(e.colour).hex : "blue"}
+                    />
                   ))}
               </Bar>
             </BarChart>
