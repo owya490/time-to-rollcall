@@ -56,7 +56,7 @@ export const currentYearStr = new Date().getFullYear().toString();
 
 export const allowedYears = () => {
   let years = [];
-  for (let year = 2023; year <= currentYear; ++year) {
+  for (let year = 2024; year <= currentYear; ++year) {
     years.push(year);
   }
   return years;
