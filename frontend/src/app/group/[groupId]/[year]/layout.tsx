@@ -2,7 +2,7 @@ import NotFoundPage from "@/components/NotFoundPage";
 import PrivateLayoutGroup from "@/components/PrivateLayoutGroup";
 import { allowedYears } from "@/helper/Time";
 
-export default function GroupLayout({
+export default function GroupYearLayout({
   children,
   params,
 }: {

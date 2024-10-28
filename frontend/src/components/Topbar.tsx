@@ -16,8 +16,10 @@ import {
   PencilIcon,
   ArrowLeftEndOnRectangleIcon,
   ArrowDownTrayIcon,
+  PresentationChartLineIcon,
 } from "@heroicons/react/24/outline";
 import {
+  PresentationChartLineIcon as PresentationChartLineIconSolid,
   UserGroupIcon as UserGroupIconSolid,
   PencilIcon as PencilIconSolid,
 } from "@heroicons/react/24/solid";
@@ -315,6 +317,24 @@ export default function Topbar({
           </div>
         ) : group ? (
           <div className="flex items-center justify-end gap-4">
+            {pathname ===
+            Path.Group + "/" + group.id + "/" + year + GroupPath.Metrics ? (
+              <PresentationChartLineIconSolid
+                className="cursor-pointer w-7 h-7 text-gray-500"
+                onClick={() =>
+                  router.push(Path.Group + "/" + group.id + "/" + year)
+                }
+              />
+            ) : (
+              <PresentationChartLineIcon
+                className="cursor-pointer w-7 h-7 text-gray-500"
+                onClick={() =>
+                  router.push(
+                    Path.Group + "/" + group.id + "/" + year + GroupPath.Metrics
+                  )
+                }
+              />
+            )}
             {pathname ===
             Path.Group + "/" + group.id + "/" + year + GroupPath.Members ? (
               <UserGroupIconSolid
