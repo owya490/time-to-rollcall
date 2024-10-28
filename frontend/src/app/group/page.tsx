@@ -3,6 +3,7 @@ import GroupBadge from "@/components/event/GroupBadge";
 import EditGroup from "@/components/group/EditGroup";
 import Topbar from "@/components/Topbar";
 import { Path } from "@/helper/Path";
+import { currentYearStr } from "@/helper/Time";
 import { UserContext } from "@/lib/context";
 import { createGroup } from "@/lib/groups";
 import { useGroupsListener } from "@/lib/hooks";
@@ -25,7 +26,7 @@ export default function Groups() {
     setUpdating(true);
     if (group) {
       const id = await createGroup(group);
-      router.push(Path.Group + "/" + id);
+      router.push(Path.Group + "/" + id + "/" + currentYearStr);
     }
     closeModal();
   }
@@ -46,7 +47,10 @@ export default function Groups() {
         <div className="flex flex-wrap gap-2 my-4">
           {groups?.map((group, i) =>
             getUniversityKey(group.name as University) ? (
-              <Link key={i} href={`${Path.Group}/${group.id}`}>
+              <Link
+                key={i}
+                href={`${Path.Group}/${group.id}/${currentYearStr}`}
+              >
                 <GroupBadge
                   campus={group.name as University}
                   className="px-4"
@@ -55,7 +59,7 @@ export default function Groups() {
             ) : (
               <Link
                 key={i}
-                href={`${Path.Group}/${group.id}`}
+                href={`${Path.Group}/${group.id}/${currentYearStr}`}
                 className="bg-gray-900 rounded-full py-1 px-4 text-white font-light text-center"
               >
                 {group.name}

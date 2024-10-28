@@ -53,3 +53,11 @@ export function convertToDateTimeLocalString(date: Date) {
 
 export const currentYear = new Date().getFullYear();
 export const currentYearStr = new Date().getFullYear().toString();
+
+export const allowedYears = () => {
+  let years = [];
+  for (let year = 2023; year <= currentYear; ++year) {
+    years.push(year);
+  }
+  return years;
+};

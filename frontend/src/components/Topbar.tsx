@@ -37,11 +37,14 @@ import { MetadataModel } from "@/models/Metadata";
 import EditMetadata from "./members/EditMetadata";
 import { editMetadatas } from "@/lib/metadata";
 import ExportEvent from "./event/ExportEvent";
+import { currentYearStr } from "@/helper/Time";
 
 export default function Topbar({
+  year,
   toggleEdit,
   setToggleEdit,
 }: {
+  year?: string;
   toggleEdit?: boolean;
   setToggleEdit?: (toggleEdit: boolean) => void;
 }) {
@@ -94,7 +97,7 @@ export default function Topbar({
     setUpdatingDelete(true);
     if (group && event) {
       await deleteEvent(group.id, event.id);
-      router.push(Path.Group + "/" + group.id);
+      router.push(Path.Group + "/" + group.id + "/" + year);
     }
     setIsOpen(false);
     setDeleteConfirmationIsOpen(false);
@@ -206,7 +209,7 @@ export default function Topbar({
         )}
         {submitGroupForm &&
           submitTagsForm !== null &&
-          pathname === Path.Group + "/" + group?.id && (
+          pathname === Path.Group + "/" + group?.id + "/" + year && (
             <EditGroup
               isOpen={isOpen}
               closeModal={closeModal}
@@ -220,7 +223,8 @@ export default function Topbar({
             />
           )}
         {metadatas &&
-          pathname === Path.Group + "/" + group?.id + GroupPath.Members && (
+          pathname ===
+            Path.Group + "/" + group?.id + "/" + year + GroupPath.Members && (
             <EditMetadata
               isOpen={isOpen}
               closeModal={closeModal}
@@ -235,9 +239,9 @@ export default function Topbar({
           getUniversityKey(group.name as University) ? (
             <Link
               href={
-                pathname === Path.Group + "/" + group.id
+                pathname === Path.Group + "/" + group.id + "/" + year
                   ? Path.Group
-                  : Path.Group + "/" + group.id
+                  : Path.Group + "/" + group.id + "/" + year
               }
             >
               <GroupBadge
@@ -248,9 +252,9 @@ export default function Topbar({
           ) : (
             <Link
               href={
-                pathname === Path.Group + "/" + group.id
+                pathname === Path.Group + "/" + group.id + "/" + year
                   ? Path.Group
-                  : Path.Group + "/" + group.id
+                  : Path.Group + "/" + group.id + "/" + year
               }
               className="bg-gray-900 rounded-full py-1 px-4 text-white font-light text-center"
             >
@@ -261,6 +265,16 @@ export default function Topbar({
           <div>Hi {user.displayName}</div>
         ) : (
           <div />
+        )}
+        {year && currentYearStr !== year && (
+          <button
+            className="rounded-lg bg-gray-200 p-1 px-2 font-bold"
+            onClick={() =>
+              router.push(`${Path.Group}/${group?.id}/${currentYearStr}`)
+            }
+          >
+            {year}
+          </button>
         )}
         {event ? (
           <div className="flex items-center gap-4 justify-end">
@@ -295,23 +309,29 @@ export default function Topbar({
           </div>
         ) : group ? (
           <div className="flex items-center justify-end gap-4">
-            {pathname === Path.Group + "/" + group.id + GroupPath.Members ? (
+            {pathname ===
+            Path.Group + "/" + group.id + "/" + year + GroupPath.Members ? (
               <UserGroupIconSolid
                 className="cursor-pointer w-7 h-7 text-gray-500"
-                onClick={() => router.push(Path.Group + "/" + group.id)}
+                onClick={() =>
+                  router.push(Path.Group + "/" + group.id + "/" + year)
+                }
               />
             ) : (
               <UserGroupIcon
                 className="cursor-pointer w-7 h-7 text-gray-500"
                 onClick={() =>
-                  router.push(Path.Group + "/" + group.id + GroupPath.Members)
+                  router.push(
+                    Path.Group + "/" + group.id + "/" + year + GroupPath.Members
+                  )
                 }
               />
             )}
             <Cog6ToothIcon
               className="cursor-pointer w-7 h-7 text-gray-500"
               onClick={
-                pathname === Path.Group + "/" + group.id + GroupPath.Members
+                pathname ===
+                Path.Group + "/" + group.id + "/" + year + GroupPath.Members
                   ? openMetadataModal
                   : openGroupModal
               }

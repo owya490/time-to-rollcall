@@ -16,7 +16,7 @@ import { searchForMemberByName } from "services/attendanceService";
 export default function GroupMember({
   params,
 }: {
-  params: { groupId: GroupId };
+  params: { groupId: GroupId; year: string };
 }) {
   const [searchActive, setSearchActive] = useState(false);
   const [searchInput, setSearchInput] = useState<string>("");
@@ -118,7 +118,7 @@ export default function GroupMember({
   }
   return (
     <>
-      <Topbar />
+      <Topbar year={params.year} />
       <EditMember
         isOpen={isOpen}
         closeModal={closeModal}

@@ -22,13 +22,13 @@ export default function PrivateLayoutGroup({
   params,
 }: {
   children: React.ReactNode;
-  params: { groupId: GroupId };
+  params: { groupId: GroupId; year: string };
 }) {
   const user = useContext(UserContext);
   const group = useGroupListener(user, params.groupId);
-  const members = useMembersListener(user, group?.id);
+  const members = useMembersListener(user, params.year, group?.id);
   const metadata = useMetadataListener(user, group?.id);
-  const events = useEventsListener(user, group?.id);
+  const events = useEventsListener(user, params.year, group?.id);
   const tags = useTagsListener(user, group?.id);
   return (
     <GroupContext.Provider value={group}>

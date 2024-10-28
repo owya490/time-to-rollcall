@@ -7,18 +7,29 @@ import EventComponent from "@/components/event/EventComponent";
 import Export from "@/components/group/Export";
 import { Filter, InitFilter } from "@/helper/Filter";
 import { GroupPath, Path } from "@/helper/Path";
-import { inBetween } from "@/helper/Time";
+import { allowedYears, currentYearStr, inBetween } from "@/helper/Time";
 import { promiseToast } from "@/helper/Toast";
 import { EventsContext, GroupContext, TagsContext } from "@/lib/context";
 import { deleteEvent, submitEvent, updateEvent } from "@/lib/events";
 import { EventModel, InitEvent } from "@/models/Event";
 import { GroupId } from "@/models/Group";
 import { TagId } from "@/models/Tag";
-import { ArrowDownTrayIcon } from "@heroicons/react/16/solid";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
+} from "@headlessui/react";
+import { ArrowDownTrayIcon, CheckIcon } from "@heroicons/react/16/solid";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
-export default function Group({ params }: { params: { groupId: GroupId } }) {
+export default function Group({
+  params,
+}: {
+  params: { groupId: GroupId; year: string };
+}) {
   const group = useContext(GroupContext);
   const tags = useContext(TagsContext);
   const events = useContext(EventsContext);
@@ -131,9 +142,14 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
     }
   }, [group, events, params.groupId]);
 
+  const years =
+    params.year === currentYearStr
+      ? allowedYears().slice(0, -1)
+      : allowedYears();
+
   return (
     <>
-      <Topbar />
+      <Topbar year={params.year} />
       {loading ? (
         <div className="flex justify-center items-center my-24">
           <Loader show />
@@ -167,7 +183,7 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
               updating={updating}
             />
           )}
-          <div className="flex justify-between mx-4 mt-3 mb-16">
+          <div className="flex justify-between mx-4 mt-3">
             <h1 className="text-2xl">Events</h1>
             <button
               type="button"
@@ -178,6 +194,48 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
               <p>EXPORT MULTIPLE</p>
             </button>
           </div>
+          <div className="flex justify-end mx-4 mt-2 mb-5">
+            <Listbox
+              value={params.year}
+              onChange={(value) =>
+                router.push(Path.Group + "/" + params.groupId + "/" + value)
+              }
+            >
+              <div className="flex justify-between items-center">
+                <ListboxButton
+                  disabled={years.length === 0}
+                  className="flex justify-between appearance-none rounded-lg bg-white/5 text-left text-lg font-semibold focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
+                >
+                  {params.year === currentYearStr
+                    ? "Previous Years"
+                    : "View Years"}
+                  <ChevronDownIcon
+                    className="pointer-events-none w-6 h-6 text-black"
+                    aria-hidden="true"
+                  />
+                </ListboxButton>
+              </div>
+              <ListboxOptions
+                anchor="bottom"
+                transition
+                className="rounded-xl border border-white/5 bg-gray-100 p-1 focus:outline-none transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
+              >
+                {years.map((year, j) => (
+                  <ListboxOption
+                    key={j}
+                    value={year}
+                    className="group flex justify-between cursor-pointer items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10"
+                  >
+                    <div className="text-lg font-semibold">{year}</div>
+                    <CheckIcon
+                      className="invisible size-4 fill-white group-data-[selected]:visible right-4 w-5 h-5 text-black"
+                      aria-hidden="true"
+                    />
+                  </ListboxOption>
+                ))}
+              </ListboxOptions>
+            </Listbox>
+          </div>
           {group &&
             showedEvents.map((event, i) => (
               <div key={i}>
@@ -185,7 +243,9 @@ export default function Group({ params }: { params: { groupId: GroupId } }) {
                 <div
                   className="cursor-pointer px-4 py-6 hover:bg-gray-100"
                   onClick={() =>
-                    router.push(`${Path.Group}/${group.id}/event/${event.id}`)
+                    router.push(
+                      `${Path.Group}/${group.id}/${params.year}/event/${event.id}`
+                    )
                   }
                 >
                   <EventComponent

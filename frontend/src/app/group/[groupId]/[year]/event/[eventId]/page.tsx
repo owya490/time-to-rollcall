@@ -38,9 +38,9 @@ gsap.registerPlugin(Draggable, useGSAP);
 export default function Event({
   params,
 }: {
-  params: { groupId: GroupId; eventId: EventId };
+  params: { groupId: GroupId; year: string; eventId: EventId };
 }) {
-  const { groupId, eventId } = params;
+  const { groupId, year, eventId } = params;
   const [searchActive, setSearchActive] = useState(false);
   const [searchInput, setSearchInput] = useState<string>("");
   const metadata = useContext(MetadataContext);
@@ -258,6 +258,7 @@ export default function Event({
         <div className="fixed top-0 bottom-0 right-0 left-0 opacity-10 bg-gray-400 z-40" />
       )}
       <Topbar
+        year={year}
         setToggleEdit={
           event && time > event.dateEnd ? setToggleEdit : undefined
         }

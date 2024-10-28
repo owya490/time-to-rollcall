@@ -27,7 +27,6 @@ import {
   where,
 } from "firebase/firestore";
 import { MetadataModel } from "@/models/Metadata";
-import { currentYearStr } from "@/helper/Time";
 
 export function useUserListener() {
   const [userAuth, loadingAuth] = useAuthState(auth);
@@ -79,6 +78,9 @@ export function useGroupsListener(user: User | null | undefined) {
     firestore,
     "groups",
     user !== null,
+    undefined,
+    undefined,
+    undefined,
     where(documentId(), "in", user?.groups ?? ["placeholder"])
   );
 
@@ -87,13 +89,13 @@ export function useGroupsListener(user: User | null | undefined) {
 
 export function useMembersListener(
   user: User | null | undefined,
+  year: string,
   groupId?: string
 ) {
   const { data: members } = useFirestoreCol<MemberModel>(
     firestore,
-    `groups/${groupId}/members/${currentYearStr}/members`,
+    `groups/${groupId}/members/${year}/members`,
     user !== null && groupId && user?.groups?.includes(groupId) ? true : false,
-    undefined,
     orderBy("name", "asc")
   );
   return members;
@@ -107,7 +109,6 @@ export function useMetadataListener(
     firestore,
     `groups/${groupId}/metadata`,
     user !== null && groupId && user?.groups?.includes(groupId) ? true : false,
-    undefined,
     orderBy("order", "asc")
   );
   return metadata;
@@ -127,14 +128,18 @@ export function useTagsListener(
 
 export function useEventsListener(
   user: User | null | undefined,
+  year: string,
   groupId?: string
 ) {
   const { data: events } = useFirestoreCol<EventModel>(
     firestore,
     `groups/${groupId}/events`,
     user !== null && groupId && user?.groups?.includes(groupId) ? true : false,
+    orderBy("dateEnd", "desc"),
     undefined,
-    orderBy("dateEnd", "desc")
+    undefined,
+    where("dateStart", ">=", new Date(`${year}-01-01`)),
+    where("dateStart", "<=", new Date(`${Number(year) + 1}-01-01`))
   );
   return events;
 }
@@ -163,10 +168,10 @@ const useFirestoreCol = <T>(
   db: Firestore,
   col: string,
   trigger: boolean,
-  constraint?: QueryFieldFilterConstraint,
   orderBy?: QueryOrderByConstraint,
   onBeforeFetch?: () => Promise<void>,
-  onAfterFetch?: (data: T[] | null) => void
+  onAfterFetch?: (data: T[] | null) => void,
+  ...constraints: QueryFieldFilterConstraint[]
 ) => {
   const [data, setData] = useState<T[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -178,10 +183,10 @@ const useFirestoreCol = <T>(
         await onBeforeFetch();
       }
       const docRef =
-        constraint && orderBy
-          ? query(collection(db, col), constraint, orderBy)
-          : constraint
-          ? query(collection(db, col), constraint)
+        constraints && orderBy
+          ? query(collection(db, col), ...constraints, orderBy)
+          : constraints
+          ? query(collection(db, col), ...constraints)
           : orderBy
           ? query(collection(db, col), orderBy)
           : collection(db, col);
