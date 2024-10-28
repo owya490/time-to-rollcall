@@ -23,6 +23,9 @@ import {
   Line,
   Tooltip,
   ResponsiveContainer,
+  BarChart,
+  Bar,
+  Cell,
 } from "recharts";
 
 export default function Metrics({
@@ -32,25 +35,48 @@ export default function Metrics({
 }) {
   const events = useContext(EventsContext);
   const tags = useContext(TagsContext);
-  const [metricByTag, setMetricByTag] = useState<{ [tagId: TagId]: any[] }>({});
+  const [metricByTag, setMetricByTag] = useState<{
+    [tagId: TagId]: {
+      attendance: { name: string; Attendance: number }[];
+      average?: { name: string; Average: number; colour?: string };
+    };
+  }>({});
 
   useEffect(() => {
     if (tags && events) {
-      let eventsByTag: { [tagId: TagId]: any[] } = {};
+      let eventsByTag: {
+        [tagId: TagId]: {
+          attendance: { name: string; Attendance: number }[];
+          average?: { name: string; Average: number; colour?: string };
+        };
+      } = {};
       for (const tag of tags) {
-        eventsByTag[tag.id] = [];
+        eventsByTag[tag.id] = { attendance: [] };
       }
       for (const event of events) {
         const eventTags = event.tags.map((t) => t.id);
 
         for (const tagId of eventTags) {
           if (eventsByTag[tagId]) {
-            eventsByTag[tagId].unshift({
+            eventsByTag[tagId].attendance.unshift({
               name: event.name,
               Attendance: event.members?.length ?? 0,
             });
           }
         }
+      }
+      for (const tag of tags) {
+        eventsByTag[tag.id].average = {
+          name: tag.name,
+          colour: tag.colour,
+          Average:
+            eventsByTag[tag.id].attendance.reduce(
+              (accumulator, currentValue) =>
+                accumulator + currentValue.Attendance,
+              0
+            ) / eventsByTag[tag.id].attendance.length,
+        };
+        console.log(eventsByTag[tag.id].average);
       }
       setMetricByTag(eventsByTag);
     }
@@ -119,15 +145,7 @@ export default function Metrics({
               <Tag tag={tag} disabled />
               <div style={{ width: "100%", height: "300px" }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={m}
-                    margin={{
-                      top: 5,
-                      right: 30,
-                      left: 20,
-                      bottom: 5,
-                    }}
-                  >
+                  <LineChart data={m.attendance}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
@@ -143,6 +161,24 @@ export default function Metrics({
             </div>
           );
         })}
+        <h1>Average attendance</h1>
+        <div style={{ width: "100%", height: "300px" }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={Object.values(metricByTag).map((m) => m.average)}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar type="monotone" dataKey="Average">
+                {Object.values(metricByTag)
+                  .map((m) => m.average)
+                  .map((e, i) => (
+                    <Cell key={i} fill={e?.colour ?? "blue"} />
+                  ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </>
   );
