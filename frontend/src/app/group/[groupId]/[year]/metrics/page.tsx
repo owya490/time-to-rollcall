@@ -11,8 +11,8 @@ import {
   YAxis,
   CartesianGrid,
   Line,
-  Legend,
   Tooltip,
+  ResponsiveContainer,
 } from "recharts";
 
 export default function Metrics({
@@ -20,7 +20,7 @@ export default function Metrics({
 }: {
   params: { groupId: GroupId; year: string };
 }) {
-  const events = useContext(EventsContext)?.reverse();
+  const events = useContext(EventsContext);
   const tags = useContext(TagsContext);
   const [metricByTag, setMetricByTag] = useState<{ [tagId: TagId]: any[] }>({});
 
@@ -30,7 +30,7 @@ export default function Metrics({
       for (const tag of tags) {
         eventsByTag[tag.id] = [];
       }
-      for (const event of events) {
+      for (const event of events.reverse()) {
         const eventTags = event.tags.map((t) => t.id);
 
         for (const tagId of eventTags) {
@@ -50,22 +50,35 @@ export default function Metrics({
     <>
       <Topbar year={params.year} />
       <div className="mx-4">
-        {Object.entries(metricByTag).map(([tId, m], i) => (
-          <div key={i}>
-            <Tag
-              tag={tags?.find((t) => t.id === tId) ?? ({} as TagModel)}
-              disabled
-            />
-            <LineChart width={530} height={250} data={m}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="Attendance" stroke="#8884d8" />
-            </LineChart>
-          </div>
-        ))}
+        {Object.entries(metricByTag).map(([tId, m], i) => {
+          const tag = tags?.find((t) => t.id === tId) as TagModel;
+          return (
+            <div style={{ width: "100%", height: "100%" }} key={i}>
+              <Tag tag={tag} disabled />
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={m}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="Attendance"
+                    stroke={tag.colour}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          );
+        })}
       </div>
     </>
   );

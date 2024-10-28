@@ -214,7 +214,8 @@ export default function Topbar({
         {!disabled &&
           submitGroupForm &&
           submitTagsForm !== null &&
-          pathname === Path.Group + "/" + group?.id + "/" + year && (
+          pathname !==
+            Path.Group + "/" + group?.id + "/" + year + GroupPath.Members && (
             <EditGroup
               isOpen={isOpen}
               closeModal={closeModal}
