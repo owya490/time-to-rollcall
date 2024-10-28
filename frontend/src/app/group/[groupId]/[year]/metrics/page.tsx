@@ -1,9 +1,19 @@
 "use client";
 import Tag from "@/components/event/Tag";
 import Topbar from "@/components/Topbar";
+import { Path } from "@/helper/Path";
+import { allowedYears, currentYearStr } from "@/helper/Time";
 import { EventsContext, TagsContext } from "@/lib/context";
 import { GroupId } from "@/models/Group";
 import { TagId, TagModel } from "@/models/Tag";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
+} from "@headlessui/react";
+import { ChevronDownIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import {
   LineChart,
@@ -46,10 +56,62 @@ export default function Metrics({
     }
   }, [tags, events]);
 
+  const router = useRouter();
+
+  const years =
+    params.year === currentYearStr
+      ? allowedYears().slice(0, -1)
+      : allowedYears();
+
   return (
     <>
       <Topbar year={params.year} />
       <div className="mx-4">
+        <div className="flex justify-between items-center mt-3 mb-10">
+          <h1 className="text-2xl">Metrics</h1>
+          <div className="flex justify-end">
+            <Listbox
+              value={params.year}
+              onChange={(value) =>
+                router.push(Path.Group + "/" + params.groupId + "/" + value)
+              }
+            >
+              <div className="flex justify-between">
+                <ListboxButton
+                  disabled={years.length === 0}
+                  className="flex justify-between items-center appearance-none rounded-lg bg-white/5 text-left text-lg font-semibold focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 text-gray-600"
+                >
+                  {params.year === currentYearStr
+                    ? "Previous Years"
+                    : "View Years"}
+                  <ChevronDownIcon
+                    className="pointer-events-none w-6 h-6 text-gray-600"
+                    aria-hidden="true"
+                  />
+                </ListboxButton>
+              </div>
+              <ListboxOptions
+                anchor="bottom"
+                transition
+                className="rounded-xl border border-white/5 bg-gray-100 p-1 focus:outline-none transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0"
+              >
+                {years.map((year, j) => (
+                  <ListboxOption
+                    key={j}
+                    value={year}
+                    className="group flex justify-between cursor-pointer items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10"
+                  >
+                    <div className="text-lg font-semibold">{year}</div>
+                    <CheckIcon
+                      className="invisible size-4 fill-white group-data-[selected]:visible right-4 w-5 h-5 text-black"
+                      aria-hidden="true"
+                    />
+                  </ListboxOption>
+                ))}
+              </ListboxOptions>
+            </Listbox>
+          </div>
+        </div>
         {Object.entries(metricByTag).map(([tId, m], i) => {
           const tag = tags?.find((t) => t.id === tId) as TagModel;
           return (
