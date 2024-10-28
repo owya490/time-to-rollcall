@@ -41,9 +41,11 @@ export default function Metrics({
       average?: { name: string; Average: number; colour?: string };
     };
   }>({});
+  const [maxNumber, setMaxNumber] = useState(0);
 
   useEffect(() => {
     if (tags && events) {
+      let maxNumber = 0;
       let eventsByTag: {
         [tagId: TagId]: {
           attendance: { name: string; Attendance: number }[];
@@ -55,12 +57,16 @@ export default function Metrics({
       }
       for (const event of events) {
         const eventTags = event.tags.map((t) => t.id);
+        const attendanceNumbers = event.members?.length ?? 0;
+        if (maxNumber < attendanceNumbers) {
+          maxNumber = attendanceNumbers;
+        }
 
         for (const tagId of eventTags) {
           if (eventsByTag[tagId]) {
             eventsByTag[tagId].attendance.unshift({
               name: event.name,
-              Attendance: event.members?.length ?? 0,
+              Attendance: attendanceNumbers,
             });
           }
         }
@@ -78,6 +84,7 @@ export default function Metrics({
         };
       }
       setMetricByTag(eventsByTag);
+      setMaxNumber(maxNumber);
     }
   }, [tags, events]);
 
@@ -147,7 +154,7 @@ export default function Metrics({
                   <LineChart data={m.attendance}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
-                    <YAxis />
+                    <YAxis domain={[0, maxNumber]} />
                     <Tooltip />
                     <Line
                       type="monotone"
