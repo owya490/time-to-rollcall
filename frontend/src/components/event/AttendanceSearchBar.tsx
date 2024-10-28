@@ -16,7 +16,7 @@ export default function AttendanceSearchBar({
       <MagnifyingGlassIcon className="w-6 h-6 mr-2 text-gray-500" />
       <input
         disabled={disabled}
-        value={searchInput}
+        value={searchInput ?? ""}
         placeholder={
           !disabled ? "Search members" : "Click the pencil icon to edit!"
         }

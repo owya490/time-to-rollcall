@@ -202,16 +202,16 @@ export default function Group({
                 router.push(Path.Group + "/" + params.groupId + "/" + value)
               }
             >
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between">
                 <ListboxButton
                   disabled={years.length === 0}
-                  className="flex justify-between appearance-none rounded-lg bg-white/5 text-left text-lg font-semibold focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25"
+                  className="flex justify-between items-center appearance-none rounded-lg bg-white/5 text-left text-lg font-semibold focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-white/25 text-gray-600"
                 >
                   {params.year === currentYearStr
                     ? "Previous Years"
                     : "View Years"}
                   <ChevronDownIcon
-                    className="pointer-events-none w-6 h-6 text-black"
+                    className="pointer-events-none w-6 h-6 text-gray-600"
                     aria-hidden="true"
                   />
                 </ListboxButton>

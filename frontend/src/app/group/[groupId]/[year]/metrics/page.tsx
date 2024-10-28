@@ -53,29 +53,31 @@ export default function Metrics({
         {Object.entries(metricByTag).map(([tId, m], i) => {
           const tag = tags?.find((t) => t.id === tId) as TagModel;
           return (
-            <div style={{ width: "100%", height: "100%" }} key={i}>
+            <div key={i}>
               <Tag tag={tag} disabled />
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={m}
-                  margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="Attendance"
-                    stroke={tag.colour}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              <div style={{ width: "100%", height: "300px" }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={m}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line
+                      type="monotone"
+                      dataKey="Attendance"
+                      stroke={tag.colour}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           );
         })}

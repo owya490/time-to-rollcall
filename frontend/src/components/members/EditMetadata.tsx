@@ -356,10 +356,13 @@ export default function EditMetadata({
                         setMetadata([
                           ...metadata,
                           InitMetadataInput(
-                            metadata.reduce(
-                              (max, obj) => (obj.order > max ? obj.order : max),
-                              metadata[0].order
-                            ) + 1
+                            metadata.length === 0
+                              ? 1
+                              : metadata.reduce(
+                                  (max, obj) =>
+                                    obj.order > max ? obj.order : max,
+                                  metadata[0].order
+                                ) + 1
                           ),
                         ])
                       }

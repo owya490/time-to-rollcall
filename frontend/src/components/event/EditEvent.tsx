@@ -163,7 +163,7 @@ export default function EditEvent({
                             autoFocus
                             className="mt-11 mb-12 w-full rounded-none resize-none text-center border-b border-blue-gray-200 border-t-0 bg-transparent pt-4 font-sans text-md font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-gray-900 focus:border-t-0 focus:outline-0"
                             placeholder="Awesome Event"
-                            value={submitEventForm.name}
+                            value={submitEventForm.name ?? ""}
                             onChange={(event) =>
                               setSubmitEventForm({
                                 ...submitEventForm,
@@ -233,7 +233,7 @@ export default function EditEvent({
                                   minWidth: "112px",
                                 }}
                                 className="rounded-3xl border-transparent border-2 text-center bg-white px-2 py-1 mt-2 text-md font-medium text-black"
-                                value={editTag.name}
+                                value={editTag.name ?? ""}
                                 onChange={(e) =>
                                   setEditTag({
                                     ...editTag,
