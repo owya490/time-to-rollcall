@@ -7,10 +7,12 @@ import { useState, useEffect } from "react";
 export default function EventComponent({
   event,
   openModal,
+  disabled,
   showButton,
 }: {
   event: EventModel;
   openModal?: () => void;
+  disabled?: boolean;
   showButton?: boolean;
 }) {
   const [time, setTime] = useState(new Date());
@@ -75,6 +77,7 @@ export default function EventComponent({
             </p>
           )}
           <button
+            disabled={disabled}
             type="button"
             onClick={(e) => {
               e.stopPropagation();

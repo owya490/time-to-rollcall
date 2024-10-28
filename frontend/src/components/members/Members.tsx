@@ -4,9 +4,10 @@ import { MemberCardMemo } from "./MemberCard";
 interface MembersProps {
   members: MemberModel[];
   action: (member: MemberModel) => void;
+  disabled?: boolean;
 }
 
-export default function Members({ members, action }: MembersProps) {
+export default function Members({ members, action, disabled }: MembersProps) {
   return (
     <div className="bg-white pb-16">
       <div className="flex items-center mx-4 mb-2">
@@ -24,7 +25,7 @@ export default function Members({ members, action }: MembersProps) {
           <MemberCardMemo
             key={member.id}
             member={member}
-            action={() => action(member)}
+            action={() => !disabled && action(member)}
           />
         );
       })}

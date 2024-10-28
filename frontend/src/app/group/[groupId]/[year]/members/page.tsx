@@ -4,6 +4,7 @@ import Topbar from "@/components/Topbar";
 import AttendanceSearchBar from "@/components/event/AttendanceSearchBar";
 import EditMember from "@/components/members/EditMember";
 import Members from "@/components/members/Members";
+import { currentYearStr } from "@/helper/Time";
 import { promiseToast } from "@/helper/Toast";
 import { GroupContext, MembersContext, MetadataContext } from "@/lib/context";
 import { createMember, deleteMember, updateMember } from "@/lib/members";
@@ -109,6 +110,8 @@ export default function GroupMember({
     setDeleteConfirmationIsOpen(true);
   }
 
+  const disabled = currentYearStr !== params.year;
+
   if (loading) {
     return (
       <div className="flex justify-center items-center my-24">
@@ -119,19 +122,21 @@ export default function GroupMember({
   return (
     <>
       <Topbar year={params.year} />
-      <EditMember
-        isOpen={isOpen}
-        closeModal={closeModal}
-        member={selectedMember}
-        setMember={setSelectedMember}
-        submit={editMember}
-        updating={updating}
-        deleteConfirmationIsOpen={deleteConfirmationIsOpen}
-        openDeleteConfirmationModal={openDeleteConfirmationModal}
-        closeDeleteConfirmationModal={closeDeleteConfirmationModal}
-        deleteMember={deleteMemberIn}
-        updatingDelete={updatingDelete}
-      />
+      {!disabled && (
+        <EditMember
+          isOpen={isOpen}
+          closeModal={closeModal}
+          member={selectedMember}
+          setMember={setSelectedMember}
+          submit={editMember}
+          updating={updating}
+          deleteConfirmationIsOpen={deleteConfirmationIsOpen}
+          openDeleteConfirmationModal={openDeleteConfirmationModal}
+          closeDeleteConfirmationModal={closeDeleteConfirmationModal}
+          deleteMember={deleteMemberIn}
+          updatingDelete={updatingDelete}
+        />
+      )}
       <h1 className="mx-4 mt-3 text-2xl mb-16">Members</h1>
       <div className="relative">
         <div className="mb-2">
@@ -144,6 +149,7 @@ export default function GroupMember({
         <div className="z-20 w-full">
           <Members
             members={membersShown ?? []}
+            disabled={disabled}
             action={(member: MemberModel) => {
               setSelectedMember(member);
               openModal();
@@ -151,29 +157,31 @@ export default function GroupMember({
           />
         </div>
       </div>
-      <button
-        type="button"
-        className="fixed z-40 bottom-0 flex justify-center text-center text-gray-700 text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
-        onClick={() => {
-          setSelectedMember(
-            InitMember(
-              searchInput,
-              metadata?.find((m) => m.key === "campus" && m.type === "select")
-                ?.id,
-              Object.entries(
-                (
-                  metadata?.find(
-                    (m) => m.key === "campus" && m.type === "select"
-                  ) as MetadataSelectModel | undefined
-                )?.values ?? {}
-              ).find(([_, v]) => v === group?.name)?.[0]
-            )
-          );
-          openModal();
-        }}
-      >
-        Create New Member
-      </button>
+      {!disabled && (
+        <button
+          type="button"
+          className="fixed z-40 bottom-0 flex justify-center text-center text-gray-700 text-sm py-4 px-1.5 w-full rounded-lg bg-green-100 font-light"
+          onClick={() => {
+            setSelectedMember(
+              InitMember(
+                searchInput,
+                metadata?.find((m) => m.key === "campus" && m.type === "select")
+                  ?.id,
+                Object.entries(
+                  (
+                    metadata?.find(
+                      (m) => m.key === "campus" && m.type === "select"
+                    ) as MetadataSelectModel | undefined
+                  )?.values ?? {}
+                ).find(([_, v]) => v === group?.name)?.[0]
+              )
+            );
+            openModal();
+          }}
+        >
+          Create New Member
+        </button>
+      )}
     </>
   );
 }

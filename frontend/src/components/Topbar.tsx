@@ -185,10 +185,12 @@ export default function Topbar({
     // eslint-disable-next-line
   }, [group, tags, metadata]);
 
+  const disabled = currentYearStr !== year;
+
   return (
     <div>
       <nav className="bg-white flex items-center fixed justify-between px-4 py-4 w-full z-40 top-0">
-        {event && group && tags !== null && (
+        {!disabled && event && group && tags !== null && (
           <EditEvent
             groupId={group.id}
             tags={tags}
@@ -207,7 +209,8 @@ export default function Topbar({
             updating={updating}
           />
         )}
-        {submitGroupForm &&
+        {!disabled &&
+          submitGroupForm &&
           submitTagsForm !== null &&
           pathname === Path.Group + "/" + group?.id + "/" + year && (
             <EditGroup
@@ -222,7 +225,8 @@ export default function Topbar({
               updating={updating}
             />
           )}
-        {metadatas &&
+        {!disabled &&
+          metadatas &&
           pathname ===
             Path.Group + "/" + group?.id + "/" + year + GroupPath.Members && (
             <EditMetadata
@@ -266,14 +270,14 @@ export default function Topbar({
         ) : (
           <div />
         )}
-        {year && currentYearStr !== year && (
+        {year && disabled && (
           <button
             className="rounded-lg bg-gray-200 p-1 px-2 font-bold"
             onClick={() =>
               router.push(`${Path.Group}/${group?.id}/${currentYearStr}`)
             }
           >
-            {year}
+            Previous Year: {year}
           </button>
         )}
         {event ? (
@@ -287,25 +291,27 @@ export default function Topbar({
               className="cursor-pointer w-7 h-7 text-gray-500"
               onClick={openExportModal}
             />
-            {setToggleEdit && (
+            {!disabled && setToggleEdit && (
               <>
                 {toggleEdit ? (
                   <PencilIconSolid
                     className="cursor-pointer w-7 h-7 text-gray-500"
-                    onClick={() => setToggleEdit(!toggleEdit)}
+                    onClick={() => !disabled && setToggleEdit(!toggleEdit)}
                   />
                 ) : (
                   <PencilIcon
                     className="cursor-pointer w-7 h-7 text-gray-500"
-                    onClick={() => setToggleEdit(!toggleEdit)}
+                    onClick={() => !disabled && setToggleEdit(!toggleEdit)}
                   />
                 )}
               </>
             )}
-            <Cog6ToothIcon
-              className="cursor-pointer w-7 h-7 text-gray-500"
-              onClick={openModal}
-            />
+            {!disabled && (
+              <Cog6ToothIcon
+                className="cursor-pointer w-7 h-7 text-gray-500"
+                onClick={openModal}
+              />
+            )}
           </div>
         ) : group ? (
           <div className="flex items-center justify-end gap-4">
@@ -327,15 +333,17 @@ export default function Topbar({
                 }
               />
             )}
-            <Cog6ToothIcon
-              className="cursor-pointer w-7 h-7 text-gray-500"
-              onClick={
-                pathname ===
-                Path.Group + "/" + group.id + "/" + year + GroupPath.Members
-                  ? openMetadataModal
-                  : openGroupModal
-              }
-            />
+            {!disabled && (
+              <Cog6ToothIcon
+                className="cursor-pointer w-7 h-7 text-gray-500"
+                onClick={
+                  pathname ===
+                  Path.Group + "/" + group.id + "/" + year + GroupPath.Members
+                    ? openMetadataModal
+                    : openGroupModal
+                }
+              />
+            )}
           </div>
         ) : user && pathname === Path.Group ? (
           <div className="flex items-center justify-end gap-4">

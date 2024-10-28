@@ -147,6 +147,7 @@ export default function Group({
       ? allowedYears().slice(0, -1)
       : allowedYears();
 
+  const disabled = currentYearStr !== params.year;
   return (
     <>
       <Topbar year={params.year} />
@@ -164,7 +165,7 @@ export default function Group({
               tags={tags}
             />
           )}
-          {group && tags !== null && (
+          {!disabled && group && tags !== null && (
             <EditEvent
               groupId={group.id}
               tags={tags}
@@ -251,6 +252,7 @@ export default function Group({
                   <EventComponent
                     event={event}
                     showButton
+                    disabled={disabled}
                     openModal={() => {
                       setSubmitEventForm(event);
                       openModal();
