@@ -30,12 +30,12 @@ export default function Metrics({
       for (const tag of tags) {
         eventsByTag[tag.id] = [];
       }
-      for (const event of events.reverse()) {
+      for (const event of events) {
         const eventTags = event.tags.map((t) => t.id);
 
         for (const tagId of eventTags) {
           if (eventsByTag[tagId]) {
-            eventsByTag[tagId].push({
+            eventsByTag[tagId].unshift({
               name: event.name,
               Attendance: event.members?.length ?? 0,
             });
