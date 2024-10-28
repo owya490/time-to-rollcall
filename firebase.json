@@ -1,6 +1,7 @@
 {
   "functions": [
     {
+      "predeploy": "npm --prefix functions run build",
       "runtime": "nodejs18",
       "source": "functions",
       "codebase": "default",
@@ -9,22 +10,7 @@
         ".git",
         "firebase-debug.log",
         "firebase-debug.*.log"
-      ],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint",
-        "npm --prefix \"$RESOURCE_DIR\" run build"
       ]
     }
-  ],
-  "hosting": {
-    "source": "frontend",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "frameworksBackend": {
-      "region": "us-central1"
-    }
-  }
+  ]
 }

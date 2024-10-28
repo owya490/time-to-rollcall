@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowJs": false,
     "strict": false,
-    "noEmit": true,
+    "noEmit": false,
     "incremental": true,
     "esModuleInterop": true,
     "module": "commonjs",
@@ -27,5 +27,5 @@
   },
   "compileOnSave": true,
   "exclude": ["node_modules", "**/node_modules/*"],
-  "include": ["src"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

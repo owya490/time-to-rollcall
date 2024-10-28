@@ -1,6 +1,8 @@
-import * as functions from "firebase-functions";
-import {db} from "../config/firebase";
+import { beforeUserCreated } from "firebase-functions/identity";
+import { db } from "../config/firebase";
 
-export const createUser = functions.auth.user().onCreate(async (user) => {
-  await db.collection("users").doc(user.uid).set({email: user.email});
+export const createUser = beforeUserCreated({ region: "australia-southeast1" }, async (event) => {
+  if (event.data) {
+    await db.collection("users").doc(event.data.uid).set({ email: event.data.email });
+  }
 });

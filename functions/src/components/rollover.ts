@@ -1,11 +1,9 @@
-import * as functions from "firebase-functions";
 import { db } from "../config/firebase";
+import { onSchedule } from "firebase-functions/scheduler";
 
-export const rolloverUsers = functions
-  .runWith({ timeoutSeconds: 120 })
-  .pubsub.schedule("0 0 1 1 *")
-  .timeZone("Australia/Sydney")
-  .onRun(async () => {
+export const rolloverUsers = onSchedule(
+  { timeZone: "Australia/Sydney", schedule: "0 0 1 1 *", timeoutSeconds: 120, region: "australia-southeast1" },
+  async () => {
     const currentYear = new Date().getFullYear();
     const lastYear = currentYear - 1;
 
@@ -19,12 +17,13 @@ export const rolloverUsers = functions
         .collection("members")
         .get();
       for (const lym of lastYearMembers.docs) {
-        let metadata = lym.data().metadata;
-        if (metadata && metadata["U65Ey0liZ6OeVqSusDtN"] !== "6+") {
-          if (metadata["U65Ey0liZ6OeVqSusDtN"] === "5") {
-            metadata["U65Ey0liZ6OeVqSusDtN"] = "6+";
+        const metadata = lym.data().metadata;
+        const mdId = "U65Ey0liZ6OeVqSusDtN";
+        if (metadata && metadata[mdId] !== "6+") {
+          if (metadata[mdId] === "5") {
+            metadata[mdId] = "6+";
           } else {
-            metadata["U65Ey0liZ6OeVqSusDtN"] = (Number(metadata["U65Ey0liZ6OeVqSusDtN"]) + 1).toString();
+            metadata[mdId] = (Number(metadata[mdId]) + 1).toString();
           }
         }
         await db
@@ -37,4 +36,5 @@ export const rolloverUsers = functions
           .set({ ...lym.data(), metadata });
       }
     }
-  });
+  }
+);
