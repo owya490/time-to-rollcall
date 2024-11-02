@@ -15,7 +15,7 @@ import Loader from "../Loader";
 import { InitTag, TagModel } from "@/models/Tag";
 import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { colourClasses, getColourClasses } from "../event/Tag";
-import DeleteConfirmation from "../event/DeleteEvent";
+import DeleteConfirmation from "../DeleteConfirmation";
 
 export default function EditGroup({
   isOpen,
@@ -46,7 +46,11 @@ export default function EditGroup({
   return (
     <>
       <DeleteConfirmation
-        description={(deleteTag?.name ?? "Tag") + " will be deleted forever"}
+        name={deleteTag?.name ?? "Tag"}
+        description={
+          (deleteTag?.name ?? "Tag") +
+          " will be deleted forever and removed from all events"
+        }
         isOpen={deleteConfirmationIsOpen}
         closeModal={() => setDeleteConfirmationIsOpen(false)}
         confirm={() => {

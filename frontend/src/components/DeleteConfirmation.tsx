@@ -5,8 +5,8 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment } from "react";
-import Loader from "../Loader";
+import { Fragment, useState } from "react";
+import Loader from "./Loader";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function DeleteConfirmation({
@@ -16,6 +16,7 @@ export default function DeleteConfirmation({
   confirm,
   updating,
   action,
+  name,
 }: {
   description: string;
   isOpen: boolean;
@@ -23,7 +24,9 @@ export default function DeleteConfirmation({
   confirm: () => void;
   updating: boolean;
   action?: string;
+  name?: string;
 }) {
+  const [deleteName, setDeleteName] = useState("");
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog
@@ -54,7 +57,7 @@ export default function DeleteConfirmation({
             >
               <DialogPanel className="rounded-t-3xl bg-white p-4 shadow-xl">
                 <div
-                  className="absolute right-2 top-2 p-2"
+                  className="absolute right-2 top-2 p-2 cursor-pointer"
                   onClick={closeModal}
                 >
                   <XMarkIcon className="w-6 h-6 text-black" />
@@ -68,6 +71,21 @@ export default function DeleteConfirmation({
                 <p className="mt-2 px-12 text-sm text-center text-gray-500">
                   {description}
                 </p>
+                {name && (
+                  <div className="flex flex-col items-center w-full mt-2">
+                    <p className="text-gray-500 text-sm">
+                      To confirm deletion, type "{name}" in the box below
+                    </p>
+                    <input
+                      type="text"
+                      autoFocus
+                      className="text-center border-2 rounded-md border-red-500"
+                      placeholder={name}
+                      value={deleteName}
+                      onChange={(e) => setDeleteName(e.target.value)}
+                    />
+                  </div>
+                )}
                 {updating ? (
                   <div className="flex justify-center items-center mt-16">
                     <Loader show />
@@ -83,6 +101,7 @@ export default function DeleteConfirmation({
                     </button>
                     <button
                       type="button"
+                      disabled={name ? deleteName !== name : false}
                       className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       onClick={confirm}
                     >

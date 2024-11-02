@@ -79,15 +79,20 @@ async function handleField(value: any): Promise<any | undefined> {
 }
 
 /// Helper functions
-export async function convertToJavascript(document: DocumentSnapshot) {
+export async function convertToJavascript(
+  document: DocumentSnapshot,
+  dontHandleField?: string
+) {
   let data = document.data();
   if (!data) {
     return undefined;
   }
   for (const [key, value] of Object.entries(data)) {
-    const v = await handleField(value);
-    if (v !== undefined) {
-      data[key] = v;
+    if (key !== dontHandleField) {
+      const v = await handleField(value);
+      if (v !== undefined) {
+        data[key] = v;
+      }
     }
   }
   data["id"] = document.id;
@@ -103,8 +108,13 @@ export function convertToFirestore(data: {
   return dataWithoutId;
 }
 
-export async function convertCollectionToJavascript(docs: DocumentSnapshot[]) {
+export async function convertCollectionToJavascript(
+  docs: DocumentSnapshot[],
+  dontHandleField?: string
+) {
   return (
-    await Promise.all(docs.map((doc) => convertToJavascript(doc)))
+    await Promise.all(
+      docs.map((doc) => convertToJavascript(doc, dontHandleField))
+    )
   ).filter((d) => d !== undefined);
 }

@@ -34,7 +34,7 @@ import { TagModel } from "@/models/Tag";
 import { updateGroup } from "@/lib/groups";
 import EditGroup from "./group/EditGroup";
 import { promiseToast } from "@/helper/Toast";
-import DeleteConfirmation from "./event/DeleteEvent";
+import DeleteConfirmation from "./DeleteConfirmation";
 import { MetadataModel } from "@/models/Metadata";
 import EditMetadata from "./members/EditMetadata";
 import { editMetadatas } from "@/lib/metadata";
