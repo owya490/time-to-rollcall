@@ -32,7 +32,10 @@ export default function DeleteConfirmation({
       <Dialog
         as="div"
         className="fixed inset-0 z-50 overflow-hidden"
-        onClose={closeModal}
+        onClose={() => {
+          setDeleteName("");
+          closeModal();
+        }}
       >
         <TransitionChild
           as={Fragment}
@@ -58,7 +61,10 @@ export default function DeleteConfirmation({
               <DialogPanel className="rounded-t-3xl bg-white p-4 shadow-xl">
                 <div
                   className="absolute right-2 top-2 p-2 cursor-pointer"
-                  onClick={closeModal}
+                  onClick={() => {
+                    setDeleteName("");
+                    closeModal();
+                  }}
                 >
                   <XMarkIcon className="w-6 h-6 text-black" />
                 </div>
@@ -96,7 +102,10 @@ export default function DeleteConfirmation({
                     <button
                       type="button"
                       className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                      onClick={closeModal}
+                      onClick={() => {
+                        setDeleteName("");
+                        closeModal();
+                      }}
                     >
                       Go back
                     </button>
@@ -104,7 +113,10 @@ export default function DeleteConfirmation({
                       type="button"
                       disabled={name ? deleteName !== name : false}
                       className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                      onClick={confirm}
+                      onClick={() => {
+                        setDeleteName("");
+                        confirm();
+                      }}
                     >
                       {action ?? "Delete"}
                     </button>
