@@ -74,7 +74,8 @@ export default function DeleteConfirmation({
                 {name && (
                   <div className="flex flex-col items-center w-full mt-2">
                     <p className="text-gray-500 text-sm">
-                      To confirm deletion, type "{name}" in the box below
+                      To confirm deletion, type &quot;{name}&quot; in the box
+                      below
                     </p>
                     <input
                       type="text"
