@@ -1,4 +1,5 @@
-import { admin, db } from "../config/firebase";
+import { DocumentReference } from "firebase-admin/firestore";
+import { db } from "../config/firebase";
 import { onDocumentDeleted } from "firebase-functions/firestore";
 
 export const deleteMember = onDocumentDeleted("groups/{groupId}/members/{year}/members/{memberId}", async (event) => {
@@ -11,11 +12,15 @@ export const deleteMember = onDocumentDeleted("groups/{groupId}/members/{year}/m
     .collection("members")
     .doc(event.params.memberId);
   for (const e of events.docs) {
-    await db
-      .collection("groups")
-      .doc(event.params.groupId)
-      .collection("events")
-      .doc(e.id)
-      .update({ members: admin.firestore.FieldValue.arrayRemove(docRef) }); // TODO: can't remove since we don't know timestamp
+    const eData = (await db.collection("groups").doc(event.params.groupId).collection("events").doc(e.id).get()).data();
+    if (eData?.members) {
+      const filteredMembers = eData?.members.filter((m: { member: DocumentReference }) => m.member === docRef);
+      await db
+        .collection("groups")
+        .doc(event.params.groupId)
+        .collection("events")
+        .doc(e.id)
+        .update({ members: filteredMembers });
+    }
   }
 });
