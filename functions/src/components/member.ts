@@ -18,7 +18,9 @@ export const deleteMember = onDocumentDeleted(
         await db.collection("groups").doc(event.params.groupId).collection("events").doc(e.id).get()
       ).data();
       if (eData?.members) {
-        const filteredMembers = eData?.members.filter((m: { member: DocumentReference }) => m.member === docRef);
+        const filteredMembers = eData?.members.filter(
+          (m: { member: DocumentReference }) => m.member.path !== docRef.path
+        );
         await db
           .collection("groups")
           .doc(event.params.groupId)
