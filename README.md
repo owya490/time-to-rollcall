@@ -4,6 +4,7 @@
 
 1. npm install -g firebase-tools
 2. firebase login
+3. cd functions
 
 ### Deploy Cloud Functions
 

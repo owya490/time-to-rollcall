@@ -113,12 +113,7 @@ export default function Group({
         : false;
       if (happeningNow) {
         router.push(
-          Path.Group +
-            "/" +
-            params.groupId +
-            GroupPath.Event +
-            "/" +
-            submittedEvent.id
+          `${Path.Group}/${params.groupId}/${params.year}/${GroupPath.Event}/${submittedEvent.id}`
         );
       } else {
         closeModal();
