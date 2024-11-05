@@ -19,10 +19,8 @@ export const rolloverUsers = onSchedule(
       for (const lym of lastYearMembers.docs) {
         const metadata = lym.data().metadata;
         const mdId = "U65Ey0liZ6OeVqSusDtN";
-        if (metadata && metadata[mdId] !== "6+") {
-          if (metadata[mdId] === "5") {
-            metadata[mdId] = "6+";
-          } else {
+        if (metadata) {
+          if (metadata[mdId] !== "6") {
             metadata[mdId] = (Number(metadata[mdId]) + 1).toString();
           }
         }
