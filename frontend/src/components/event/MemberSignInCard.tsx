@@ -221,18 +221,18 @@ function MemberSignInCard({
       grayEvents.push({ id: "placeholder" } as EventModel);
     }
     return (
-      <div className="flex-row-reverse flex justify-evenly gap-2 p-2">
+      <div className="flex-row-reverse flex justify-evenly gap-1 p-2">
         {pastEvents?.slice(-5).map((e, i) => (
           <div key={i}>
             {e.members?.find((m) => m.member.id === memberInfo.member.id) ? (
-              <div className="bg-green-400 p-3" />
+              <div className="bg-green-400 p-2" />
             ) : (
-              <div className="bg-red-400 p-3" />
+              <div className="bg-red-400 p-2" />
             )}
           </div>
         ))}
         {grayEvents.map((e, i) => (
-          <div key={i} className="bg-gray-100 p-3" />
+          <div key={i} className="bg-gray-100 p-2" />
         ))}
       </div>
     );
@@ -310,8 +310,8 @@ function MemberSignInCard({
                 </p>
               </div>
             </div>
-            <PastEvents />
             <div className="flex justify-end items-center h-full">
+              <PastEvents />
               <div className="w-14 text-sm mr-4">
                 <GroupBadge
                   campus={
