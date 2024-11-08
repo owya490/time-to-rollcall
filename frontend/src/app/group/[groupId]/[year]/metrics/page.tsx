@@ -99,29 +99,6 @@ export default function Metrics({
     <>
       <Topbar year={params.year} />
       <div className="mx-4">
-        <h1 className="text-xl">Average attendance by Tag</h1>
-        <div style={{ width: "100%", height: "300px" }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={Object.values(metricByTag).map((m) => m.average)}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar type="monotone" dataKey="Average">
-                {Object.values(metricByTag)
-                  .map((m) => m.average)
-                  .map((e, i) => (
-                    <Cell
-                      key={i}
-                      fill={
-                        e?.colour ? getColourClasses(e.colour).hex : "#3B82F6"
-                      }
-                    />
-                  ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
         <div className="flex justify-between items-center mt-3 mb-10">
           <h1 className="text-2xl">Metrics</h1>
           <div className="flex justify-end">
@@ -166,6 +143,29 @@ export default function Metrics({
               </ListboxOptions>
             </Listbox>
           </div>
+        </div>
+        <h1 className="text-xl">Average attendance by Tag</h1>
+        <div style={{ width: "100%", height: "300px" }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={Object.values(metricByTag).map((m) => m.average)}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar type="monotone" dataKey="Average">
+                {Object.values(metricByTag)
+                  .map((m) => m.average)
+                  .map((e, i) => (
+                    <Cell
+                      key={i}
+                      fill={
+                        e?.colour ? getColourClasses(e.colour).hex : "#3B82F6"
+                      }
+                    />
+                  ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
         {Object.entries(metricByTag).map(([tId, m], i) => {
           const tag = tags?.find((t) => t.id === tId) as TagModel;
