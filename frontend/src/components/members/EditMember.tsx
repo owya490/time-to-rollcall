@@ -18,7 +18,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import Loader from "../Loader";
-import { MetadataContext } from "@/lib/context";
+import { MembersContext, MetadataContext } from "@/lib/context";
 import DeleteConfirmation from "../event/DeleteEvent";
 import { MetadataSelectModel } from "@/models/Metadata";
 import { convertToDateTimeLocalString } from "@/helper/Time";
@@ -52,6 +52,7 @@ export default function EditMember({
   signInTime?: Date;
   updateSignInTime?: (d: Date) => void;
 }) {
+  const members = useContext(MembersContext);
   const metadata = useContext(MetadataContext);
   const newMember = member.id === "placeholder";
   return (
@@ -132,6 +133,12 @@ export default function EditMember({
                           })
                         }
                       />
+                      {newMember &&
+                        members?.find((m) => m.name === member.name) && (
+                          <div className="text-orange-400">
+                            Member with this name already exists!
+                          </div>
+                        )}
                     </div>
                     {metadata &&
                       metadata.map((m, i) => (
