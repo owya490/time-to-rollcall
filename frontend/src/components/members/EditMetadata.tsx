@@ -377,10 +377,8 @@ export default function EditMetadata({
                       <PlusCircleIcon className="w-5 h-5 text-gray-500" />
                     </button>
                     {updating ? (
-                      <div className="flex justify-center items-center">
-                        <div className="bottom-2 fixed">
-                          <Loader show />
-                        </div>
+                      <div className="bottom-2 w-full fixed flex justify-center items-center">
+                        <Loader show />
                       </div>
                     ) : (
                       <div className="flex justify-center">
