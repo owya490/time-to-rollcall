@@ -18,7 +18,7 @@ import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import Tag from "./Tag";
 import { EventModel } from "@/models/Event";
 import Loader from "../Loader";
-import DeleteConfirmation from "./DeleteEvent";
+import DeleteConfirmation from "../DeleteConfirmation";
 import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function EditEvent({
@@ -67,6 +67,7 @@ export default function EditEvent({
         deleteEvent &&
         updatingDelete !== undefined && (
           <DeleteConfirmation
+            name={submitEventForm.name}
             description={submitEventForm.name + " will be deleted forever"}
             isOpen={deleteConfirmationIsOpen}
             closeModal={closeDeleteConfirmationModal}
@@ -287,6 +288,7 @@ export default function EditEvent({
                           <div className="flex flex-wrap mt-16 mb-6 justify-between items-center">
                             <p className="text-xs">Start Time</p>
                             <input
+                              className="border-2 border-transparent"
                               type="datetime-local"
                               value={convertToDateTimeLocalString(
                                 submitEventForm.dateStart
@@ -307,6 +309,12 @@ export default function EditEvent({
                           <div className="flex flex-wrap mb-16 justify-between items-center">
                             <p className="text-xs">End Time</p>
                             <input
+                              className={
+                                submitEventForm.dateEnd <
+                                submitEventForm.dateStart
+                                  ? "border-2 border-red-500 rounded"
+                                  : "border-2 border-transparent"
+                              }
                               type="datetime-local"
                               value={convertToDateTimeLocalString(
                                 submitEventForm.dateEnd
@@ -339,7 +347,9 @@ export default function EditEvent({
                             ? false
                             : selectedIndex === 2
                             ? !submitEventForm.dateStart ||
-                              !submitEventForm.dateEnd
+                              !submitEventForm.dateEnd ||
+                              submitEventForm.dateEnd <
+                                submitEventForm.dateStart
                             : false
                         }
                         className="inline-flex w-full mt-4 justify-center rounded-3xl border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"

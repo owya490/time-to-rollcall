@@ -21,7 +21,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import Loader from "../Loader";
-import DeleteConfirmation from "../event/DeleteEvent";
+import DeleteConfirmation from "../DeleteConfirmation";
 
 export default function EditMetadata({
   isOpen,
@@ -72,6 +72,7 @@ export default function EditMetadata({
   return (
     <>
       <DeleteConfirmation
+        name={deleteIndex ? metadata[deleteIndex]?.key : "Data"}
         description={
           (deleteIndex ? metadata[deleteIndex]?.key : "Data") +
           " will be deleted forever and all past events"
@@ -95,6 +96,11 @@ export default function EditMetadata({
         updating={false}
       />
       <DeleteConfirmation
+        name={
+          deleteValue !== null && deleteIndex !== null
+            ? (metadata[deleteIndex] as MetadataSelectModel).values[deleteValue]
+            : "Value"
+        }
         description={
           (deleteValue !== null && deleteIndex !== null
             ? (metadata[deleteIndex] as MetadataSelectModel).values[deleteValue]

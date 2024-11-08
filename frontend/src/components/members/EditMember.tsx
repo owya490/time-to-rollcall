@@ -19,7 +19,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Loader from "../Loader";
 import { MembersContext, MetadataContext } from "@/lib/context";
-import DeleteConfirmation from "../event/DeleteEvent";
+import DeleteConfirmation from "../DeleteConfirmation";
 import { MetadataSelectModel } from "@/models/Metadata";
 import { convertToDateTimeLocalString } from "@/helper/Time";
 
@@ -62,7 +62,11 @@ export default function EditMember({
         deleteMember &&
         updatingDelete !== undefined && (
           <DeleteConfirmation
-            description={member.name + " will be deleted forever"}
+            name={member.name}
+            description={
+              member.name +
+              " will be deleted for all events for the current year. It won't affect the previous years' event attendance."
+            }
             isOpen={deleteConfirmationIsOpen}
             closeModal={closeDeleteConfirmationModal}
             confirm={deleteMember}

@@ -81,6 +81,7 @@ export function useGroupsListener(user: User | null | undefined) {
     undefined,
     undefined,
     undefined,
+    undefined,
     where(documentId(), "in", user?.groups ?? ["placeholder"])
   );
 
@@ -138,6 +139,7 @@ export function useEventsListener(
     orderBy("dateEnd", "desc"),
     undefined,
     undefined,
+    "members",
     where("dateStart", ">=", new Date(`${year}-01-01`)),
     where("dateStart", "<=", new Date(`${Number(year) + 1}-01-01`))
   );
@@ -171,6 +173,7 @@ const useFirestoreCol = <T>(
   orderBy?: QueryOrderByConstraint,
   onBeforeFetch?: () => Promise<void>,
   onAfterFetch?: (data: T[] | null) => void,
+  dontHandleField?: string,
   ...constraints: QueryFieldFilterConstraint[]
 ) => {
   const [data, setData] = useState<T[] | null>(null);
@@ -195,7 +198,8 @@ const useFirestoreCol = <T>(
         docRef,
         async (document) => {
           const colData = (await convertCollectionToJavascript(
-            document.docs
+            document.docs,
+            dontHandleField
           )) as T[];
           if (colData.length === 0) {
             setData([]);
