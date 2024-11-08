@@ -216,10 +216,10 @@ function MemberSignInCard({
 
     if (!pastEvents) return <></>;
 
-    const grayEvents: EventModel[] = [];
-    for (let i = 0; i < 5 - pastEvents.length; ++i) {
-      grayEvents.push({ id: "placeholder" } as EventModel);
-    }
+    // const grayEvents: EventModel[] = [];
+    // for (let i = 0; i < 5 - pastEvents.length; ++i) {
+    //   grayEvents.push({ id: "placeholder" } as EventModel);
+    // }
     return (
       <div className="flex-row-reverse flex justify-evenly gap-1 p-2">
         {pastEvents?.slice(-5).map((e, i) => (
@@ -227,13 +227,13 @@ function MemberSignInCard({
             {e.members?.find((m) => m.member.id === memberInfo.member.id) ? (
               <div className="bg-green-400 p-2" />
             ) : (
-              <div className="bg-red-400 p-2" />
+              <div className="bg-gray-100 p-2" />
             )}
           </div>
         ))}
-        {grayEvents.map((e, i) => (
+        {/* {grayEvents.map((e, i) => (
           <div key={i} className="bg-gray-100 p-2" />
-        ))}
+        ))} */}
       </div>
     );
   }
