@@ -376,41 +376,43 @@ export default function EditMetadata({
                       <p className="text-gray-500 mr-3">Add field</p>
                       <PlusCircleIcon className="w-5 h-5 text-gray-500" />
                     </button>
-                  </div>
-                  {updating ? (
-                    <div className="bottom-2 w-full fixed flex justify-center items-center">
-                      <Loader show />
+                    {updating ? (
+                      <div className="flex justify-center items-center">
+                        <div className="bottom-2 fixed">
+                          <Loader show />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex justify-center bottom-2">
+                        <button
+                          type="button"
+                          className="bottom-2 fixed inline-flex mt-4 z-50 justify-center rounded-3xl border border-transparent bg-black px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                          onClick={() => {
+                            setOrder(false);
+                            submit();
+                          }}
+                        >
+                          Update
+                        </button>
+                      </div>
+                    )}
+                    <div className="flex justify-end items-center">
+                      <p className="bottom-3.5 mr-14 text-sm fixed text-gray-400 font-medium">
+                        Order
+                      </p>
+                      <label className="bottom-3 fixed inline-flex items-center cursor-pointer">
+                        <input
+                          disabled={updating}
+                          type="checkbox"
+                          id="mySwitch"
+                          checked={order}
+                          className="sr-only peer"
+                          onChange={() => setOrder(!order)}
+                        />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-black rounded-full peer-checked:bg-black transition-all duration-300"></div>
+                        <div className="absolute w-5 h-5 bg-white rounded-full left-0.5 top-0.5 peer-checked:translate-x-full transition-transform duration-300"></div>
+                      </label>
                     </div>
-                  ) : (
-                    <div className="flex justify-center items-center w-full bottom-2 fixed z-50 ">
-                      <button
-                        type="button"
-                        className="mt-4 rounded-3xl border border-transparent bg-black px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                        onClick={() => {
-                          setOrder(false);
-                          submit();
-                        }}
-                      >
-                        Update
-                      </button>
-                    </div>
-                  )}
-                  <div className="flex justify-end mr-2 items-center">
-                    <p className="bottom-3.5 mr-14 text-sm fixed text-gray-400 font-medium">
-                      Order
-                    </p>
-                    <label className="bottom-3 fixed inline-flex items-center cursor-pointer">
-                      <input
-                        disabled={updating}
-                        type="checkbox"
-                        id="mySwitch"
-                        checked={order}
-                        className="sr-only peer"
-                        onChange={() => setOrder(!order)}
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-black rounded-full peer-checked:bg-black transition-all duration-300"></div>
-                      <div className="absolute w-5 h-5 bg-white rounded-full left-0.5 top-0.5 peer-checked:translate-x-full transition-transform duration-300"></div>
-                    </label>
                   </div>
                 </DialogPanel>
               </TransitionChild>
