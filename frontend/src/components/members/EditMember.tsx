@@ -9,7 +9,7 @@ import {
   ListboxOption,
   ListboxOptions,
 } from "@headlessui/react";
-import { Fragment, useContext } from "react";
+import { Fragment, useContext, useState } from "react";
 import { MemberModel } from "@/models/Member";
 import {
   CheckIcon,
@@ -18,7 +18,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import Loader from "../Loader";
-import { MetadataContext } from "@/lib/context";
+import { MembersContext, MetadataContext } from "@/lib/context";
 import DeleteConfirmation from "../DeleteConfirmation";
 import { MetadataSelectModel } from "@/models/Metadata";
 import { convertToDateTimeLocalString } from "@/helper/Time";
@@ -52,8 +52,17 @@ export default function EditMember({
   signInTime?: Date;
   updateSignInTime?: (d: Date) => void;
 }) {
+  const members = useContext(MembersContext);
   const metadata = useContext(MetadataContext);
   const newMember = member.id === "placeholder";
+  const [confirmationIsOpen, setConfirmationIsOpen] = useState(false);
+  function closeConfirmationModal() {
+    setConfirmationIsOpen(false);
+  }
+
+  function openConfirmationModal() {
+    setConfirmationIsOpen(true);
+  }
   return (
     <>
       {deleteConfirmationIsOpen !== undefined &&
@@ -72,6 +81,23 @@ export default function EditMember({
             updating={updatingDelete}
           />
         )}
+      {newMember && (
+        <DeleteConfirmation
+          description={
+            "A member with name " +
+            member.name +
+            " already exists. Are you sure you want to create another member with the same name?"
+          }
+          isOpen={confirmationIsOpen}
+          closeModal={closeConfirmationModal}
+          confirm={() => {
+            submit();
+            closeConfirmationModal();
+          }}
+          updating={updating}
+          action="Create"
+        />
+      )}
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog
           as="div"
@@ -122,7 +148,15 @@ export default function EditMember({
                   </DialogTitle>
                   <div className="overflow-auto max-h-[70vh] pb-14 px-4">
                     <div className="my-4">
-                      <p className="text-sm text-gray-900">Name</p>
+                      <p className="text-sm text-gray-900">
+                        Name
+                        {newMember &&
+                          members?.find((m) => m.name === member.name) && (
+                            <span className="ml-2 text-orange-400 text-xs">
+                              Member with this name already exists!
+                            </span>
+                          )}
+                      </p>
                       <input
                         type="text"
                         autoFocus
@@ -264,22 +298,24 @@ export default function EditMember({
                       </div>
                     )}
                   </div>
-                  <div className="flex justify-center">
-                    {updating ? (
-                      <div className="bottom-2 fixed flex justify-center items-center">
-                        <Loader show />
-                      </div>
-                    ) : (
+                  {updating ? (
+                    <div className="bottom-2 w-full fixed flex justify-center items-center">
+                      <Loader show />
+                    </div>
+                  ) : (
+                    <div className="flex justify-center w-full bottom-2 fixed z-50 ">
                       <button
                         type="button"
                         disabled={!member.name}
-                        className="bottom-2 fixed z-50 inline-flex mt-4 justify-center rounded-3xl border border-transparent bg-black px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                        onClick={submit}
+                        className="mt-4 rounded-3xl border border-transparent bg-black px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={() =>
+                          newMember ? openConfirmationModal() : submit()
+                        }
                       >
                         {newMember ? "Create" : "Update"}
                       </button>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </DialogPanel>
               </TransitionChild>
             </div>

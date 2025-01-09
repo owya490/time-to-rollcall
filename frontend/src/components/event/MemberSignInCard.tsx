@@ -13,10 +13,10 @@ import { FC, memo, useContext, useEffect, useRef } from "react";
 import WOMAN_FACE_SVG from "../../../public/face-woman-profile.svg";
 import MAN_SVG from "../../../public/man-profile.svg";
 import GroupBadge from "./GroupBadge";
-import { MetadataContext } from "@/lib/context";
+import { EventContext, EventsContext, MetadataContext } from "@/lib/context";
 import { MetadataSelectModel } from "@/models/Metadata";
 import useMediaQuery from "@/helper/useMediaQuery";
-import { MemberInformation } from "@/models/Event";
+import { EventModel, MemberInformation } from "@/models/Event";
 
 export const MemberSignIn: FC<MemberSignInCardProps> = memo(
   ({ ...props }) => {
@@ -59,6 +59,8 @@ function MemberSignInCard({
   refreshDependency,
   triggerAddAnimation,
 }: MemberSignInCardProps) {
+  const event = useContext(EventContext);
+  const events = useContext(EventsContext);
   const metadata = useContext(MetadataContext);
   const role = metadata?.find(
     (m) => m.key === "Role" && m.type === "select"
@@ -202,6 +204,40 @@ function MemberSignInCard({
     };
   }, [refreshDependency, disabled]);
 
+  function PastEvents() {
+    const pastEvents =
+      event &&
+      events &&
+      events
+        .filter((e) => e.dateStart < event.dateStart)
+        .filter((e) =>
+          event.tags?.every((t) => e.tags.map((t) => t.id).includes(t.id))
+        );
+
+    if (!pastEvents) return <></>;
+
+    // const grayEvents: EventModel[] = [];
+    // for (let i = 0; i < 5 - pastEvents.length; ++i) {
+    //   grayEvents.push({ id: "placeholder" } as EventModel);
+    // }
+    return (
+      <div className="flex-row-reverse flex justify-evenly gap-1 p-2">
+        {pastEvents?.slice(-5).map((e, i) => (
+          <div key={i}>
+            {e.members?.find((m) => m.member.id === memberInfo.member.id) ? (
+              <div className="bg-green-400 p-2" />
+            ) : (
+              <div className="bg-gray-100 p-2" />
+            )}
+          </div>
+        ))}
+        {/* {grayEvents.map((e, i) => (
+          <div key={i} className="bg-gray-100 p-2" />
+        ))} */}
+      </div>
+    );
+  }
+
   return (
     <div className="overflow-hidden" id={id} key={id}>
       <div className="z-10" id={frontId} ref={frontRef}>
@@ -275,14 +311,16 @@ function MemberSignInCard({
               </div>
             </div>
             <div className="flex justify-end items-center h-full">
-              <GroupBadge
-                campus={
-                  campus &&
-                  memberInfo.member.metadata?.[campus.id] &&
-                  campus.values[memberInfo.member.metadata?.[campus.id]]
-                }
-                className="w-14 text-sm mr-4"
-              />
+              <PastEvents />
+              <div className="w-14 text-sm mr-4">
+                <GroupBadge
+                  campus={
+                    campus &&
+                    memberInfo.member.metadata?.[campus.id] &&
+                    campus.values[memberInfo.member.metadata?.[campus.id]]
+                  }
+                />
+              </div>
               {!mobile && (
                 <div
                   className={`flex items-center h-full w-20 justify-center p-2 cursor-pointer ${

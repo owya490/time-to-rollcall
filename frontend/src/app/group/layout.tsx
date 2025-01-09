@@ -1,5 +1,6 @@
 import AuthCheck from "@/components/AuthCheck";
 import PrivateLayout from "@/components/PrivateLayout";
+import { Toaster } from "react-hot-toast";
 
 export default function PagesLayout({
   children,
@@ -8,6 +9,7 @@ export default function PagesLayout({
 }) {
   return (
     <PrivateLayout>
+      <Toaster />
       <AuthCheck>{children}</AuthCheck>
     </PrivateLayout>
   );

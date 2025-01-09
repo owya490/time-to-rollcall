@@ -248,22 +248,22 @@ export default function EditGroup({
                       </div>
                     )}
                   </div>
-                  <div className="flex justify-center">
-                    {updating ? (
-                      <div className="bottom-2 fixed flex justify-center items-center">
-                        <Loader show />
-                      </div>
-                    ) : (
+                  {updating ? (
+                    <div className="bottom-2 w-full fixed flex justify-center items-center">
+                      <Loader show />
+                    </div>
+                  ) : (
+                    <div className="flex justify-center w-full bottom-2 fixed z-50 ">
                       <button
                         type="button"
                         disabled={!group.name || tags?.some((t) => !t.name)}
-                        className="bottom-2 fixed z-50 inline-flex mt-4 justify-center rounded-3xl border border-transparent bg-black px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="mt-4 rounded-3xl border border-transparent bg-black px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         onClick={submit}
                       >
                         {newGroup ? "Create" : "Update"}
                       </button>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </DialogPanel>
               </TransitionChild>
             </div>

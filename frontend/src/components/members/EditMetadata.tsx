@@ -383,7 +383,7 @@ export default function EditMetadata({
                         </div>
                       </div>
                     ) : (
-                      <div className="flex justify-center">
+                      <div className="flex justify-center bottom-2">
                         <button
                           type="button"
                           className="bottom-2 fixed inline-flex mt-4 z-50 justify-center rounded-3xl border border-transparent bg-black px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"

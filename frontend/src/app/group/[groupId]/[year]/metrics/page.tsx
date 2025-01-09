@@ -144,6 +144,29 @@ export default function Metrics({
             </Listbox>
           </div>
         </div>
+        <h1 className="text-xl">Average attendance by Tag</h1>
+        <div style={{ width: "100%", height: "300px" }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={Object.values(metricByTag).map((m) => m.average)}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar type="monotone" dataKey="Average">
+                {Object.values(metricByTag)
+                  .map((m) => m.average)
+                  .map((e, i) => (
+                    <Cell
+                      key={i}
+                      fill={
+                        e?.colour ? getColourClasses(e.colour).hex : "#3B82F6"
+                      }
+                    />
+                  ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
         {Object.entries(metricByTag).map(([tId, m], i) => {
           const tag = tags?.find((t) => t.id === tId) as TagModel;
           return (
@@ -171,29 +194,6 @@ export default function Metrics({
             </div>
           );
         })}
-        <h1 className="text-xl">Average attendance by Tag</h1>
-        <div style={{ width: "100%", height: "300px" }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={Object.values(metricByTag).map((m) => m.average)}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar type="monotone" dataKey="Average">
-                {Object.values(metricByTag)
-                  .map((m) => m.average)
-                  .map((e, i) => (
-                    <Cell
-                      key={i}
-                      fill={
-                        e?.colour ? getColourClasses(e.colour).hex : "#3B82F6"
-                      }
-                    />
-                  ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
       </div>
     </>
   );
